@@ -1,5 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
 import { url2obj } from './dbUrlToObj';
 import { UserRole } from '../../modules/roles/user-role.model';
+
 import { databaseConfig } from './database.config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Module } from '@nestjs/common';
