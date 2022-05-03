@@ -7,6 +7,7 @@ async function start() {
   const PORT = process.env.PORT || 5000;
   console.log(process.env.NODE_ENV);
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
