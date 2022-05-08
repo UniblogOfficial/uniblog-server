@@ -21,6 +21,13 @@ export class AuthService {
     return { data: user, auth: { token } };
   }
 
+  async me(userTokenData) {
+    const user = await this.userService.getUserById(userTokenData.id);
+    if (user) {
+      return { data: user };
+    }
+  }
+
   async login(dto: LoginDto) {
     const user = await this.validateUser(dto);
     const token = this.generateToken(user);
