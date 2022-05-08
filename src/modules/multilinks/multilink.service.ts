@@ -3,6 +3,7 @@ import { Multilink } from './model/multilink.model';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateMLDto } from './dto/create-ml.dto';
+import { TImagesFormData } from './multilink.controller';
 
 @Injectable()
 export class MultilinkService {
@@ -11,7 +12,7 @@ export class MultilinkService {
     @InjectModel(MLContent) private mlContentRepository: typeof MLContent,
   ) {}
 
-  async createMultilink(user, dto: CreateMLDto, images) {
+  async createMultilink(user, dto: CreateMLDto, images: TImagesFormData) {
     try {
       console.log(images[`order${1}`][0]);
       let multilink = await this.multilinkRepository.findOne({ where: { userId: user.id } });
@@ -27,13 +28,20 @@ export class MultilinkService {
       const content = await Promise.all(
         dto.content.map(async (content, i) => {
           const parsedContent = JSON.parse(content);
-          const image = images[`order${i + 1}`]
-            ? `images/multilink/${user.id}/${dto.name}/${images[`order${i + 1}`][0].filename}`
+          const imageRawData = images[`order${i + 1}`]
+            ? (images[`order${i + 1}`][0] as Express.Multer.File)
+            : undefined;
+          const image = imageRawData
+            ? {
+                imageType: imageRawData.mimetype,
+                imageName: `order${i + 1}`,
+                imageData: imageRawData.buffer,
+              }
             : undefined;
           const dbreq = image
             ? {
                 ...parsedContent,
-                image,
+                ...image,
                 multilinkId: multilink.id,
               }
             : { ...parsedContent, multilinkId: multilink.id };

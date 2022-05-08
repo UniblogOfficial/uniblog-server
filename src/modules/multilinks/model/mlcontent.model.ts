@@ -16,7 +16,7 @@ interface MLContentCreationAttributes {
 export enum ContentType {
   LINK = 'link',
   TEXT = 'text',
-  PHOTO = 'photo',
+  IMAGE = 'image',
   UNKNOWN = 'unknown',
 }
 
@@ -64,9 +64,20 @@ export class MLContent extends Model<MLContent, MLContentCreationAttributes> {
   @Column({ type: DataType.TEXT })
   text: string;
 
-  @ApiProperty({ example: 'src/img... xz', description: 'Image url if exists' })
+  @ApiProperty({ example: 'image/png', description: 'Image mime type' })
   @Column({ type: DataType.STRING })
-  image: string;
+  imageType: string;
+
+  @ApiProperty({ example: 'order4', description: 'Image name with order number in ML grid' })
+  @Column({ type: DataType.STRING })
+  imageName: string;
+
+  @ApiProperty({
+    example: '<A HUGE STRING OF RANDOM CHARS REPRESENTING IMAGE>',
+    description: 'Image data',
+  })
+  @Column({ type: DataType.BLOB('long') })
+  imageData: string;
 
   @ForeignKey(() => Multilink)
   @Column({

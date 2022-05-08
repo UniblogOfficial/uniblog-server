@@ -12,7 +12,7 @@ import { MulterModule } from '@nestjs/platform-express';
   providers: [MultilinkService],
   imports: [
     MulterModule.register({
-      dest: 'dist/images',
+      // dest: 'dist/images',
     }),
     SequelizeModule.forFeature([Multilink, MLContent]),
     AuthModule,

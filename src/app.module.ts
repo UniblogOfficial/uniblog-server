@@ -18,7 +18,7 @@ import * as path from 'path';
   providers: [],
   imports: [
     ConfigModule.forRoot({ envFilePath: `.${process.env.NODE_ENV}.env`, isGlobal: true }),
-    ServeStaticModule.forRoot({ rootPath: path.resolve(__dirname, 'static') }),
+    // ServeStaticModule.forRoot({ rootPath: path.resolve(__dirname, 'static') }),
     DatabaseModule,
     UserModule,
     RoleModule,

@@ -23,6 +23,19 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateMLDto } from './dto/create-ml.dto';
 import { diskStorage } from 'multer';
 
+export type TImagesFormData = {
+  order1?: Express.Multer.File[];
+  order2?: Express.Multer.File[];
+  order3?: Express.Multer.File[];
+  order4?: Express.Multer.File[];
+  order5?: Express.Multer.File[];
+  order6?: Express.Multer.File[];
+  order7?: Express.Multer.File[];
+  order8?: Express.Multer.File[];
+  order9?: Express.Multer.File[];
+  order10?: Express.Multer.File[];
+};
+
 @ApiTags('Multilink')
 @Controller('multilink')
 export class MultilinkController {
@@ -63,7 +76,7 @@ export class MultilinkController {
             );
           }
         },
-        storage: diskStorage({
+        /* storage: diskStorage({
           // Destination storage path details
           destination: (req: any, file: any, cb: any) => {
             const uploadPath = `dist/static/images/multilink/${req.user.id}/${req.body.name}`;
@@ -77,7 +90,7 @@ export class MultilinkController {
           filename: (req: any, file: any, cb: any) => {
             cb(null, `${file.fieldname}.${file.mimetype.split('/')[1]}`);
           },
-        }),
+        }), */
       },
     ),
   )
@@ -85,18 +98,7 @@ export class MultilinkController {
     @Req() request,
     @Body() dto: CreateMLDto,
     @UploadedFiles()
-    images: {
-      order1?: Express.Multer.File[];
-      order2?: Express.Multer.File[];
-      order3?: Express.Multer.File[];
-      order4?: Express.Multer.File[];
-      order5?: Express.Multer.File[];
-      order6?: Express.Multer.File[];
-      order7?: Express.Multer.File[];
-      order8?: Express.Multer.File[];
-      order9?: Express.Multer.File[];
-      order10?: Express.Multer.File[];
-    },
+    images: TImagesFormData,
   ) {
     return this.multilinkService.createMultilink(request.user, dto, images);
   }
