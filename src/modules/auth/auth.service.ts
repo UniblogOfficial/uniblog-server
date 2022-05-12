@@ -27,6 +27,7 @@ export class AuthService {
     if (user) {
       return { data: user };
     }
+    throw new HttpException('Token expired or such user not exists', HttpStatus.NOT_FOUND);
   }
 
   async login(dto: LoginDto) {
