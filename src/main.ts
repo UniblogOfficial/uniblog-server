@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const whitelist = [
   'https://uniblog-online.netlify.app',
+  'https://uniblog-server.herokuapp.com',
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:3002',
