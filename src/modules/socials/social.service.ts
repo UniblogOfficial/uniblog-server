@@ -11,8 +11,6 @@ import { lastValueFrom, map, Observable } from 'rxjs';
 import { BindSocialVkDto } from './dto/bind-social.dto';
 import { Social } from './social.model';
 
-const vktoken = '';
-
 @Injectable()
 export class SocialService {
   constructor(
@@ -25,7 +23,7 @@ export class SocialService {
     try {
       authData = await this.getVkAuthData(dto.code);
       authData = {
-        userVkId: authData.user_id,
+        socialUserId: authData.user_id,
         accessToken: authData.access_token,
         expiresIn: authData.expires_in,
         email: authData.email ?? null,
@@ -35,8 +33,8 @@ export class SocialService {
     }
     console.log(authData);
 
-    const { userVkId, accessToken, expiresIn } = authData;
-    const account = await this.getAccountByVkUserId(userVkId);
+    const { socialUserId, accessToken, expiresIn } = authData;
+    const account = await this.getAccountBySocialUserId(socialUserId);
     if (account) {
       throw new HttpException('Account already have bound', HttpStatus.BAD_REQUEST);
     }
@@ -44,10 +42,10 @@ export class SocialService {
     const social = await this.socialRepository.create({
       name: 'vk',
       accessToken,
-      userVkId,
+      socialUserId,
       userId: dto.userId,
     });
-    const VkData = await this.getVkUserData(userVkId, accessToken);
+    const VkData = await this.getSocialUserData(socialUserId, accessToken);
     return VkData;
   }
 
@@ -72,7 +70,7 @@ export class SocialService {
     return data;
   }
 
-  private async getVkUserData(
+  private async getSocialUserData(
     userVkId: number,
     token: string,
   ): Promise<Observable<AxiosResponse<any, any>>> {
@@ -91,13 +89,13 @@ export class SocialService {
     return data;
   }
 
-  private getAccountByVkUserId(userVkId: number) {
-    const account = this.socialRepository.findOne({ where: { userVkId } });
+  private async getAccountBySocialUserId(socialUserId: string) {
+    const account = await this.socialRepository.findOne({ where: { socialUserId } });
     return account;
   }
 
-  getAccountByUserId(userId: number) {
-    const account = this.socialRepository.findOne({ where: { userId } });
+  async getAccountByUserId(userId: number) {
+    const account = await this.socialRepository.findOne({ where: { userId } });
     return account;
   }
 }

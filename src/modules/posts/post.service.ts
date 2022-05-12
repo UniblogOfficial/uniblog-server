@@ -42,7 +42,7 @@ export class PostService {
         .post(`https://api.vk.com/method/wall.post`, {
           params: {
             access_token: userVk.accessToken,
-            owner_id: userVk.userVkId,
+            owner_id: userVk.socialUserId,
             message: 'Posted via Uniblog',
             attachments: 'https://prnt.sc/umipVPCnvviL',
             v: '5.131',

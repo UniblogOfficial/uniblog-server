@@ -1,3 +1,4 @@
+import { TUserTokenData } from './types/index';
 import * as bcrypt from 'bcryptjs';
 import { UserService } from '../users/user.service';
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
@@ -18,10 +19,10 @@ export class AuthService {
     const hashPassword = await bcrypt.hash(userDto.password, 5);
     const user = await this.userService.createUser({ ...userDto, password: hashPassword });
     const token = this.generateToken(user);
-    return { data: user, auth: { token } };
+    return { data: user, auth: { token }, message: 'User created' };
   }
 
-  async me(userTokenData) {
+  async me(userTokenData: TUserTokenData) {
     const user = await this.userService.getUserById(userTokenData.id);
     if (user) {
       return { data: user };

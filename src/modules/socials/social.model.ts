@@ -5,7 +5,7 @@ import { User } from '../users/user.model';
 interface SocialCreationAttributes {
   name: string;
   accessToken: string;
-  userVkId: number;
+  socialUserId: string;
   userId: number;
 }
 
@@ -20,8 +20,8 @@ export class Social extends Model<Social, SocialCreationAttributes> {
   name: string;
 
   @ApiProperty({ example: '10204223', description: 'Social network user ID' })
-  @Column({ type: DataType.INTEGER, unique: true, allowNull: false })
-  userVkId: number;
+  @Column({ type: DataType.STRING, unique: true, allowNull: false })
+  socialUserId: string;
 
   @ApiProperty({ example: '3ff3fwfs4Wvy', description: 'Social network access token' })
   @Column({ type: DataType.STRING })
