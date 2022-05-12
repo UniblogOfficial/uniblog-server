@@ -5,11 +5,13 @@ import {
   DataType,
   ForeignKey,
   HasMany,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { User } from '../../users/user.model';
 import { MLContent } from './mlcontent.model';
+import { MLLogo } from './mllogo.model';
 
 interface MultilinkCreationAttributes {
   name: string;
@@ -39,8 +41,15 @@ export class Multilink extends Model<Multilink, MultilinkCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   background: string;
 
+  @HasOne(() => MLLogo)
+  logo: MLLogo;
+
   @HasMany(() => MLContent)
   content: MLContent[];
+
+  @ApiProperty({ example: '69', description: 'ML customer clicks count' })
+  @Column({ type: DataType.INTEGER })
+  clickCount: number;
 
   @ForeignKey(() => User)
   @Column({

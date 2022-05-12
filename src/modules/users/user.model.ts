@@ -1,14 +1,21 @@
 import { UserRole } from '../roles/user-role.model';
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsToMany, Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsToMany,
+  Column,
+  DataType,
+  HasMany,
+  HasOne,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import { Role } from '../roles/role.model';
 import { Post } from '../posts/post.model';
 import { Social } from '../socials/social.model';
+import { Avatar } from './model/avatar.model';
 
 interface UserCreationAttributes {
   name: string;
-  vk_id?: number;
-  youtube_id?: string;
 }
 
 @Table({ tableName: 'users' })
@@ -43,14 +50,8 @@ export class User extends Model<User, UserCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: true })
   banReason: string;
 
-  //
-  @ApiProperty({ example: '129210302', description: 'VK user ID' })
-  @Column({ type: DataType.INTEGER, unique: true, allowNull: true })
-  vk_id: number;
-
-  @ApiProperty({ example: '43hkH43kf', description: 'Youtube user ID' })
-  @Column({ type: DataType.STRING, unique: true, allowNull: true })
-  youtube_id: string;
+  @HasOne(() => Avatar)
+  avatar: Avatar;
 
   @HasMany(() => Social)
   socials: Social[];

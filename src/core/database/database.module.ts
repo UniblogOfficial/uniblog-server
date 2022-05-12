@@ -15,6 +15,8 @@ import { Post } from 'src/modules/posts/post.model';
 import { Social } from 'src/modules/socials/social.model';
 import { Multilink } from 'src/modules/multilinks/model/multilink.model';
 import { MLContent } from 'src/modules/multilinks/model/mlcontent.model';
+import { MLLogo } from 'src/modules/multilinks/model/mllogo.model';
+import { Avatar } from 'src/modules/users/model/avatar.model';
 
 const db = url2obj(process.env.DATABASE_URL);
 
@@ -37,7 +39,7 @@ const db = url2obj(process.env.DATABASE_URL);
           rejectUnauthorized: false,
         },
       },
-      models: [User, Role, UserRole, Post, Social, Multilink, MLContent],
+      models: [User, Role, UserRole, Avatar, Post, Social, Multilink, MLContent, MLLogo],
       autoLoadModels: true,
     }),
   ],

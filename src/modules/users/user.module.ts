@@ -1,3 +1,4 @@
+import { Avatar } from './model/avatar.model';
 import { AuthModule } from './../auth/auth.module';
 import { RoleModule } from '../roles/role.module';
 import { UserRole } from '../roles/user-role.model';
@@ -13,7 +14,7 @@ import { Post } from '../posts/post.model';
   controllers: [UserController],
   providers: [UserService],
   imports: [
-    SequelizeModule.forFeature([User, Role, UserRole, Post]),
+    SequelizeModule.forFeature([User, Role, UserRole, Avatar, Post]),
     RoleModule,
     forwardRef(() => AuthModule),
   ],

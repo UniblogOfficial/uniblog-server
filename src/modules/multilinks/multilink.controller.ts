@@ -15,26 +15,12 @@ import {
 import { Express } from 'express';
 
 import * as path from 'path';
-import * as fs from 'fs';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Multilink } from './model/multilink.model';
 import { MultilinkService } from './multilink.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateMLDto } from './dto/create-ml.dto';
-import { diskStorage } from 'multer';
-
-export type TImagesFormData = {
-  order1?: Express.Multer.File[];
-  order2?: Express.Multer.File[];
-  order3?: Express.Multer.File[];
-  order4?: Express.Multer.File[];
-  order5?: Express.Multer.File[];
-  order6?: Express.Multer.File[];
-  order7?: Express.Multer.File[];
-  order8?: Express.Multer.File[];
-  order9?: Express.Multer.File[];
-  order10?: Express.Multer.File[];
-};
+import { TImagesFormData } from '../files/file.service';
 
 @ApiTags('Multilink')
 @Controller('multilink')
@@ -42,12 +28,14 @@ export class MultilinkController {
   constructor(private multilinkService: MultilinkService) {}
 
   @ApiOperation({ summary: 'Multilink creating' })
-  @ApiResponse({ status: 200, type: [Multilink] })
+  @ApiConsumes('multipart/form-data')
+  @ApiResponse({ status: 200, type: Multilink })
   @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileFieldsInterceptor(
       [
+        { name: 'order0', maxCount: 1 },
         { name: 'order1', maxCount: 1 },
         { name: 'order2', maxCount: 1 },
         { name: 'order3', maxCount: 1 },
@@ -57,7 +45,7 @@ export class MultilinkController {
         { name: 'order7', maxCount: 1 },
         { name: 'order8', maxCount: 1 },
         { name: 'order9', maxCount: 1 },
-        { name: 'order10', maxCount: 1 },
+        { name: 'logo', maxCount: 1 },
       ],
       {
         limits: {
@@ -103,11 +91,19 @@ export class MultilinkController {
     return this.multilinkService.createMultilink(request.user, dto, images);
   }
 
-  @ApiOperation({ summary: 'All multilinks fetching' })
-  @ApiResponse({ status: 200, type: [Multilink] })
+  @ApiOperation({ summary: 'Multilink fetching (public)' })
+  @ApiResponse({ status: 200, type: Multilink })
   @Get('/:name')
-  get(@Param('name') name: string) {
+  getOne(@Param('name') name: string) {
     return this.multilinkService.getMLByName(name);
+  }
+
+  @ApiOperation({ summary: 'All user multilinks fetching' })
+  @ApiResponse({ status: 200, type: Multilink })
+  @UseGuards(JwtAuthGuard)
+  @Get('/all')
+  getAll(@Req() request) {
+    return this.multilinkService.getMLsByUserId(request.user);
   }
 }
 

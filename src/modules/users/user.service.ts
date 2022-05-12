@@ -1,3 +1,5 @@
+import { Avatar } from './model/avatar.model';
+import { TUserTokenData } from './../auth/types/index';
 import { BanUserDto } from './dto/ban-user.dto';
 import { AddRoleDto } from './dto/add-role.dto';
 import { RoleService } from '../roles/role.service';
@@ -5,11 +7,13 @@ import { User } from './user.model';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user.dto';
+import { TImageFormData } from '../files/file.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User) private userRepository: typeof User,
+    @InjectModel(Avatar) private avatarRepository: typeof Avatar,
     private roleService: RoleService,
   ) {}
 
@@ -20,6 +24,30 @@ export class UserService {
       await user.$set('roles', [role.id]);
       user.roles = [role];
       return user;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async updateAvatar(userTokenData: TUserTokenData, image: TImageFormData) {
+    try {
+      const { id } = await this.userRepository.findByPk(userTokenData.id);
+      let avatar = await this.avatarRepository.findOne({ where: { userId: id } });
+      const avatarData = {
+        userId: id,
+        imageType: image.image[0].mimetype,
+        imageData: image.image[0].buffer,
+      };
+      if (!avatar) {
+        avatar = await this.avatarRepository.create(avatarData);
+      } else {
+        await this.avatarRepository.update(avatarData, {
+          where: { userId: id },
+          returning: true,
+        });
+      }
+      const user = await this.getUserById(id);
+      return { data: user, message: 'Avatar updated' };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -63,14 +91,6 @@ export class UserService {
 
   async getUserByName(name: string) {
     const user = await this.userRepository.findOne({ where: { name }, include: { all: true } });
-    return user;
-  }
-
-  async getUserByVkUserId(userId: string) {
-    const user = await this.userRepository.findOne({
-      where: { vk_id: userId },
-      include: { all: true },
-    });
     return user;
   }
 }

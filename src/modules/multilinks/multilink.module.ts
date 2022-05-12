@@ -6,6 +6,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { MultilinkController } from './multilink.controller';
 import { MultilinkService } from './multilink.service';
 import { MulterModule } from '@nestjs/platform-express';
+import { MLLogo } from './model/mllogo.model';
 
 @Module({
   controllers: [MultilinkController],
@@ -14,7 +15,7 @@ import { MulterModule } from '@nestjs/platform-express';
     MulterModule.register({
       // dest: 'dist/images',
     }),
-    SequelizeModule.forFeature([Multilink, MLContent]),
+    SequelizeModule.forFeature([Multilink, MLContent, MLLogo]),
     AuthModule,
   ],
 })
