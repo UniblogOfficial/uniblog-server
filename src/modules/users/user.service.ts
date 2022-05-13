@@ -7,7 +7,7 @@ import { User } from './user.model';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user.dto';
-import { TImageFormData } from '../files/file.service';
+import { TUserAvatarFormData } from '../files/file.service';
 
 @Injectable()
 export class UserService {
@@ -29,14 +29,15 @@ export class UserService {
     }
   }
 
-  async updateAvatar(userTokenData: TUserTokenData, image: TImageFormData) {
+  async updateAvatar(userTokenData: TUserTokenData, image: TUserAvatarFormData) {
     try {
       const { id } = await this.userRepository.findByPk(userTokenData.id);
       let avatar = await this.avatarRepository.findOne({ where: { userId: id } });
+      console.log(image);
       const avatarData = {
         userId: id,
-        imageType: image.image[0].mimetype,
-        imageData: image.image[0].buffer,
+        imageType: image.avatar[0].mimetype,
+        imageData: image.avatar[0].buffer,
       };
       if (!avatar) {
         avatar = await this.avatarRepository.create(avatarData);

@@ -4,7 +4,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateMLDto } from './dto/create-ml.dto';
 import { MLLogo } from './model/mllogo.model';
-import { TImagesFormData } from '../files/file.service';
+import { TMLImagesFormData } from '../files/file.service';
 
 @Injectable()
 export class MultilinkService {
@@ -14,7 +14,7 @@ export class MultilinkService {
     @InjectModel(MLLogo) private mlLogoRepository: typeof MLLogo,
   ) {}
 
-  async createMultilink(user, dto: CreateMLDto, images: TImagesFormData) {
+  async createMultilink(user, dto: CreateMLDto, images: TMLImagesFormData) {
     try {
       let multilink = await this.multilinkRepository.findOne({ where: { userId: user.id } });
       // <multilink root data>

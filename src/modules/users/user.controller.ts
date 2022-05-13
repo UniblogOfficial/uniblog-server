@@ -25,7 +25,7 @@ import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger
 import { User } from './user.model';
 import { Roles } from '../auth/roles-auth.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { TImageFormData } from '../files/file.service';
+import { TUserAvatarFormData } from '../files/file.service';
 
 @ApiTags('User')
 @Controller('user')
@@ -70,7 +70,7 @@ export class UserController {
   updateAvatar(
     @Req() request,
     @UploadedFiles()
-    image: TImageFormData,
+    image: TUserAvatarFormData,
   ) {
     return this.userService.updateAvatar(request.user as TUserTokenData, image);
   }

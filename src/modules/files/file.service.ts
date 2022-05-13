@@ -3,11 +3,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as uuid from 'uuid';
 
-export type TImageFormData = {
-  image: Express.Multer.File[];
+export type TUserAvatarFormData = {
+  avatar: Express.Multer.File[];
 };
 
-export type TImagesFormData = {
+export type TMLImagesFormData = {
   order0?: Express.Multer.File[];
   order1?: Express.Multer.File[];
   order2?: Express.Multer.File[];

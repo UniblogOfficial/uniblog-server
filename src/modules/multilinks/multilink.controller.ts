@@ -20,7 +20,7 @@ import { Multilink } from './model/multilink.model';
 import { MultilinkService } from './multilink.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateMLDto } from './dto/create-ml.dto';
-import { TImagesFormData } from '../files/file.service';
+import { TMLImagesFormData } from '../files/file.service';
 
 @ApiTags('Multilink')
 @Controller('multilink')
@@ -86,7 +86,7 @@ export class MultilinkController {
     @Req() request,
     @Body() dto: CreateMLDto,
     @UploadedFiles()
-    images: TImagesFormData,
+    images: TMLImagesFormData,
   ) {
     return this.multilinkService.createMultilink(request.user, dto, images);
   }
