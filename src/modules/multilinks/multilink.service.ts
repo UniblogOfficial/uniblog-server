@@ -5,6 +5,13 @@ import { InjectModel } from '@nestjs/sequelize';
 import { CreateMLDto } from './dto/create-ml.dto';
 import { MLLogo } from './model/mllogo.model';
 import { TMLImagesFormData } from '../files/file.service';
+import { Avatar } from '../users/model/avatar.model';
+
+type TImageData = {
+  imageType: string;
+  imageName: string;
+  imageData: string | Buffer;
+};
 
 @Injectable()
 export class MultilinkService {
@@ -12,6 +19,7 @@ export class MultilinkService {
     @InjectModel(Multilink) private multilinkRepository: typeof Multilink,
     @InjectModel(MLContent) private mlContentRepository: typeof MLContent,
     @InjectModel(MLLogo) private mlLogoRepository: typeof MLLogo,
+    @InjectModel(Avatar) private avatarRepository: typeof Avatar,
   ) {}
 
   async createMultilink(user, dto: CreateMLDto, images: TMLImagesFormData) {
@@ -39,12 +47,23 @@ export class MultilinkService {
       // <multilink logo>
       await this.mlLogoRepository.destroy({ where: { multilinkId: multilink.id } });
       let logo = null;
-      if (images.logo.length) {
+      if (images.logo) {
         logo = await this.mlLogoRepository.create({
           multilinkId: multilink.id,
           imageType: images.logo[0].mimetype,
           imageData: images.logo[0].buffer,
         });
+      } else {
+        const avatar = await this.avatarRepository.findOne({
+          where: { userId: user.id },
+        });
+        if (avatar) {
+          logo = await this.mlLogoRepository.create({
+            multilinkId: multilink.id,
+            imageType: avatar.imageType,
+            imageData: avatar.imageData,
+          });
+        }
       }
       // </multilink logo>
       // <multilink content>
@@ -55,7 +74,7 @@ export class MultilinkService {
           const imageRawData = images[`order${i}`]
             ? (images[`order${i}`][0] as Express.Multer.File)
             : undefined;
-          const image = imageRawData
+          const image: TImageData | undefined = imageRawData
             ? {
                 imageType: imageRawData.mimetype,
                 imageName: `order${i}`,

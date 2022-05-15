@@ -1,3 +1,5 @@
+import { Avatar } from 'src/modules/users/model/avatar.model';
+import { UserModule } from './../users/user.module';
 import { AuthModule } from './../auth/auth.module';
 import { MLContent } from './model/mlcontent.model';
 import { Multilink } from './model/multilink.model';
@@ -15,8 +17,9 @@ import { MLLogo } from './model/mllogo.model';
     MulterModule.register({
       // dest: 'dist/images',
     }),
-    SequelizeModule.forFeature([Multilink, MLContent, MLLogo]),
+    SequelizeModule.forFeature([Multilink, MLContent, MLLogo, Avatar]),
     AuthModule,
+    UserModule,
   ],
 })
 export class MultilinkModule {}

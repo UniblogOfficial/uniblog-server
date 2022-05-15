@@ -52,7 +52,7 @@ export class MultilinkController {
           fileSize: 1024 * 1000, // is it 1mb?
         },
         fileFilter: (req: any, file: any, cb: any) => {
-          if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
+          if (file.mimetype.match(/\/(jpg|jpeg|png|gif|bmp)$/)) {
             cb(null, true);
           } else {
             cb(
