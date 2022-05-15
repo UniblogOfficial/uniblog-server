@@ -24,7 +24,9 @@ export class MultilinkService {
 
   async createMultilink(user, dto: CreateMLDto, images: TMLImagesFormData) {
     try {
-      let multilink = await this.multilinkRepository.findOne({ where: { userId: user.id } });
+      let multilink = await this.multilinkRepository.findOne({
+        where: { userId: user.id, name: dto.name },
+      });
       // <multilink root data>
       const mlRootData = {
         name: dto.name,
