@@ -76,19 +76,19 @@ export class MultilinkController {
     return this.multilinkService.createMultilink(request.user, dto, images.images);
   }
 
-  @ApiOperation({ summary: 'Multilink fetching (public)' })
-  @ApiResponse({ status: 200, type: Multilink })
-  @Get('/:name')
-  getOne(@Param('name') name: string) {
-    return this.multilinkService.getMLByName(name);
-  }
-
   @ApiOperation({ summary: 'All user multilinks fetching' })
   @ApiResponse({ status: 200, type: Multilink })
   @UseGuards(JwtAuthGuard)
   @Get('/all')
   getAll(@Req() request) {
     return this.multilinkService.getMLsByUserId(request.user);
+  }
+
+  @ApiOperation({ summary: 'Multilink fetching (public)' })
+  @ApiResponse({ status: 200, type: Multilink })
+  @Get('/:name')
+  getOne(@Param('name') name: string) {
+    return this.multilinkService.getMLByName(name);
   }
 }
 
