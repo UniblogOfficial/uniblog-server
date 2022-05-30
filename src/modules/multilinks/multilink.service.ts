@@ -1,10 +1,17 @@
-import { MLContent } from './model/mlcontent.model';
-import { Multilink } from './model/multilink.model';
+import { MLImageData } from './model/images/ml-imagedata.model';
+import { MLShopCell } from './model/ml-shop-cell.model';
+import { MLShop } from './model/ml-shop.model';
+import { MLVideo } from './model/ml-video.model';
+import { MLLink } from './model/ml-link.model';
+import { MLImageText } from './model/ml-imagetext.model';
+import { MLImage } from './model/ml-image.model';
+import { MLSocial } from './model/ml-social.model';
+import { MLText } from './model/ml-text.model';
+import { MLContentType, Multilink } from './model/multilink.model';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateMLDto } from './dto/create-ml.dto';
-import { MLLogo } from './model/mllogo.model';
-import { TMLImagesFormData } from '../files/file.service';
+import { MLLogo } from './model/ml-logo.model';
 import { Avatar } from '../users/model/avatar.model';
 
 type TImageData = {
@@ -17,84 +24,207 @@ type TImageData = {
 export class MultilinkService {
   constructor(
     @InjectModel(Multilink) private multilinkRepository: typeof Multilink,
-    @InjectModel(MLContent) private mlContentRepository: typeof MLContent,
+    //
     @InjectModel(MLLogo) private mlLogoRepository: typeof MLLogo,
+    @InjectModel(MLText) private mlTextRepository: typeof MLText,
+    @InjectModel(MLSocial) private mlSocialRepository: typeof MLSocial,
+    @InjectModel(MLImage) private mlImageRepository: typeof MLImage,
+    @InjectModel(MLImageText) private mlImageTextRepository: typeof MLImageText,
+    @InjectModel(MLLink) private mlLinkRepository: typeof MLLink,
+    @InjectModel(MLVideo) private mlVideoRepository: typeof MLVideo,
+    @InjectModel(MLShop) private mlShopRepository: typeof MLShop,
+    //
+    @InjectModel(MLShopCell) private mlShopCellRepository: typeof MLShopCell,
+    //
+    @InjectModel(MLImageData) private mlImageDataRepository: typeof MLImageData,
     @InjectModel(Avatar) private avatarRepository: typeof Avatar,
   ) {}
 
-  async createMultilink(user, dto: CreateMLDto, images: TMLImagesFormData) {
+  async createMultilink(user, dto: CreateMLDto, images: Express.Multer.File[]) {
+    const { logoSet, textSet, linkSet, socialSet, imageSet, imageTextSet, shopSet, videoSet } = dto;
+    const parsedSets = {
+      logoSet: JSON.parse(logoSet),
+      textSet: JSON.parse(textSet),
+      linkSet: JSON.parse(linkSet),
+      socialSet: JSON.parse(socialSet),
+      imageSet: JSON.parse(imageSet),
+      imageTextSet: JSON.parse(imageTextSet),
+      shopSet: JSON.parse(shopSet),
+      videoSet: JSON.parse(videoSet),
+    };
+
     try {
-      let multilink = await this.multilinkRepository.findOne({
+      /* let multilink = await this.multilinkRepository.findOne({
         where: { userId: user.id, name: dto.name },
+      }); */
+      await this.multilinkRepository.destroy({
+        where: { userId: user.id, name: dto.name },
+        force: true,
       });
       // <multilink root data>
       const mlRootData = {
         name: dto.name,
-        template: dto.template.map(t => +t),
         background: dto.background,
+        contentSet: JSON.parse(dto.contentSet),
       };
 
-      if (!multilink) {
-        multilink = await this.multilinkRepository.create({
-          userId: user.id,
-          ...mlRootData,
-        });
-      } else {
-        await this.multilinkRepository.update(
-          { ...mlRootData },
-          { where: { id: multilink.id }, returning: true },
-        );
-      }
+      const multilink = await this.multilinkRepository.create({
+        userId: user.id,
+        ...mlRootData,
+      });
+      const multilinkId = multilink.id;
+      const logoOrders = [];
       // </multilink root data>
-      // <multilink logo>
-      await this.mlLogoRepository.destroy({ where: { multilinkId: multilink.id } });
-      let logo = null;
-      if (images.logo) {
-        logo = await this.mlLogoRepository.create({
-          multilinkId: multilink.id,
-          imageType: images.logo[0].mimetype,
-          imageData: images.logo[0].buffer,
+      // <multilink content>
+      if (parsedSets.textSet.length) {
+        parsedSets.textSet.map(async block => {
+          await this.mlTextRepository.create({ multilinkId, ...block });
         });
-      } else {
+      }
+      if (parsedSets.logoSet.length) {
+        parsedSets.logoSet.map(async block => {
+          logoOrders.push(block.order);
+          await this.mlLogoRepository.create({ multilinkId, ...block });
+        });
+      }
+      if (parsedSets.socialSet.length) {
+        parsedSets.socialSet.map(async block => {
+          await this.mlSocialRepository.create({ multilinkId, ...block });
+        });
+      }
+      if (parsedSets.linkSet.length) {
+        parsedSets.linkSet.map(async block => {
+          await this.mlLinkRepository.create({ multilinkId, ...block });
+        });
+      }
+      if (parsedSets.imageSet.length) {
+        parsedSets.imageSet.map(async block => {
+          await this.mlImageRepository.create({ multilinkId, ...block });
+        });
+      }
+      if (parsedSets.imageTextSet.length) {
+        parsedSets.imageTextSet.map(async block => {
+          await this.mlImageTextRepository.create({ multilinkId, ...block });
+        });
+      }
+      if (parsedSets.videoSet.length) {
+        parsedSets.videoSet.map(async block => {
+          await this.mlVideoRepository.create({ multilinkId, ...block });
+        });
+      }
+      if (parsedSets.shopSet.length) {
+        parsedSets.shopSet.map(async block => {
+          const shopBlock = await this.mlShopRepository.create({ multilinkId, ...block });
+          await Promise.all(
+            block.cells.forEach(async cell => {
+              await this.mlShopCellRepository.create({ blockId: shopBlock.id, ...cell });
+            }),
+          );
+        });
+      }
+      // </multilink content>
+      // <multilink images>
+      let logo = null;
+      await Promise.all(
+        images.map(async file => {
+          const { order, type, suborder } = {
+            order: +file.originalname.split('.')[0].split('_')[0],
+            type: file.originalname.split('.')[0].split('_')[1],
+            suborder: +file.originalname.split('.')[0].split('_')[2],
+          };
+
+          switch (type) {
+            case 'logo':
+              if (suborder === 1) {
+                logo = await this.mlImageDataRepository.create({
+                  multilinkId,
+                  type: MLContentType.LOGO,
+                  order,
+                  suborder,
+                  imageName: file.originalname.split('.')[0],
+                  imageType: file.mimetype,
+                  imageData: file.buffer,
+                });
+                return logo;
+              }
+              // banner
+              if (suborder === 2) {
+                return await this.mlImageDataRepository.create({
+                  multilinkId,
+                  type: MLContentType.LOGO,
+                  order,
+                  suborder,
+                  imageName: file.originalname.split('.')[0],
+                  imageType: file.mimetype,
+                  imageData: file.buffer,
+                });
+              }
+            case 'image':
+              return await this.mlImageDataRepository.create({
+                multilinkId,
+                type: MLContentType.IMAGE,
+                order,
+                suborder,
+                imageName: file.originalname.split('.')[0],
+                imageType: file.mimetype,
+                imageData: file.buffer,
+              });
+            case 'imagetext':
+              return await this.mlImageDataRepository.create({
+                multilinkId,
+                type: MLContentType.IMAGETEXT,
+                order,
+                suborder,
+                imageName: file.originalname.split('.')[0],
+                imageType: file.mimetype,
+                imageData: file.buffer,
+              });
+            case 'shop':
+              return await this.mlImageDataRepository.create({
+                multilinkId,
+                type: MLContentType.SHOP,
+                order,
+                suborder,
+                imageName: file.originalname.split('.')[0],
+                imageType: file.mimetype,
+                imageData: file.buffer,
+              });
+          }
+          if (file.originalname.split('.')[0] === 'backgroundImage') {
+            return await this.mlImageDataRepository.create({
+              multilinkId,
+              type: 'backgroundImage',
+              order: 9999,
+              suborder: 0,
+              imageName: file.originalname.split('.')[0],
+              imageType: file.mimetype,
+              imageData: file.buffer,
+            });
+          }
+        }),
+      );
+      if (!logo && logoOrders.length) {
         const avatar = await this.avatarRepository.findOne({
           where: { userId: user.id },
         });
         if (avatar) {
-          logo = await this.mlLogoRepository.create({
-            multilinkId: multilink.id,
-            imageType: avatar.imageType,
-            imageData: avatar.imageData,
+          logoOrders.forEach(async order => {
+            await this.mlImageDataRepository.create({
+              multilinkId: multilink.id,
+              type: MLContentType.LOGO,
+              order,
+              suborder: 1,
+              imageType: avatar.imageType,
+              imageData: avatar.imageData,
+            });
           });
         }
       }
-      // </multilink logo>
-      // <multilink content>
-      await this.mlContentRepository.destroy({ where: { multilinkId: multilink.id } });
-      const content = await Promise.all(
-        dto.content.map(async (content, i) => {
-          const parsedContent = JSON.parse(content);
-          const imageRawData = images[`order${i}`]
-            ? (images[`order${i}`][0] as Express.Multer.File)
-            : undefined;
-          const image: TImageData | undefined = imageRawData
-            ? {
-                imageType: imageRawData.mimetype,
-                imageName: `order${i}`,
-                imageData: imageRawData.buffer,
-              }
-            : undefined;
-          const dbreq = image
-            ? {
-                ...parsedContent,
-                ...image,
-                multilinkId: multilink.id,
-              }
-            : { ...parsedContent, multilinkId: multilink.id };
-          return await this.mlContentRepository.create(dbreq);
-        }),
-      );
-      // </multilink content>
-      return { data: { multilink, content, logo }, message: 'Multilink created' };
+      // </multilink images>
+      const createdML = await this.multilinkRepository.findByPk(multilink.id, {
+        include: { all: true },
+      });
+      return { data: { multilink: createdML }, message: 'Multilink created' };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

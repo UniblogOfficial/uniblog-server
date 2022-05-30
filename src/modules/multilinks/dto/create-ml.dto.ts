@@ -1,33 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ContentType, SocialNetwork } from '../model/mlcontent.model';
 
 export class CreateMLDto {
   @ApiProperty({ example: 'VasyaRaper', description: 'Unique(!) ML name' })
   readonly name: string;
 
-  @ApiProperty({
-    description: 'Array that representing ML template',
-    type: [String],
-    isArray: true,
-  })
-  readonly template: string[];
-
   @ApiProperty({ example: '#fff', description: 'Must be CSS background value' })
   readonly background: string;
 
   @ApiProperty({
-    description: 'Array that representing ML content',
-    type: [String],
-    isArray: true,
+    description: 'Array as string that representing ML content',
   })
-  readonly content: string[]; //TContentDTO[]
-}
+  readonly contentSet: string; //TContentDTO[]
 
-type TContentDTO = {
-  order: number;
-  type: ContentType;
-  link?: string;
-  linkType?: SocialNetwork | 'third-party';
-  title?: string;
-  text?: string;
-};
+  readonly textSet: string;
+  readonly linkSet: string;
+  readonly socialSet: string;
+  readonly logoSet: string;
+  readonly imageSet: string;
+  readonly imageTextSet: string;
+  readonly videoSet: string;
+  readonly shopSet: string;
+}

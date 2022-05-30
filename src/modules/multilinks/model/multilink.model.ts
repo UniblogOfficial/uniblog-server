@@ -1,3 +1,4 @@
+import { MLImageData } from './images/ml-imagedata.model';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   BelongsTo,
@@ -5,22 +6,39 @@ import {
   DataType,
   ForeignKey,
   HasMany,
-  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { User } from '../../users/user.model';
-import { MLContent } from './mlcontent.model';
-import { MLLogo } from './mllogo.model';
+import { MLLogo } from './ml-logo.model';
+import { MLLink } from './ml-link.model';
+import { MLSocial } from './ml-social.model';
+import { MLText } from './ml-text.model';
+import { MLVideo } from './ml-video.model';
+import { MLImage } from './ml-image.model';
+import { MLImageText } from './ml-imagetext.model';
+import { MLShop } from './ml-shop.model';
 
 interface MultilinkCreationAttributes {
   name: string;
-  template: number[];
   background: string;
+  contentSet: MLContentType[];
   userId: number;
 }
 
-@Table({ tableName: 'multilinks' })
+export enum MLContentType {
+  TEXT = 'text',
+  LINK = 'link',
+  LOGO = 'logo',
+  SOCIAL = 'social',
+  IMAGE = 'image',
+  IMAGETEXT = 'imagetext',
+  VIDEO = 'video',
+  SHOP = 'shop',
+  UNKNOWN = 'unknown',
+}
+
+@Table({ tableName: 'multilinks', paranoid: true })
 export class Multilink extends Model<Multilink, MultilinkCreationAttributes> {
   @ApiProperty({ example: '69', description: 'Unique ML ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
@@ -31,24 +49,45 @@ export class Multilink extends Model<Multilink, MultilinkCreationAttributes> {
   name: string;
 
   @ApiProperty({
-    example: '[50, 25, 12.5, 12.5]',
-    description: 'ML layout template (in parts of height)',
+    example: '[logo, text, image, social]',
+    description: 'ML blocks structure',
   })
-  @Column({ type: DataType.ARRAY(DataType.FLOAT), allowNull: false })
-  template: number[];
+  @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
+  contentSet: MLContentType[];
 
   @ApiProperty({ example: '#ff0', description: 'ML CSS background' })
   @Column({ type: DataType.STRING, allowNull: false })
   background: string;
 
-  @HasOne(() => MLLogo)
-  logo: MLLogo;
+  @HasMany(() => MLLogo)
+  logoSet: MLLogo[];
 
-  @HasMany(() => MLContent)
-  content: MLContent[];
+  @HasMany(() => MLText)
+  textSet: MLText[];
+
+  @HasMany(() => MLLink)
+  linkSet: MLLink[];
+
+  @HasMany(() => MLImage)
+  imageSet: MLImage[];
+
+  @HasMany(() => MLImageText)
+  imageTextSet: MLImageText[];
+
+  @HasMany(() => MLSocial)
+  socialSet: MLSocial[];
+
+  @HasMany(() => MLShop)
+  shopSet: MLShop[];
+
+  @HasMany(() => MLVideo)
+  videoSet: MLVideo[];
+
+  @HasMany(() => MLImageData)
+  images: MLImageData[];
 
   @ApiProperty({ example: '69', description: 'ML customer clicks count' })
-  @Column({ type: DataType.INTEGER })
+  @Column({ type: DataType.INTEGER, defaultValue: 0 })
   clickCount: number;
 
   @ForeignKey(() => User)

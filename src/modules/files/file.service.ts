@@ -8,17 +8,7 @@ export type TUserAvatarFormData = {
 };
 
 export type TMLImagesFormData = {
-  order0?: Express.Multer.File[];
-  order1?: Express.Multer.File[];
-  order2?: Express.Multer.File[];
-  order3?: Express.Multer.File[];
-  order4?: Express.Multer.File[];
-  order5?: Express.Multer.File[];
-  order6?: Express.Multer.File[];
-  order7?: Express.Multer.File[];
-  order8?: Express.Multer.File[];
-  order9?: Express.Multer.File[];
-  logo?: Express.Multer.File[];
+  images: Express.Multer.File[];
 };
 
 @Injectable()

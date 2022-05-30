@@ -33,38 +33,24 @@ export class MultilinkController {
   @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
-    FileFieldsInterceptor(
-      [
-        { name: 'order0', maxCount: 1 },
-        { name: 'order1', maxCount: 1 },
-        { name: 'order2', maxCount: 1 },
-        { name: 'order3', maxCount: 1 },
-        { name: 'order4', maxCount: 1 },
-        { name: 'order5', maxCount: 1 },
-        { name: 'order6', maxCount: 1 },
-        { name: 'order7', maxCount: 1 },
-        { name: 'order8', maxCount: 1 },
-        { name: 'order9', maxCount: 1 },
-        { name: 'logo', maxCount: 1 },
-      ],
-      {
-        limits: {
-          fileSize: 1024 * 1000, // is it 1mb?
-        },
-        fileFilter: (req: any, file: any, cb: any) => {
-          if (file.mimetype.match(/\/(jpg|jpeg|png|gif|bmp)$/)) {
-            cb(null, true);
-          } else {
-            cb(
-              new HttpException(
-                `Unsupported file type ${path.extname(file.originalname)}`,
-                HttpStatus.BAD_REQUEST,
-              ),
-              false,
-            );
-          }
-        },
-        /* storage: diskStorage({
+    FileFieldsInterceptor([{ name: 'images', maxCount: 100 }], {
+      limits: {
+        fileSize: 1024 * 1000, // is it 1mb?
+      },
+      fileFilter: (req: any, file: any, cb: any) => {
+        if (file.mimetype.match(/\/(jpg|jpeg|png|gif|bmp)$/)) {
+          cb(null, true);
+        } else {
+          cb(
+            new HttpException(
+              `Unsupported file type ${path.extname(file.originalname)}`,
+              HttpStatus.BAD_REQUEST,
+            ),
+            false,
+          );
+        }
+      },
+      /* storage: diskStorage({
           // Destination storage path details
           destination: (req: any, file: any, cb: any) => {
             const uploadPath = `dist/static/images/multilink/${req.user.id}/${req.body.name}`;
@@ -79,8 +65,7 @@ export class MultilinkController {
             cb(null, `${file.fieldname}.${file.mimetype.split('/')[1]}`);
           },
         }), */
-      },
-    ),
+    }),
   )
   create(
     @Req() request,
@@ -88,7 +73,7 @@ export class MultilinkController {
     @UploadedFiles()
     images: TMLImagesFormData,
   ) {
-    return this.multilinkService.createMultilink(request.user, dto, images);
+    return this.multilinkService.createMultilink(request.user, dto, images.images);
   }
 
   @ApiOperation({ summary: 'Multilink fetching (public)' })
