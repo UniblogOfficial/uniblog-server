@@ -237,7 +237,8 @@ export class MultilinkService {
         where: { name },
         include: { all: true },
       });
-      multilink.$set('clickCount', multilink.clickCount + 1);
+      multilink.clickCount++;
+      multilink.save();
       return multilink;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
