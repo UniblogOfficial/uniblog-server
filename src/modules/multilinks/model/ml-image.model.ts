@@ -25,14 +25,14 @@ export class MLImage extends Model<MLImage, MLImageCreationAttributes> {
   @Column({ type: DataType.INTEGER, allowNull: false })
   order: number;
 
-  @Column({ type: DataType.ARRAY(DataType.FLOAT) })
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
   padding: number[];
 
-  @Column({ type: DataType.ARRAY(DataType.FLOAT) })
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
   margin: number[];
 
   @ApiProperty({ example: '#ff0', description: 'ML block CSS background' })
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, defaultValue: '#0000' })
   background: string;
 
   @ApiProperty({ example: 'image', description: 'ML content type' })
@@ -44,7 +44,7 @@ export class MLImage extends Model<MLImage, MLImageCreationAttributes> {
   @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
   images: string[];
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, defaultValue: '1fr' })
   grid: string;
 
   @ForeignKey(() => Multilink)

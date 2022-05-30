@@ -29,15 +29,15 @@ export class MLText extends Model<MLText, MLTextCreationAttributes> {
   @Column({ type: DataType.INTEGER, allowNull: false })
   order: number;
 
-  @Column({ type: DataType.ARRAY(DataType.FLOAT) })
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
   padding: number[];
 
-  @Column({ type: DataType.ARRAY(DataType.FLOAT) })
-  margin?: number[];
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
+  margin: number[];
 
   @ApiProperty({ example: '#ff0', description: 'ML block CSS background' })
-  @Column({ type: DataType.STRING })
-  background?: string;
+  @Column({ type: DataType.STRING, defaultValue: '#0000' })
+  background: string;
 
   @ApiProperty({ example: 'text', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
@@ -59,7 +59,7 @@ export class MLText extends Model<MLText, MLTextCreationAttributes> {
   @Column({ type: DataType.FLOAT })
   fontWeight: number;
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, defaultValue: 'left' })
   align: string; // 'right' | 'left' | 'center' | 'justify';
 
   @Column({ type: DataType.STRING })

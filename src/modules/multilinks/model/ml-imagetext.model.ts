@@ -31,14 +31,14 @@ export class MLImageText extends Model<MLImageText, MLImageTextCreationAttribute
   @Column({ type: DataType.INTEGER, allowNull: false })
   order: number;
 
-  @Column({ type: DataType.ARRAY(DataType.FLOAT) })
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
   padding: number[];
 
-  @Column({ type: DataType.ARRAY(DataType.FLOAT) })
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
   margin: number[];
 
   @ApiProperty({ example: '#ff0', description: 'ML block CSS background' })
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, defaultValue: '#0000' })
   background: string;
 
   @ApiProperty({ example: 'imagetext', description: 'ML content type' })
@@ -69,10 +69,10 @@ export class MLImageText extends Model<MLImageText, MLImageTextCreationAttribute
   @Column({ type: DataType.STRING })
   font: string;
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, defaultValue: 'left' })
   hAlign: string; // 'right' | 'left' | 'center' | 'justify';
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, defaultValue: 'center' })
   vAlign: string; // 'top' | 'center' | 'bottom';
 
   @ForeignKey(() => Multilink)

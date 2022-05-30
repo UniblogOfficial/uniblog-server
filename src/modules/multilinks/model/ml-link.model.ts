@@ -33,14 +33,14 @@ export class MLLink extends Model<MLLink, MLLinkCreationAttributes> {
   @Column({ type: DataType.INTEGER, allowNull: false })
   order: number;
 
-  @Column({ type: DataType.ARRAY(DataType.FLOAT) })
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
   padding: number[];
 
-  @Column({ type: DataType.ARRAY(DataType.FLOAT) })
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
   margin: number[];
 
   @ApiProperty({ example: '#ff0', description: 'ML block CSS background' })
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, defaultValue: '#0000' })
   background: string;
 
   @ApiProperty({ example: 'link', description: 'ML content type' })

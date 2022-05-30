@@ -36,14 +36,14 @@ export class MLSocial extends Model<MLSocial, MLSocialCreationAttributes> {
   @Column({ type: DataType.INTEGER, allowNull: false })
   order: number;
 
-  @Column({ type: DataType.ARRAY(DataType.FLOAT) })
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
   padding: number[];
 
-  @Column({ type: DataType.ARRAY(DataType.FLOAT) })
-  margin: number | number[];
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
+  margin: number[];
 
   @ApiProperty({ example: '#ff0', description: 'ML block CSS background' })
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, defaultValue: '#0000' })
   background: string;
 
   @ApiProperty({ example: 'social', description: 'ML content type' })

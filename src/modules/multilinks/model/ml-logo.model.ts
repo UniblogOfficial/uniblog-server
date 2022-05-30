@@ -28,14 +28,14 @@ export class MLLogo extends Model<MLLogo, MLLogoCreationAttributes> {
   @Column({ type: DataType.INTEGER, allowNull: false })
   order: number;
 
-  @Column({ type: DataType.ARRAY(DataType.FLOAT) })
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
   padding: number[];
 
-  @Column({ type: DataType.ARRAY(DataType.FLOAT) })
-  margin: number | number[];
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
+  margin: number[];
 
   @ApiProperty({ example: '#ff0', description: 'ML block CSS background' })
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, defaultValue: '#0000' })
   background: string;
 
   @ApiProperty({ example: 'logo', description: 'ML content type' })
@@ -53,10 +53,10 @@ export class MLLogo extends Model<MLLogo, MLLogoCreationAttributes> {
   @Column({ type: DataType.INTEGER })
   size: number;
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, defaultValue: 'center' })
   hAlign: string; // 'right' | 'left' | 'center';
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, defaultValue: 'center' })
   vAlign: string; // 'top' | 'center' | 'bottom';
 
   @ForeignKey(() => Multilink)

@@ -214,6 +214,7 @@ export class MultilinkService {
               type: MLContentType.LOGO,
               order,
               suborder: 1,
+              imageName: 'avatar',
               imageType: avatar.imageType,
               imageData: avatar.imageData,
             });
@@ -236,6 +237,7 @@ export class MultilinkService {
         where: { name },
         include: { all: true },
       });
+      multilink.$set('clickCount', multilink.clickCount + 1);
       return multilink;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
