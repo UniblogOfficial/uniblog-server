@@ -14,12 +14,6 @@ import { CreateMLDto } from './dto/create-ml.dto';
 import { MLLogo } from './model/ml-logo.model';
 import { Avatar } from '../users/model/avatar.model';
 
-type TImageData = {
-  imageType: string;
-  imageName: string;
-  imageData: string | Buffer;
-};
-
 @Injectable()
 export class MultilinkService {
   constructor(
