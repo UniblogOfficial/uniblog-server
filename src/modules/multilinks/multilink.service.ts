@@ -124,9 +124,9 @@ export class MultilinkService {
       }
       // </multilink content>
       // <multilink images>
-      let logo = null;
+      let logo: Promise<MLImageData>;
       await Promise.all(
-        images.map(async file => {
+        images.map(file => {
           const { order, type, suborder } = {
             order: +file.originalname.split('.')[0].split('_')[0],
             type: file.originalname.split('.')[0].split('_')[1],
@@ -136,7 +136,7 @@ export class MultilinkService {
           switch (type) {
             case 'logo':
               if (suborder === 1) {
-                logo = await this.mlImageDataRepository.create({
+                logo = this.mlImageDataRepository.create({
                   multilinkId,
                   type: MLContentType.LOGO,
                   order,
@@ -149,7 +149,7 @@ export class MultilinkService {
               }
               // banner
               if (suborder === 2) {
-                return await this.mlImageDataRepository.create({
+                return this.mlImageDataRepository.create({
                   multilinkId,
                   type: MLContentType.LOGO,
                   order,
@@ -160,7 +160,7 @@ export class MultilinkService {
                 });
               }
             case 'image':
-              return await this.mlImageDataRepository.create({
+              return this.mlImageDataRepository.create({
                 multilinkId,
                 type: MLContentType.IMAGE,
                 order,
@@ -170,7 +170,7 @@ export class MultilinkService {
                 imageData: file.buffer,
               });
             case 'imagetext':
-              return await this.mlImageDataRepository.create({
+              return this.mlImageDataRepository.create({
                 multilinkId,
                 type: MLContentType.IMAGETEXT,
                 order,
@@ -180,7 +180,7 @@ export class MultilinkService {
                 imageData: file.buffer,
               });
             case 'shop':
-              return await this.mlImageDataRepository.create({
+              return this.mlImageDataRepository.create({
                 multilinkId,
                 type: MLContentType.SHOP,
                 order,
@@ -191,7 +191,7 @@ export class MultilinkService {
               });
           }
           if (file.originalname.split('.')[0] === 'backgroundImage') {
-            return await this.mlImageDataRepository.create({
+            return this.mlImageDataRepository.create({
               multilinkId,
               type: 'backgroundImage',
               order: 9999,
@@ -223,9 +223,13 @@ export class MultilinkService {
       }
       // </multilink images>
       const createdML = await this.multilinkRepository.findByPk(multilink.id, {
-        include: { all: true },
+        include: { all: true, nested: true },
       });
-      return { data: { multilink: createdML }, message: 'Multilink created' };
+
+      return {
+        data: { multilink: createdML },
+        message: 'Multilink created',
+      };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -235,11 +239,11 @@ export class MultilinkService {
     try {
       const multilink = await this.multilinkRepository.findOne({
         where: { name },
-        include: { all: true },
+        include: { all: true, nested: true },
       });
       multilink.clickCount++;
       multilink.save();
-      return multilink;
+      return { data: { multilink }, message: 'Here we go' };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }
@@ -249,7 +253,7 @@ export class MultilinkService {
     try {
       const multilinks = await this.multilinkRepository.findAll({
         where: { userId: user.id },
-        include: { all: true },
+        include: { all: true, nested: true },
       });
       return { data: { multilinks }, message: 'Here all your stuff, sir' };
     } catch (error) {
