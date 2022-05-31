@@ -84,7 +84,7 @@ export class MultilinkService {
       if (parsedSets.logoSet.length) {
         parsedSets.logoSet.map(async block => {
           logoOrders.push(block.order);
-          await this.mlLogoRepository.create({ multilinkId, ...block });
+          await this.mlLogoRepository.create({ multilinkId, ...block, logo: '' });
         });
       }
       if (parsedSets.socialSet.length) {
@@ -104,7 +104,7 @@ export class MultilinkService {
       }
       if (parsedSets.imageTextSet.length) {
         parsedSets.imageTextSet.map(async block => {
-          await this.mlImageTextRepository.create({ multilinkId, ...block });
+          await this.mlImageTextRepository.create({ multilinkId, ...block, image: '' });
         });
       }
       if (parsedSets.videoSet.length) {
@@ -117,7 +117,7 @@ export class MultilinkService {
           const shopBlock = await this.mlShopRepository.create({ multilinkId, ...block });
           await Promise.all(
             block.cells.forEach(async cell => {
-              await this.mlShopCellRepository.create({ blockId: shopBlock.id, ...cell });
+              await this.mlShopCellRepository.create({ blockId: shopBlock.id, ...cell, image: '' });
             }),
           );
         });
