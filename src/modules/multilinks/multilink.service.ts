@@ -116,8 +116,8 @@ export class MultilinkService {
         parsedSets.shopSet.map(async block => {
           const shopBlock = await this.mlShopRepository.create({ multilinkId, ...block });
           await Promise.all(
-            block.cells.forEach(async cell => {
-              await this.mlShopCellRepository.create({ blockId: shopBlock.id, ...cell, image: '' });
+            block.cells.forEach(cell => {
+              this.mlShopCellRepository.create({ blockId: shopBlock.id, ...cell, image: '' });
             }),
           );
         });
