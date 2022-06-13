@@ -16,15 +16,24 @@ import { Post } from 'src/modules/posts/post.model';
 import { Social } from 'src/modules/socials/social.model';
 import { Multilink } from 'src/modules/multilinks/model/multilink.model';
 import { MLText } from 'src/modules/multilinks/model/blocks/text.model';
-import { MLLogo } from 'src/modules/multilinks/model/ml-logo.model';
 import { Avatar } from 'src/modules/users/model/avatar.model';
 import { MLImageData } from 'src/modules/multilinks/model/images/ml-imagedata.model';
 import { MLImage } from 'src/modules/multilinks/model/blocks/image.model';
-import { MLImageText } from 'src/modules/multilinks/model/ml-imagetext.model';
-import { MLLink } from 'src/modules/multilinks/model/ml-link.model';
 import { MLShop } from 'src/modules/multilinks/model/blocks/shop/shop.model';
 import { MLSocial } from 'src/modules/multilinks/model/blocks/social.model';
 import { MLVideo } from 'src/modules/multilinks/model/blocks/video.model';
+import { MLImageText } from 'src/modules/multilinks/model/blocks/imagetext.model';
+import { MLLink } from 'src/modules/multilinks/model/blocks/link.model';
+import { MLLogo } from 'src/modules/multilinks/model/blocks/logo.model';
+import { MLAudio } from 'src/modules/multilinks/model/blocks/audio.block';
+import { MLButton } from 'src/modules/multilinks/model/blocks/button.model';
+import { MLCarousel } from 'src/modules/multilinks/model/blocks/carousel.model';
+import { MLDivider } from 'src/modules/multilinks/model/blocks/divider.model';
+import { MLMap } from 'src/modules/multilinks/model/blocks/map.model';
+import { MLPost } from 'src/modules/multilinks/model/blocks/post.model';
+import { MLVoteCell } from 'src/modules/multilinks/model/blocks/vote/vote-cell.model';
+import { MLVote } from 'src/modules/multilinks/model/blocks/vote/vote.model';
+import { MLWidget } from 'src/modules/multilinks/model/blocks/widget.model';
 
 const db = url2obj(process.env.DATABASE_URL);
 
@@ -56,16 +65,26 @@ const db = url2obj(process.env.DATABASE_URL);
         Social,
         Multilink,
         //
-        MLLogo,
         MLText,
+        MLSocial,
+        MLPost,
+        MLWidget,
+        MLVideo,
+        MLAudio,
+        MLMap,
+        MLVote,
+        MLDivider,
+
+        MLLogo,
         MLLink,
+        MLButton,
         MLImage,
         MLImageText,
-        MLSocial,
+        MLCarousel,
         MLShop,
-        MLVideo,
         //
         MLShopCell,
+        MLVoteCell,
         //
         MLImageData,
       ],

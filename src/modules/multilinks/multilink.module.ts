@@ -1,10 +1,17 @@
+import { MLWidget } from './model/blocks/widget.model';
+import { MLDivider } from './model/blocks/divider.model';
+import { MLButton } from './model/blocks/button.model';
+import { MLCarousel } from './model/blocks/carousel.model';
+import { MLVote } from './model/blocks/vote/vote.model';
+import { MLMap } from './model/blocks/map.model';
+import { MLAudio } from './model/blocks/audio.block';
+import { MLPost } from './model/blocks/post.model';
+import { MLVoteCell } from './model/blocks/vote/vote-cell.model';
 import { MLImageData } from './model/images/ml-imagedata.model';
 import { MLVideo } from './model/blocks/video.model';
 import { MLShop } from './model/blocks/shop/shop.model';
 import { MLSocial } from './model/blocks/social.model';
-import { MLImageText } from './model/ml-imagetext.model';
 import { MLImage } from './model/blocks/image.model';
-import { MLLink } from './model/ml-link.model';
 import { Avatar } from 'src/modules/users/model/avatar.model';
 import { UserModule } from './../users/user.module';
 import { AuthModule } from './../auth/auth.module';
@@ -15,8 +22,10 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { MultilinkController } from './multilink.controller';
 import { MultilinkService } from './multilink.service';
 import { MulterModule } from '@nestjs/platform-express';
-import { MLLogo } from './model/ml-logo.model';
 import { MLShopCell } from './model/blocks/shop/shop-cell.model';
+import { MLImageText } from './model/blocks/imagetext.model';
+import { MLLink } from './model/blocks/link.model';
+import { MLLogo } from './model/blocks/logo.model';
 
 @Module({
   controllers: [MultilinkController],
@@ -28,16 +37,26 @@ import { MLShopCell } from './model/blocks/shop/shop-cell.model';
     SequelizeModule.forFeature([
       Multilink,
       // blocks
-      MLLogo,
       MLText,
+      MLSocial,
+      MLPost,
+      MLWidget,
+      MLVideo,
+      MLAudio,
+      MLMap,
+      MLVote,
+      MLDivider,
+
+      MLLogo,
       MLLink,
+      MLButton,
       MLImage,
       MLImageText,
-      MLSocial,
+      MLCarousel,
       MLShop,
-      MLVideo,
       //
       MLShopCell,
+      MLVoteCell,
       //
       MLImageData,
       Avatar,
