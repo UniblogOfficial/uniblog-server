@@ -71,8 +71,8 @@ export class MultilinkService {
       });
       // <multilink root data>
       const mlRootData = {
-        name,
-        background,
+        name: JSON.parse(name),
+        background: JSON.parse(background),
         maxWidth: +maxWidth,
         contentMap: JSON.parse(contentMap),
       };
