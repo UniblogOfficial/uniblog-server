@@ -1,33 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from './multilink.model';
-
-interface MLSocialCreationAttributes {
-  multilinkId: number;
-  order: number;
-  type: MLContentType;
-  links: string[];
-  linkTypes: SocialNetwork[];
-  size: number;
-
-  padding?: number[];
-  margin?: number[];
-  background?: string;
-}
-
-export enum SocialNetwork {
-  VK = 'vk',
-  YOUTUBE = 'youtube',
-  INSTAGRAM = 'instagram',
-  TELEGRAM = 'telegram',
-  TIKTOK = 'tiktok',
-  TWITTER = 'twitter',
-  FACEBOOK = 'facebook',
-  PINTEREST = 'pinterest',
-}
+import { MLContentType, Multilink } from '../multilink.model';
+import { IMLSocialCreationAttributes, SocialNetwork } from '../types/creation-attr';
 
 @Table({ tableName: 'mlsocials' })
-export class MLSocial extends Model<MLSocial, MLSocialCreationAttributes> {
+export class MLSocial extends Model<MLSocial, IMLSocialCreationAttributes> {
   @ApiProperty({ example: '69', description: 'Unique MLSocial ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -48,7 +25,7 @@ export class MLSocial extends Model<MLSocial, MLSocialCreationAttributes> {
 
   @ApiProperty({ example: 'social', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType;
+  type: MLContentType.SOCIAL;
 
   // ================================================================================
 
@@ -65,6 +42,12 @@ export class MLSocial extends Model<MLSocial, MLSocialCreationAttributes> {
 
   @Column({ type: DataType.FLOAT })
   size: number;
+
+  @Column({ type: DataType.STRING })
+  rows: string;
+
+  @Column({ type: DataType.STRING })
+  columns: string;
 
   @ForeignKey(() => Multilink)
   @Column({

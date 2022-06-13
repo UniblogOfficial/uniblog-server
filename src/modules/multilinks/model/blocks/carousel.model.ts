@@ -1,32 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  HasMany,
-  Model,
-  Table,
-} from 'sequelize-typescript';
-import { MLShopCell } from './ml-shop-cell.model';
-import { MLContentType, Multilink } from './multilink.model';
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { MLContentType, Multilink } from '../multilink.model';
+import { IMLCarouselCreationAttributes } from '../types/creation-attr';
 
-interface MLShopCreationAttributes {
-  multilinkId: number;
-  order: number;
-  type: MLContentType;
-
-  grid: string;
-  gap?: number;
-
-  padding?: number[];
-  margin?: number[];
-  background?: string;
-}
-
-@Table({ tableName: 'mlshops' })
-export class MLShop extends Model<MLShop, MLShopCreationAttributes> {
-  @ApiProperty({ example: '69', description: 'Unique MLShop ID' })
+@Table({ tableName: 'mlcarousels' })
+export class MLCarousel extends Model<MLCarousel, IMLCarouselCreationAttributes> {
+  @ApiProperty({ example: '69', description: 'Unique MLCarousel ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -44,20 +23,25 @@ export class MLShop extends Model<MLShop, MLShopCreationAttributes> {
   @Column({ type: DataType.STRING, defaultValue: '#0000' })
   background: string;
 
-  @ApiProperty({ example: 'shop', description: 'ML content type' })
+  @ApiProperty({ example: 'carousel', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType;
+  type: MLContentType.CAROUSEL;
 
   // ================================================================================
 
-  @Column({ type: DataType.STRING, defaultValue: '1fr 1fr 1fr' })
-  grid: string;
+  @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
+  images: string[];
 
-  @Column({ type: DataType.FLOAT })
-  gap: number;
+  @Column({ type: DataType.BOOLEAN, defaultValue: true })
+  dots: boolean;
 
-  @HasMany(() => MLShopCell)
-  cells: MLShopCell[];
+  @Column({ type: DataType.BOOLEAN, defaultValue: true })
+  arrows: boolean;
+
+  @Column({ type: DataType.INTEGER })
+  interval: number;
+
+  // ================================================================================
 
   @ForeignKey(() => Multilink)
   @Column({

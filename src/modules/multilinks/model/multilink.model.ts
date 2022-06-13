@@ -10,32 +10,49 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { User } from '../../users/user.model';
-import { MLLogo } from './ml-logo.model';
-import { MLLink } from './ml-link.model';
-import { MLSocial } from './ml-social.model';
-import { MLText } from './ml-text.model';
-import { MLVideo } from './ml-video.model';
-import { MLImage } from './ml-image.model';
-import { MLImageText } from './ml-imagetext.model';
-import { MLShop } from './ml-shop.model';
+import { MLLogo } from './blocks/logo.model';
+import { MLLink } from './blocks/link.model';
+import { MLSocial } from './blocks/social.model';
+import { MLText } from './blocks/text.model';
+import { MLVideo } from './blocks/video.model';
+import { MLImage } from './blocks/image.model';
+import { MLImageText } from './blocks/imagetext.model';
+import { MLShop } from './blocks/shop/shop.model';
+import { MLAudio } from './blocks/audio.block';
+import { MLButton } from './blocks/button.model';
+import { MLCarousel } from './blocks/carousel.model';
+import { MLDivider } from './blocks/divider.model';
+import { MLMap } from './blocks/map.model';
+import { MLPost } from './blocks/post.model';
+import { MLVote } from './blocks/vote/vote.model';
+import { MLWidget } from './blocks/widget.model';
 
 interface MultilinkCreationAttributes {
   name: string;
   background: string;
-  contentSet: MLContentType[];
+  maxWidth: number;
+  contentMap: MLContentType[];
   userId: number;
 }
 
 export enum MLContentType {
-  TEXT = 'text',
-  LINK = 'link',
-  LOGO = 'logo',
-  SOCIAL = 'social',
-  IMAGE = 'image',
-  IMAGETEXT = 'imagetext',
-  VIDEO = 'video',
-  SHOP = 'shop',
-  UNKNOWN = 'unknown',
+  TEXT = 'textBlocks',
+  SOCIAL = 'socialBlocks',
+  WIDGET = 'widgetBlocks',
+  VIDEO = 'videoBlocks',
+  AUDIO = 'audioBlocks',
+  POST = 'postBlocks',
+  VOTE = 'voteBlocks',
+  MAP = 'mapBlocks',
+  DIVIDER = 'dividerBlocks',
+
+  LINK = 'linkBlocks',
+  LOGO = 'logoBlocks',
+  BUTTON = 'buttonBlocks',
+  IMAGE = 'imageBlocks',
+  IMAGETEXT = 'imageTextBlocks',
+  CAROUSEL = 'carouselBlocks',
+  SHOP = 'shopBlocks',
 }
 
 @Table({ tableName: 'multilinks', paranoid: true })
@@ -53,35 +70,65 @@ export class Multilink extends Model<Multilink, MultilinkCreationAttributes> {
     description: 'ML blocks structure',
   })
   @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
-  contentSet: MLContentType[];
+  contentMap: MLContentType[];
 
   @ApiProperty({ example: '#ff0', description: 'ML CSS background' })
   @Column({ type: DataType.STRING, allowNull: false })
   background: string;
 
-  @HasMany(() => MLLogo)
-  logoSet: MLLogo[];
+  @ApiProperty({ example: '720', description: 'ML CSS maxWidth' })
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  maxWidth: number;
 
   @HasMany(() => MLText)
-  textSet: MLText[];
-
-  @HasMany(() => MLLink)
-  linkSet: MLLink[];
-
-  @HasMany(() => MLImage)
-  imageSet: MLImage[];
-
-  @HasMany(() => MLImageText)
-  imageTextSet: MLImageText[];
+  textBlocks: MLText[];
 
   @HasMany(() => MLSocial)
-  socialSet: MLSocial[];
-
-  @HasMany(() => MLShop)
-  shopSet: MLShop[];
+  socialBlocks: MLSocial[];
 
   @HasMany(() => MLVideo)
-  videoSet: MLVideo[];
+  videoBlocks: MLVideo[];
+
+  @HasMany(() => MLAudio)
+  audioBlocks: MLAudio[];
+
+  @HasMany(() => MLWidget)
+  widgetBlocks: MLWidget[];
+
+  @HasMany(() => MLPost)
+  postBlocks: MLPost[];
+
+  @HasMany(() => MLMap)
+  mapBlocks: MLMap[];
+
+  @HasMany(() => MLVote)
+  voteBlocks: MLVote[];
+
+  @HasMany(() => MLDivider)
+  dividerBlocks: MLDivider[];
+
+  // <image containing blocks>
+
+  @HasMany(() => MLLogo)
+  logoBlocks: MLLogo[];
+
+  @HasMany(() => MLButton)
+  buttonBlocks: MLButton[];
+
+  @HasMany(() => MLLink)
+  linkBlocks: MLLink[];
+
+  @HasMany(() => MLImage)
+  imageBlocks: MLImage[];
+
+  @HasMany(() => MLImageText)
+  imageTextBlocks: MLImageText[];
+
+  @HasMany(() => MLCarousel)
+  carouselBlocks: MLCarousel[];
+
+  @HasMany(() => MLShop)
+  shopBlocks: MLShop[];
 
   @HasMany(() => MLImageData)
   images: MLImageData[];

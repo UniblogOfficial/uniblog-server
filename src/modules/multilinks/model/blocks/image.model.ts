@@ -1,31 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { SocialNetwork } from './ml-social.model';
-import { MLContentType, Multilink } from './multilink.model';
+import { MLContentType, Multilink } from '../multilink.model';
+import { IMLImageCreationAttributes } from '../types/creation-attr';
 
-interface MLLinkCreationAttributes {
-  multilinkId: number;
-  order: number;
-  type: MLContentType;
-
-  href: string;
-  linkType: SocialNetwork | 'third-party';
-  title: string;
-
-  color?: string;
-  fontSize?: number;
-  fontWeight?: number;
-  align?: string; // 'right' | 'left' | 'center' | 'justify';
-  font?: string;
-
-  padding?: number[];
-  margin?: number[];
-  background?: string;
-}
-
-@Table({ tableName: 'mllinks' })
-export class MLLink extends Model<MLLink, MLLinkCreationAttributes> {
-  @ApiProperty({ example: '69', description: 'Unique ML Block Link ID' })
+@Table({ tableName: 'mlimages' })
+export class MLImage extends Model<MLImage, IMLImageCreationAttributes> {
+  @ApiProperty({ example: '69', description: 'Unique MLImage ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -43,36 +23,46 @@ export class MLLink extends Model<MLLink, MLLinkCreationAttributes> {
   @Column({ type: DataType.STRING, defaultValue: '#0000' })
   background: string;
 
-  @ApiProperty({ example: 'link', description: 'ML content type' })
+  @ApiProperty({ example: 'image', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType;
+  type: MLContentType.IMAGE;
 
   // ================================================================================
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  href: string;
+  @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
+  images: string[];
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  linkType: SocialNetwork | 'third-party';
+  @Column({ type: DataType.STRING, defaultValue: '1fr' })
+  grid: string;
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  title: string;
+  @Column({ type: DataType.ARRAY(DataType.STRING) })
+  titles: string[];
+
+  @Column({ type: DataType.STRING, defaultValue: 'bottom' })
+  imgPosition: 'top' | 'bottom';
+
+  @Column({ type: DataType.STRING, defaultValue: 'outside' })
+  textPosition: 'inside' | 'outside';
+
+  // ================================================================================
 
   @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
   color: string;
 
-  @Column({ type: DataType.FLOAT })
-  fontSize: number;
-
-  @Column({ type: DataType.FLOAT })
-  fontWeight: number;
-
-  @Column({ type: DataType.STRING })
-  align: string; // 'right' | 'left' | 'center' | 'justify';
-
   @Column({ type: DataType.STRING })
   font: string;
+
+  @Column({ type: DataType.FLOAT })
+  letterSpacing: number;
+
+  @Column({ type: DataType.STRING })
+  textShadow: string; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+
+  @Column({ type: DataType.STRING, defaultValue: 'center' })
+  align: string; // 'right' | 'left' | 'center' | 'justify';
+
+  // ================================================================================
 
   @ForeignKey(() => Multilink)
   @Column({

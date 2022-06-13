@@ -1,20 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from './multilink.model';
+import { MLContentType, Multilink } from '../multilink.model';
+import { IMLMapCreationAttributes } from '../types/creation-attr';
 
-interface MLVideoCreationAttributes {
-  multilinkId: number;
-  order: number;
-  type: MLContentType;
-  url: string;
-  padding?: number[];
-  margin?: number[];
-  background?: string;
-}
-
-@Table({ tableName: 'mlvideos' })
-export class MLVideo extends Model<MLVideo, MLVideoCreationAttributes> {
-  @ApiProperty({ example: '69', description: 'Unique MLVideo ID' })
+@Table({ tableName: 'mlmaps' })
+export class MLMap extends Model<MLMap, IMLMapCreationAttributes> {
+  @ApiProperty({ example: '69', description: 'Unique MLMap ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -32,15 +23,17 @@ export class MLVideo extends Model<MLVideo, MLVideoCreationAttributes> {
   @Column({ type: DataType.STRING })
   background: string;
 
-  @ApiProperty({ example: 'video', description: 'ML content type' })
+  @ApiProperty({ example: 'map', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType;
+  type: MLContentType.MAP;
 
   // ================================================================================
 
-  @ApiProperty({ example: 'https://www.youtube.com/embed/hYu0d-4SX_Y', description: 'video URL' })
-  @Column({ type: DataType.STRING })
+  @ApiProperty({ example: 'https://www.maps.google.com', description: 'map URL' })
+  @Column({ type: DataType.STRING, allowNull: false })
   url: string;
+
+  // ================================================================================
 
   @ForeignKey(() => Multilink)
   @Column({

@@ -1,25 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from './multilink.model';
-
-interface MLLogoCreationAttributes {
-  multilinkId: number;
-  order: number;
-  type: MLContentType;
-
-  logo: string;
-  banner?: string;
-  size?: number;
-  hAlign?: string;
-  vAlign?: string;
-
-  padding?: number[];
-  margin?: number[];
-  background?: string;
-}
+import { MLContentType, Multilink } from '../multilink.model';
+import { IMLLogoCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mllogos' })
-export class MLLogo extends Model<MLLogo, MLLogoCreationAttributes> {
+export class MLLogo extends Model<MLLogo, IMLLogoCreationAttributes> {
   @ApiProperty({ example: '69', description: 'Unique MLLogo ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -40,7 +25,7 @@ export class MLLogo extends Model<MLLogo, MLLogoCreationAttributes> {
 
   @ApiProperty({ example: 'logo', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType;
+  type: MLContentType.LOGO;
 
   // ================================================================================
 

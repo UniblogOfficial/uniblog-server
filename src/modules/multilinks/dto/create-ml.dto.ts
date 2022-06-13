@@ -7,17 +7,29 @@ export class CreateMLDto {
   @ApiProperty({ example: '#fff', description: 'Must be CSS background value' })
   readonly background: string;
 
+  @ApiProperty({ example: '1024', description: 'Max ML width in px' })
+  readonly maxWidth: string;
+
   @ApiProperty({
     description: 'Array as string that representing ML content',
   })
-  readonly contentSet: string; //TContentDTO[]
+  readonly contentMap: string; //TContentDTO[]
 
-  readonly textSet: string;
-  readonly linkSet: string;
-  readonly socialSet: string;
-  readonly logoSet: string;
-  readonly imageSet: string;
-  readonly imageTextSet: string;
-  readonly videoSet: string;
-  readonly shopSet: string;
+  readonly textBlocks: string;
+  readonly socialBlocks: string;
+  readonly mapBlocks: string;
+  readonly widgetBlocks: string;
+  readonly videoBlocks: string;
+  readonly audioBlocks: string;
+  readonly voteBlocks: string;
+  readonly postBlocks: string;
+  readonly dividerBlocks: string;
+
+  readonly linkBlocks: string;
+  readonly logoBlocks: string;
+  readonly imageBlocks: string;
+  readonly imageTextBlocks: string;
+  readonly shopBlocks: string;
+  readonly buttonBlocks: string;
+  readonly carouselBlocks: string;
 }

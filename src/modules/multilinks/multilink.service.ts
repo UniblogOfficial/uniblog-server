@@ -1,17 +1,17 @@
 import { MLImageData } from './model/images/ml-imagedata.model';
-import { MLShopCell } from './model/ml-shop-cell.model';
-import { MLShop } from './model/ml-shop.model';
-import { MLVideo } from './model/ml-video.model';
-import { MLLink } from './model/ml-link.model';
-import { MLImageText } from './model/ml-imagetext.model';
-import { MLImage } from './model/ml-image.model';
-import { MLSocial } from './model/ml-social.model';
-import { MLText } from './model/ml-text.model';
+import { MLShopCell } from './model/blocks/shop/shop-cell.model';
+import { MLShop } from './model/blocks/shop/shop.model';
+import { MLVideo } from './model/blocks/video.model';
+import { MLLink } from './model/blocks/link.model';
+import { MLImageText } from './model/blocks/imagetext.model';
+import { MLImage } from './model/blocks/image.model';
+import { MLSocial } from './model/blocks/social.model';
+import { MLText } from './model/blocks/text.model';
 import { MLContentType, Multilink } from './model/multilink.model';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateMLDto } from './dto/create-ml.dto';
-import { MLLogo } from './model/ml-logo.model';
+import { MLLogo } from './model/blocks/logo.model';
 import { Avatar } from '../users/model/avatar.model';
 
 @Injectable()
@@ -35,16 +35,25 @@ export class MultilinkService {
   ) {}
 
   async createMultilink(user, dto: CreateMLDto, images: Express.Multer.File[]) {
-    const { logoSet, textSet, linkSet, socialSet, imageSet, imageTextSet, shopSet, videoSet } = dto;
+    const {
+      logoBlocks,
+      textBlocks,
+      linkBlocks,
+      socialBlocks,
+      imageBlocks,
+      imageTextBlocks,
+      shopBlocks,
+      videoBlocks,
+    } = dto;
     const parsedSets = {
-      logoSet: JSON.parse(logoSet),
-      textSet: JSON.parse(textSet),
-      linkSet: JSON.parse(linkSet),
-      socialSet: JSON.parse(socialSet),
-      imageSet: JSON.parse(imageSet),
-      imageTextSet: JSON.parse(imageTextSet),
-      shopSet: JSON.parse(shopSet),
-      videoSet: JSON.parse(videoSet),
+      logoBlocks: JSON.parse(logoBlocks),
+      textBlocks: JSON.parse(textBlocks),
+      linkBlocks: JSON.parse(linkBlocks),
+      socialBlocks: JSON.parse(socialBlocks),
+      imageBlocks: JSON.parse(imageBlocks),
+      imageTextBlocks: JSON.parse(imageTextBlocks),
+      shopBlocks: JSON.parse(shopBlocks),
+      videoBlocks: JSON.parse(videoBlocks),
     };
 
     try {
@@ -59,7 +68,7 @@ export class MultilinkService {
       const mlRootData = {
         name: dto.name,
         background: dto.background,
-        contentSet: JSON.parse(dto.contentSet),
+        contentMap: JSON.parse(dto.contentMap),
       };
 
       const multilink = await this.multilinkRepository.create({
@@ -70,44 +79,44 @@ export class MultilinkService {
       const logoOrders = [];
       // </multilink root data>
       // <multilink content>
-      if (parsedSets.textSet.length) {
-        parsedSets.textSet.map(async block => {
+      if (parsedSets.textBlocks.length) {
+        parsedSets.textBlocks.map(async block => {
           await this.mlTextRepository.create({ multilinkId, ...block });
         });
       }
-      if (parsedSets.logoSet.length) {
-        parsedSets.logoSet.map(async block => {
+      if (parsedSets.logoBlocks.length) {
+        parsedSets.logoBlocks.map(async block => {
           logoOrders.push(block.order);
           await this.mlLogoRepository.create({ multilinkId, ...block, logo: '' });
         });
       }
-      if (parsedSets.socialSet.length) {
-        parsedSets.socialSet.map(async block => {
+      if (parsedSets.socialBlocks.length) {
+        parsedSets.socialBlocks.map(async block => {
           await this.mlSocialRepository.create({ multilinkId, ...block });
         });
       }
-      if (parsedSets.linkSet.length) {
-        parsedSets.linkSet.map(async block => {
+      if (parsedSets.linkBlocks.length) {
+        parsedSets.linkBlocks.map(async block => {
           await this.mlLinkRepository.create({ multilinkId, ...block });
         });
       }
-      if (parsedSets.imageSet.length) {
-        parsedSets.imageSet.map(async block => {
+      if (parsedSets.imageBlocks.length) {
+        parsedSets.imageBlocks.map(async block => {
           await this.mlImageRepository.create({ multilinkId, ...block });
         });
       }
-      if (parsedSets.imageTextSet.length) {
-        parsedSets.imageTextSet.map(async block => {
+      if (parsedSets.imageTextBlocks.length) {
+        parsedSets.imageTextBlocks.map(async block => {
           await this.mlImageTextRepository.create({ multilinkId, ...block, image: '' });
         });
       }
-      if (parsedSets.videoSet.length) {
-        parsedSets.videoSet.map(async block => {
+      if (parsedSets.videoBlocks.length) {
+        parsedSets.videoBlocks.map(async block => {
           await this.mlVideoRepository.create({ multilinkId, ...block });
         });
       }
-      if (parsedSets.shopSet.length) {
-        parsedSets.shopSet.map(async block => {
+      if (parsedSets.shopBlocks.length) {
+        parsedSets.shopBlocks.map(async block => {
           const shopBlock = await this.mlShopRepository.create({ multilinkId, ...block });
           await Promise.all(
             block.cells.map(cell => {
@@ -133,7 +142,7 @@ export class MultilinkService {
 
           switch (type) {
             case 'logo':
-              if (suborder === 1) {
+              if (suborder === 0) {
                 logo = this.mlImageDataRepository.create({
                   multilinkId,
                   type: MLContentType.LOGO,
@@ -146,7 +155,7 @@ export class MultilinkService {
                 return logo;
               }
               // banner
-              if (suborder === 2) {
+              if (suborder === 1) {
                 return this.mlImageDataRepository.create({
                   multilinkId,
                   type: MLContentType.LOGO,
