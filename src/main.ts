@@ -22,7 +22,7 @@ const corsOptions = {
     } */
     callback(null, true);
   },
-  // allowedHeaders: 'Content-Type, Accept, Observe, API-KEY',
+  allowedHeaders: 'Content-Type, Accept, Observe, API-KEY, Authorization',
   methods: 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
   credentials: true,
 };
