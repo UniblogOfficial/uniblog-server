@@ -1,13 +1,16 @@
+import { ApiKeyGuard } from './api-key.guard';
 import { CreateUserDto } from './../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { Body, Controller, Get, Post, Req, UseGuards, UsePipes } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { ValidationPipe } from 'src/core/pipes/validation.pipe';
 import { User } from '../users/user.model';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 @ApiTags('Auth')
+@ApiSecurity('API-KEY', ['API-KEY'])
+@UseGuards(ApiKeyGuard)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

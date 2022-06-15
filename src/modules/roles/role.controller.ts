@@ -1,9 +1,12 @@
 import { CreateRoleDto } from './dto/create-role.dto';
 import { RoleService } from './role.service';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiKeyGuard } from '../auth/api-key.guard';
 
 @ApiTags('Role')
+@ApiSecurity('API-KEY', ['API-KEY'])
+@UseGuards(ApiKeyGuard)
 @Controller('role')
 export class RoleController {
   constructor(private roleService: RoleService) {}

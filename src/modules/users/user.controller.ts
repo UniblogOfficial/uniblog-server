@@ -21,13 +21,16 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { User } from './user.model';
 import { Roles } from '../auth/roles-auth.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { TUserAvatarFormData } from '../files/file.service';
+import { ApiKeyGuard } from '../auth/api-key.guard';
 
 @ApiTags('User')
+@ApiSecurity('API-KEY', ['API-KEY'])
+@UseGuards(ApiKeyGuard)
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}

@@ -12,12 +12,17 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { SocialModule } from './modules/socials/social.module';
 import { MultilinkModule } from './modules/multilinks/multilink.module';
 import * as path from 'path';
+import config from './config';
 
 @Module({
   controllers: [],
   providers: [],
   imports: [
-    ConfigModule.forRoot({ envFilePath: `.${process.env.NODE_ENV}.env`, isGlobal: true }),
+    ConfigModule.forRoot({
+      envFilePath: `.${process.env.NODE_ENV}.env`,
+      isGlobal: true,
+      load: [config],
+    }),
     // ServeStaticModule.forRoot({ rootPath: path.resolve(__dirname, 'static') }),
     DatabaseModule,
     UserModule,

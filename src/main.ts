@@ -13,15 +13,16 @@ const whitelist = [
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || whitelist.indexOf(origin) !== -1) {
+    /* if (!origin || whitelist.indexOf(origin) !== -1) {
       console.log('Allowed cors for: ', origin);
       callback(null, true);
     } else {
       console.log('Blocked cors for: ', origin);
       callback(new HttpException('Not allowed by CORS', HttpStatus.FORBIDDEN));
-    }
+    } */
+    callback(null, true);
   },
-  // allowedHeaders: 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
+  allowedHeaders: 'Content-Type, Accept, Observe, API-KEY',
   methods: 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
   credentials: true,
 };
@@ -37,6 +38,15 @@ async function start() {
     .setTitle('Uniblog Server')
     .setDescription('Uniblog REST API Documentation')
     .setVersion('0.1.0')
+    .addApiKey(
+      {
+        type: 'apiKey',
+        name: 'API-KEY',
+        in: 'header',
+        description: 'Enter your API key',
+      },
+      'API-KEY',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);

@@ -15,14 +15,17 @@ import {
 import { Express } from 'express';
 
 import * as path from 'path';
-import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Multilink } from './model/multilink.model';
 import { MultilinkService } from './multilink.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateMLDto } from './dto/create-ml.dto';
 import { TMLImagesFormData } from '../files/file.service';
+import { ApiKeyGuard } from '../auth/api-key.guard';
 
 @ApiTags('Multilink')
+@ApiSecurity('API-KEY', ['API-KEY'])
+@UseGuards(ApiKeyGuard)
 @Controller('multilink')
 export class MultilinkController {
   constructor(private multilinkService: MultilinkService) {}
