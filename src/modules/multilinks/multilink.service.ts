@@ -168,102 +168,103 @@ export class MultilinkService {
       // </multilink content>
       // <multilink images>
       let logo: Promise<MLImageData>;
-      await Promise.all(
-        images.map(file => {
-          const { order, type, suborder } = {
-            order: +file.originalname.split('.')[0].split('_')[0],
-            type: file.originalname.split('.')[0].split('_')[1],
-            suborder: +file.originalname.split('.')[0].split('_')[2],
-          };
+      images.length &&
+        (await Promise.all(
+          images.map(file => {
+            const { order, type, suborder } = {
+              order: +file.originalname.split('.')[0].split('_')[0],
+              type: file.originalname.split('.')[0].split('_')[1],
+              suborder: +file.originalname.split('.')[0].split('_')[2],
+            };
 
-          const fileData = {
-            imageName: file.originalname.split('.')[0],
-            imageType: file.mimetype,
-            imageData: file.buffer,
-          };
+            const fileData = {
+              imageName: file.originalname.split('.')[0],
+              imageType: file.mimetype,
+              imageData: file.buffer,
+            };
 
-          switch (type) {
-            case 'logo':
-              if (suborder === 0) {
-                logo = this.mlImageDataRepository.create({
-                  multilinkId,
-                  type: MLContentType.LOGO,
-                  order,
-                  suborder,
-                  ...fileData,
-                });
-                return logo;
-              }
-              // banner
-              if (suborder === 1) {
+            switch (type) {
+              case 'logo':
+                if (suborder === 0) {
+                  logo = this.mlImageDataRepository.create({
+                    multilinkId,
+                    type: MLContentType.LOGO,
+                    order,
+                    suborder,
+                    ...fileData,
+                  });
+                  return logo;
+                }
+                // banner
+                if (suborder === 1) {
+                  return this.mlImageDataRepository.create({
+                    multilinkId,
+                    type: MLContentType.LOGO,
+                    order,
+                    suborder,
+                    ...fileData,
+                  });
+                }
+              case 'link':
                 return this.mlImageDataRepository.create({
                   multilinkId,
-                  type: MLContentType.LOGO,
+                  type: MLContentType.LINK,
                   order,
                   suborder,
                   ...fileData,
                 });
-              }
-            case 'link':
+              case 'button':
+                return this.mlImageDataRepository.create({
+                  multilinkId,
+                  type: MLContentType.BUTTON,
+                  order,
+                  suborder,
+                  ...fileData,
+                });
+              case 'image':
+                return this.mlImageDataRepository.create({
+                  multilinkId,
+                  type: MLContentType.IMAGE,
+                  order,
+                  suborder,
+                  ...fileData,
+                });
+              case 'imagetext':
+                return this.mlImageDataRepository.create({
+                  multilinkId,
+                  type: MLContentType.IMAGETEXT,
+                  order,
+                  suborder,
+                  ...fileData,
+                });
+              case 'carousel':
+                return this.mlImageDataRepository.create({
+                  multilinkId,
+                  type: MLContentType.CAROUSEL,
+                  order,
+                  suborder,
+                  ...fileData,
+                });
+              case 'shop':
+                return this.mlImageDataRepository.create({
+                  multilinkId,
+                  type: MLContentType.SHOP,
+                  order,
+                  suborder,
+                  ...fileData,
+                });
+            }
+            if (file.originalname.split('.')[0] === 'backgroundImage') {
               return this.mlImageDataRepository.create({
                 multilinkId,
-                type: MLContentType.LINK,
-                order,
-                suborder,
+                type: 'backgroundImage',
+                order: 9999,
+                suborder: 0,
                 ...fileData,
               });
-            case 'button':
-              return this.mlImageDataRepository.create({
-                multilinkId,
-                type: MLContentType.BUTTON,
-                order,
-                suborder,
-                ...fileData,
-              });
-            case 'image':
-              return this.mlImageDataRepository.create({
-                multilinkId,
-                type: MLContentType.IMAGE,
-                order,
-                suborder,
-                ...fileData,
-              });
-            case 'imagetext':
-              return this.mlImageDataRepository.create({
-                multilinkId,
-                type: MLContentType.IMAGETEXT,
-                order,
-                suborder,
-                ...fileData,
-              });
-            case 'carousel':
-              return this.mlImageDataRepository.create({
-                multilinkId,
-                type: MLContentType.CAROUSEL,
-                order,
-                suborder,
-                ...fileData,
-              });
-            case 'shop':
-              return this.mlImageDataRepository.create({
-                multilinkId,
-                type: MLContentType.SHOP,
-                order,
-                suborder,
-                ...fileData,
-              });
-          }
-          if (file.originalname.split('.')[0] === 'backgroundImage') {
-            return this.mlImageDataRepository.create({
-              multilinkId,
-              type: 'backgroundImage',
-              order: 9999,
-              suborder: 0,
-              ...fileData,
-            });
-          }
-        }),
-      );
+            }
+          }),
+        ));
       if (!logo && logoOrders.length) {
         const avatar = await this.avatarRepository.findOne({
           where: { userId: user.id },
