@@ -168,7 +168,8 @@ export class MultilinkService {
       // </multilink content>
       // <multilink images>
       let logo: Promise<MLImageData>;
-      images.length &&
+      images &&
+        images.length &&
         (await Promise.all(
           images.map(file => {
             const { order, type, suborder } = {
