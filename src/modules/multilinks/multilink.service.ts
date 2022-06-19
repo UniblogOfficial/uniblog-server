@@ -77,11 +77,15 @@ export class MultilinkService {
         maxWidth: +maxWidth,
         contentMap: JSON.parse(contentMap),
       };
-
-      const multilink = await this.multilinkRepository.create({
-        userId: user.id,
-        ...mlRootData,
-      });
+      let multilink;
+      try {
+        multilink = await this.multilinkRepository.create({
+          userId: user.id,
+          ...mlRootData,
+        });
+      } catch (error) {
+        throw new Error(`Fail in ML creation: ${error}`);
+      }
       const multilinkId = multilink.id;
       const logoOrders = [];
       // </multilink root data>
@@ -106,33 +110,40 @@ export class MultilinkService {
       createBlockSet(parsedSets.mapBlocks, this.mlMapRepository);
       createBlockSet(parsedSets.dividerBlocks, this.mlDividerRepository);
 
-      if (parsedSets.logoBlocks.length) {
-        parsedSets.logoBlocks.map(async block => {
-          logoOrders.push(block.order);
-          await this.mlLogoRepository.create({ multilinkId, ...block, logo: '' });
-        });
+      try {
+        if (parsedSets.logoBlocks.length) {
+          parsedSets.logoBlocks.map(async block => {
+            logoOrders.push(block.order);
+            await this.mlLogoRepository.create({ multilinkId, ...block, logo: '' });
+          });
+        }
+      } catch (error) {
+        throw new Error(`Fail in ${this.mlLogoRepository.tableName}: ${error}`);
       }
 
-      if (parsedSets.linkBlocks.length) {
-        parsedSets.linkBlocks.map(async block => {
-          await this.mlLinkRepository.create({ multilinkId, ...block });
-        });
+      createBlockSet(parsedSets.linkBlocks, this.mlLinkRepository);
+      createBlockSet(parsedSets.buttonBlocks, this.mlButtonRepository);
+
+      try {
+        if (parsedSets.imageTextBlocks.length) {
+          parsedSets.imageTextBlocks.map(async block => {
+            await this.mlImageTextRepository.create({ multilinkId, ...block, image: '' });
+          });
+        }
+      } catch (error) {
+        throw new Error(`Fail in ${this.mlImageTextRepository.tableName}: ${error}`);
       }
-      if (parsedSets.buttonBlocks.length) {
-        parsedSets.buttonBlocks.map(async block => {
-          await this.mlButtonRepository.create({ multilinkId, ...block });
-        });
+
+      try {
+        if (parsedSets.imageBlocks.length) {
+          parsedSets.imageBlocks.map(async block => {
+            await this.mlImageRepository.create({ multilinkId, ...block, images: [] });
+          });
+        }
+      } catch (error) {
+        throw new Error(`Fail in ${this.mlImageRepository.tableName}: ${error}`);
       }
-      if (parsedSets.imageBlocks.length) {
-        parsedSets.imageBlocks.map(async block => {
-          await this.mlImageRepository.create({ multilinkId, ...block });
-        });
-      }
-      if (parsedSets.imageTextBlocks.length) {
-        parsedSets.imageTextBlocks.map(async block => {
-          await this.mlImageTextRepository.create({ multilinkId, ...block, image: '' });
-        });
-      }
+
       if (parsedSets.carouselBlocks.length) {
         parsedSets.carouselBlocks.map(async block => {
           await this.mlCarouselRepository.create({ multilinkId, ...block });
