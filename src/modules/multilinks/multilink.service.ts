@@ -67,7 +67,7 @@ export class MultilinkService {
         where: { userId: user.id, name: dto.name },
       }); */
       await this.multilinkRepository.destroy({
-        where: { userId: user.id, name: dto.name },
+        where: { userId: user.id, name: JSON.parse(name) },
         force: true,
       });
       // <multilink root data>
