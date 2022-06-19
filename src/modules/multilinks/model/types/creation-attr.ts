@@ -71,7 +71,7 @@ export interface IMLVoteCreationAttributes
   buttonColor?: string;
   buttonFont?: string;
   buttonLetterSpacing?: number;
-  buttonTextShadow?: string;
+  buttonTextShadow?: string[];
   buttonAlign?: 'right' | 'left' | 'center' | 'justify';
 }
 
@@ -163,19 +163,19 @@ export interface IMLShopCreationAttributes
   subtitleColor?: string;
   subtitleFont?: string;
   subtitleLetterSpacing?: number;
-  subtitleTextShadow?: string;
+  subtitleTextShadow?: string[];
   subtitleAlign?: 'right' | 'left' | 'center' | 'justify';
 
   descriptionColor?: string;
   descriptionFont?: string;
   descriptionLetterSpacing?: number;
-  descriptionTextShadow?: string;
+  descriptionTextShadow?: string[];
   descriptionAlign?: 'right' | 'left' | 'center' | 'justify';
 
   priceColor?: string;
   priceFont?: string;
   priceLetterSpacing?: number;
-  priceTextShadow?: string;
+  priceTextShadow?: string[];
   priceAlign?: 'right' | 'left' | 'center' | 'justify';
 
   buttonBackground?: string;
@@ -183,7 +183,7 @@ export interface IMLShopCreationAttributes
   buttonColor?: string;
   buttonFont?: string;
   buttonLetterSpacing?: number;
-  buttonTextShadow?: string;
+  buttonTextShadow?: string[];
   buttonAlign?: 'right' | 'left' | 'center' | 'justify';
 }
 
@@ -207,7 +207,7 @@ interface IMLTextProperties {
   // exm. #2: 20px Arial, sans-serif; <= required
   font?: string;
   letterSpacing?: number;
-  textShadow?: string; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+  textShadow?: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
   align?: 'right' | 'left' | 'center' | 'justify';
 }
 

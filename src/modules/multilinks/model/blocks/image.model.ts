@@ -56,8 +56,8 @@ export class MLImage extends Model<MLImage, IMLImageCreationAttributes> {
   @Column({ type: DataType.FLOAT })
   letterSpacing: number;
 
-  @Column({ type: DataType.STRING })
-  textShadow: string; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+  @Column({ type: DataType.ARRAY(DataType.STRING) })
+  textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'center' })
   align: string; // 'right' | 'left' | 'center' | 'justify';

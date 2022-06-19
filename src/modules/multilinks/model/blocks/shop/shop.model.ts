@@ -63,8 +63,8 @@ export class MLShop extends Model<MLShop, IMLShopCreationAttributes> {
   @Column({ type: DataType.FLOAT })
   letterSpacing: number;
 
-  @Column({ type: DataType.STRING })
-  textShadow: string; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+  @Column({ type: DataType.ARRAY(DataType.STRING) })
+  textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
   align: string; // 'right' | 'left' | 'center' | 'justify';
@@ -79,8 +79,8 @@ export class MLShop extends Model<MLShop, IMLShopCreationAttributes> {
   @Column({ type: DataType.FLOAT })
   subtitleLetterSpacing: number;
 
-  @Column({ type: DataType.STRING })
-  subtitleTextShadow: string; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+  @Column({ type: DataType.ARRAY(DataType.STRING) })
+  subtitleTextShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
   subtitleAlign: string; // 'right' | 'left' | 'center' | 'justify';
@@ -95,8 +95,8 @@ export class MLShop extends Model<MLShop, IMLShopCreationAttributes> {
   @Column({ type: DataType.FLOAT })
   descriptionLetterSpacing: number;
 
-  @Column({ type: DataType.STRING })
-  descriptionTextShadow: string; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+  @Column({ type: DataType.ARRAY(DataType.STRING) })
+  descriptionTextShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
   descriptionAlign: string; // 'right' | 'left' | 'center' | 'justify';
@@ -111,8 +111,8 @@ export class MLShop extends Model<MLShop, IMLShopCreationAttributes> {
   @Column({ type: DataType.FLOAT })
   priceLetterSpacing: number;
 
-  @Column({ type: DataType.STRING })
-  priceTextShadow: string; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+  @Column({ type: DataType.ARRAY(DataType.STRING) })
+  priceTextShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
   priceAlign: string; // 'right' | 'left' | 'center' | 'justify';
@@ -135,8 +135,8 @@ export class MLShop extends Model<MLShop, IMLShopCreationAttributes> {
   @Column({ type: DataType.FLOAT })
   buttonLetterSpacing: number;
 
-  @Column({ type: DataType.STRING })
-  buttonTextShadow: string; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+  @Column({ type: DataType.ARRAY(DataType.STRING) })
+  buttonTextShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
   buttonAlign: string; // 'right' | 'left' | 'center' | 'justify';
