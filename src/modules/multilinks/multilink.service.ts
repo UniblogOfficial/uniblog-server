@@ -23,6 +23,7 @@ import { MLCarousel } from './model/blocks/carousel.model';
 import { MLDivider } from './model/blocks/divider.model';
 import { MLVote } from './model/blocks/vote/vote.model';
 import { MLButton } from './model/blocks/button.model';
+import { ModelDefined } from 'sequelize/types';
 
 @Injectable()
 export class MultilinkService {
@@ -85,51 +86,25 @@ export class MultilinkService {
       const logoOrders = [];
       // </multilink root data>
       // <multilink content>
-      if (parsedSets.textBlocks.length) {
-        parsedSets.textBlocks.map(async block => {
-          await this.mlTextRepository.create({ multilinkId, ...block });
-        });
-      }
-      if (parsedSets.socialBlocks.length) {
-        parsedSets.socialBlocks.map(async block => {
-          await this.mlSocialRepository.create({ multilinkId, ...block });
-        });
-      }
-      if (parsedSets.postBlocks.length) {
-        parsedSets.postBlocks.map(async block => {
-          await this.mlPostRepository.create({ multilinkId, ...block });
-        });
-      }
-      if (parsedSets.widgetBlocks.length) {
-        parsedSets.widgetBlocks.map(async block => {
-          await this.mlWidgetRepository.create({ multilinkId, ...block });
-        });
-      }
-      if (parsedSets.videoBlocks.length) {
-        parsedSets.videoBlocks.map(async block => {
-          await this.mlVideoRepository.create({ multilinkId, ...block });
-        });
-      }
-      if (parsedSets.audioBlocks.length) {
-        parsedSets.audioBlocks.map(async block => {
-          await this.mlAudioRepository.create({ multilinkId, ...block });
-        });
-      }
-      if (parsedSets.mapBlocks.length) {
-        parsedSets.mapBlocks.map(async block => {
-          await this.mlMapRepository.create({ multilinkId, ...block });
-        });
-      }
-      if (parsedSets.voteBlocks.length) {
-        parsedSets.voteBlocks.map(async block => {
-          await this.mlVoteRepository.create({ multilinkId, ...block });
-        });
-      }
-      if (parsedSets.dividerBlocks.length) {
-        parsedSets.dividerBlocks.map(async block => {
-          await this.mlDividerRepository.create({ multilinkId, ...block });
-        });
-      }
+      const createBlockSet = <T extends ModelDefined<any, any>>(blocks: any[], repository: T) => {
+        try {
+          if (blocks.length) {
+            blocks.map(async block => {
+              await repository.create({ multilinkId, ...block });
+            });
+          }
+        } catch (error) {
+          throw new Error(`Fail in ${repository.tableName}: ${error}`);
+        }
+      };
+      createBlockSet(parsedSets.textBlocks, this.mlTextRepository);
+      createBlockSet(parsedSets.socialBlocks, this.mlSocialRepository);
+      createBlockSet(parsedSets.postBlocks, this.mlPostRepository);
+      createBlockSet(parsedSets.widgetBlocks, this.mlWidgetRepository);
+      createBlockSet(parsedSets.videoBlocks, this.mlVideoRepository);
+      createBlockSet(parsedSets.audioBlocks, this.mlAudioRepository);
+      createBlockSet(parsedSets.mapBlocks, this.mlMapRepository);
+      createBlockSet(parsedSets.dividerBlocks, this.mlDividerRepository);
 
       if (parsedSets.logoBlocks.length) {
         parsedSets.logoBlocks.map(async block => {
@@ -137,6 +112,7 @@ export class MultilinkService {
           await this.mlLogoRepository.create({ multilinkId, ...block, logo: '' });
         });
       }
+
       if (parsedSets.linkBlocks.length) {
         parsedSets.linkBlocks.map(async block => {
           await this.mlLinkRepository.create({ multilinkId, ...block });
@@ -184,7 +160,6 @@ export class MultilinkService {
               return this.mlVoteCellRepository.create({
                 blockId: voteBlock.id,
                 ...cell,
-                image: '',
               });
             }),
           );
