@@ -11,6 +11,10 @@ export type TMLImagesFormData = {
   images: Express.Multer.File[];
 };
 
+export type TImageFormData = {
+  image: Express.Multer.File[];
+};
+
 @Injectable()
 export class FileService {
   create(file): string {
