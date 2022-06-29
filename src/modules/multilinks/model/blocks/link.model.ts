@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLLinkCreationAttributes, SocialNetwork, SocialService } from '../types/creation-attr';
 
 @Table({ tableName: 'mllinks' })
-export class MLLink extends Model<MLLink, IMLLinkCreationAttributes> {
+export class MLLink
+  extends Model<MLLink, IMLLinkCreationAttributes>
+  implements IMLLinkCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique ML Block Link ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -42,6 +45,9 @@ export class MLLink extends Model<MLLink, IMLLinkCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   title: string;
 
+  @Column({ type: DataType.STRING })
+  image: string;
+
   // ================================================================================
 
   @ApiProperty({ example: '#ff0', description: 'CSS text color' })
@@ -58,7 +64,7 @@ export class MLLink extends Model<MLLink, IMLLinkCreationAttributes> {
   textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  align: string; // 'right' | 'left' | 'center' | 'justify';
+  align: 'right' | 'left' | 'center' | 'justify';
 
   // ================================================================================
 

@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLCarouselCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mlcarousels' })
-export class MLCarousel extends Model<MLCarousel, IMLCarouselCreationAttributes> {
+export class MLCarousel
+  extends Model<MLCarousel, IMLCarouselCreationAttributes>
+  implements IMLCarouselCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLCarousel ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -37,6 +40,9 @@ export class MLCarousel extends Model<MLCarousel, IMLCarouselCreationAttributes>
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   arrows: boolean;
+
+  @Column({ type: DataType.BOOLEAN, defaultValue: true })
+  swipe: boolean;
 
   @Column({ type: DataType.INTEGER })
   interval: number;

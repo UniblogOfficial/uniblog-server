@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLImageTextCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mlimagetexts' })
-export class MLImageText extends Model<MLImageText, IMLImageTextCreationAttributes> {
+export class MLImageText
+  extends Model<MLImageText, IMLImageTextCreationAttributes>
+  implements IMLImageTextCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLImageText ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -43,10 +46,10 @@ export class MLImageText extends Model<MLImageText, IMLImageTextCreationAttribut
   text: string;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  hAlign: string; // 'right' | 'left' | 'center' | 'justify';
+  hAlign: 'right' | 'left' | 'center' | 'justify';
 
   @Column({ type: DataType.STRING, defaultValue: 'center' })
-  vAlign: string; // 'top' | 'center' | 'bottom';
+  vAlign: 'top' | 'center' | 'bottom';
 
   // ================================================================================
 

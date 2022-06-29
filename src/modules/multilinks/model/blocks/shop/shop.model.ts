@@ -13,7 +13,10 @@ import { MLContentType, Multilink } from '../../multilink.model';
 import { IMLShopCreationAttributes } from '../../types/creation-attr';
 
 @Table({ tableName: 'mlshops' })
-export class MLShop extends Model<MLShop, IMLShopCreationAttributes> {
+export class MLShop
+  extends Model<MLShop, IMLShopCreationAttributes>
+  implements IMLShopCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLShop ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -67,7 +70,7 @@ export class MLShop extends Model<MLShop, IMLShopCreationAttributes> {
   textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  align: string; // 'right' | 'left' | 'center' | 'justify';
+  align: 'right' | 'left' | 'center' | 'justify';
 
   @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
@@ -83,7 +86,7 @@ export class MLShop extends Model<MLShop, IMLShopCreationAttributes> {
   subtitleTextShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  subtitleAlign: string; // 'right' | 'left' | 'center' | 'justify';
+  subtitleAlign: 'right' | 'left' | 'center' | 'justify';
 
   @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
@@ -99,7 +102,7 @@ export class MLShop extends Model<MLShop, IMLShopCreationAttributes> {
   descriptionTextShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  descriptionAlign: string; // 'right' | 'left' | 'center' | 'justify';
+  descriptionAlign: 'right' | 'left' | 'center' | 'justify';
 
   @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
@@ -115,7 +118,7 @@ export class MLShop extends Model<MLShop, IMLShopCreationAttributes> {
   priceTextShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  priceAlign: string; // 'right' | 'left' | 'center' | 'justify';
+  priceAlign: 'right' | 'left' | 'center' | 'justify';
 
   @ApiProperty({ example: '#ff0', description: 'ML shop block button CSS background' })
   @Column({ type: DataType.STRING, defaultValue: '#0000' })
@@ -139,7 +142,7 @@ export class MLShop extends Model<MLShop, IMLShopCreationAttributes> {
   buttonTextShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  buttonAlign: string; // 'right' | 'left' | 'center' | 'justify';
+  buttonAlign: 'right' | 'left' | 'center' | 'justify';
 
   // ================================================================================
 

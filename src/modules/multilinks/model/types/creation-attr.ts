@@ -6,6 +6,7 @@ export interface IMLTextCreationAttributes
   type: MLContentType.TEXT;
 
   text: string;
+  textType?: 'plain' | 'list';
   href?: string;
   icon?: string;
   iconPosition?: 'sticky' | 'aside';
@@ -28,7 +29,8 @@ export interface IMLVideoCreationAttributes
   type: MLContentType.VIDEO;
 
   url: string;
-  ratio?: number;
+  width: number;
+  height: number;
 }
 
 export interface IMLAudioCreationAttributes
@@ -43,6 +45,8 @@ export interface IMLWidgetCreationAttributes
   type: MLContentType.WIDGET;
 
   url: string;
+  width: number;
+  height: number;
 }
 
 export interface IMLMapCreationAttributes
@@ -50,6 +54,7 @@ export interface IMLMapCreationAttributes
   type: MLContentType.MAP;
 
   url: string;
+  latLng: [number, number];
 }
 
 export interface IMLPostCreationAttributes
@@ -95,6 +100,7 @@ export interface IMLButtonCreationAttributes
 
   href: string;
   title: string;
+  image?: string;
 }
 
 export interface IMLLogoCreationAttributes
@@ -116,6 +122,7 @@ export interface IMLLinkCreationAttributes
   href: string;
   linkType: SocialNetwork | SocialService | 'third-party';
   title: string;
+  image: string;
 }
 
 export interface IMLImageCreationAttributes
@@ -123,9 +130,9 @@ export interface IMLImageCreationAttributes
     IMLTextProperties {
   type: MLContentType.IMAGE;
 
-  images: string[];
-  grid?: '1fr' | '1fr 1fr' | '1fr 1fr 1fr';
-  titles?: string[];
+  image: string;
+  title?: string;
+  href?: string;
   imgPosition?: 'top' | 'bottom';
   textPosition?: 'inside' | 'outside';
 }
@@ -149,6 +156,7 @@ export interface IMLCarouselCreationAttributes
   images: string[];
   dots?: boolean;
   arrows?: boolean;
+  swipe?: boolean;
   interval?: number;
 }
 

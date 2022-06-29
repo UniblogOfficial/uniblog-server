@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLVideoCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mlvideos' })
-export class MLVideo extends Model<MLVideo, IMLVideoCreationAttributes> {
+export class MLVideo
+  extends Model<MLVideo, IMLVideoCreationAttributes>
+  implements IMLVideoCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLVideo ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -33,8 +36,11 @@ export class MLVideo extends Model<MLVideo, IMLVideoCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   url: string;
 
-  @Column({ type: DataType.FLOAT })
-  ratio: number;
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  width: number;
+
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  height: number;
 
   // ================================================================================
 

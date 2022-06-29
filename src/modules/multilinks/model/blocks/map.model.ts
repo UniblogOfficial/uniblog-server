@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLMapCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mlmaps' })
-export class MLMap extends Model<MLMap, IMLMapCreationAttributes> {
+export class MLMap
+  extends Model<MLMap, IMLMapCreationAttributes>
+  implements IMLMapCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLMap ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -32,6 +35,9 @@ export class MLMap extends Model<MLMap, IMLMapCreationAttributes> {
   @ApiProperty({ example: 'https://www.maps.google.com', description: 'map URL' })
   @Column({ type: DataType.STRING, allowNull: false })
   url: string;
+
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), allowNull: false })
+  latLng: [number, number];
 
   // ================================================================================
 

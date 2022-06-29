@@ -11,7 +11,10 @@ interface MLVoteCellCreationAttributes {
 }
 
 @Table({ tableName: 'mlvotecells' })
-export class MLVoteCell extends Model<MLVoteCell, MLVoteCellCreationAttributes> {
+export class MLVoteCell
+  extends Model<MLVoteCell, MLVoteCellCreationAttributes>
+  implements MLVoteCellCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLShopCell ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;

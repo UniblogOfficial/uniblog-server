@@ -13,10 +13,16 @@ interface MLImageDataCreationAttributes {
 }
 
 @Table({ tableName: 'mlimagedatas' })
-export class MLImageData extends Model<MLImageData, MLImageDataCreationAttributes> {
+export class MLImageData
+  extends Model<MLImageData, MLImageDataCreationAttributes>
+  implements MLImageDataCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLImageData ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
+
+  @Column({ type: DataType.STRING, allowNull: false })
+  type: MLContentType | 'backgroundImage';
 
   @ApiProperty({ example: '3', description: 'ML content order value' })
   @Column({ type: DataType.INTEGER, allowNull: false })

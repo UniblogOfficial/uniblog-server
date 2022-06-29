@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLPostCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mlposts' })
-export class MLPost extends Model<MLPost, IMLPostCreationAttributes> {
+export class MLPost
+  extends Model<MLPost, IMLPostCreationAttributes>
+  implements IMLPostCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLPost ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;

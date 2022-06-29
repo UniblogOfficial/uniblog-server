@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLLogoCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mllogos' })
-export class MLLogo extends Model<MLLogo, IMLLogoCreationAttributes> {
+export class MLLogo
+  extends Model<MLLogo, IMLLogoCreationAttributes>
+  implements IMLLogoCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLLogo ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;

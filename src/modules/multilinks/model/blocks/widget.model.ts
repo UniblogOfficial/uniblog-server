@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLWidgetCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mlwidgets' })
-export class MLWidget extends Model<MLWidget, IMLWidgetCreationAttributes> {
+export class MLWidget
+  extends Model<MLWidget, IMLWidgetCreationAttributes>
+  implements IMLWidgetCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLWidget ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -35,6 +38,12 @@ export class MLWidget extends Model<MLWidget, IMLWidgetCreationAttributes> {
   })
   @Column({ type: DataType.STRING, allowNull: false })
   url: string;
+
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  width: number;
+
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  height: number;
 
   // ================================================================================
 

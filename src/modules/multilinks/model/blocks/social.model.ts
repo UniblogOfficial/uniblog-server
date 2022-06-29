@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLSocialCreationAttributes, SocialNetwork } from '../types/creation-attr';
 
 @Table({ tableName: 'mlsocials' })
-export class MLSocial extends Model<MLSocial, IMLSocialCreationAttributes> {
+export class MLSocial
+  extends Model<MLSocial, IMLSocialCreationAttributes>
+  implements IMLSocialCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLSocial ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;

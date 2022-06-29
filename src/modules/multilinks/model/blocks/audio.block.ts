@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLAudioCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mlaudios' })
-export class MLAudio extends Model<MLAudio, IMLAudioCreationAttributes> {
+export class MLAudio
+  extends Model<MLAudio, IMLAudioCreationAttributes>
+  implements IMLAudioCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLAudio ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;

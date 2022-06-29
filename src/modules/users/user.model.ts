@@ -59,6 +59,9 @@ export class User extends Model<User, UserCreationAttributes> {
   @HasMany(() => Post)
   posts: Post[];
 
+  /*   @HasOne(() => MultilinkSummary)
+  multilinkSummary: MultilinkSummary; */
+
   @BelongsToMany(() => Role, () => UserRole)
   roles: Role[];
 }

@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLButtonCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mlbuttons' })
-export class MLButton extends Model<MLButton, IMLButtonCreationAttributes> {
+export class MLButton
+  extends Model<MLButton, IMLButtonCreationAttributes>
+  implements IMLButtonCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLButton ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -29,7 +32,7 @@ export class MLButton extends Model<MLButton, IMLButtonCreationAttributes> {
 
   @ApiProperty({ example: 'button', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.AUDIO;
+  type: MLContentType.BUTTON;
 
   // ================================================================================
 
@@ -38,6 +41,9 @@ export class MLButton extends Model<MLButton, IMLButtonCreationAttributes> {
 
   @Column({ type: DataType.STRING })
   title: string;
+
+  @Column({ type: DataType.STRING })
+  image: string;
 
   // ================================================================================
 
@@ -55,7 +61,7 @@ export class MLButton extends Model<MLButton, IMLButtonCreationAttributes> {
   textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  align: string; // 'right' | 'left' | 'center' | 'justify';
+  align: 'right' | 'left' | 'center' | 'justify';
 
   // ================================================================================
 

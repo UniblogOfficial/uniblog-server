@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLDividerCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mldividers' })
-export class MLDivider extends Model<MLDivider, IMLDividerCreationAttributes> {
+export class MLDivider
+  extends Model<MLDivider, IMLDividerCreationAttributes>
+  implements IMLDividerCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLDivider ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;

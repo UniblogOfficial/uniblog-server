@@ -18,7 +18,10 @@ interface MLShopCellCreationAttributes {
 }
 
 @Table({ tableName: 'mlshopcells' })
-export class MLShopCell extends Model<MLShopCell, MLShopCellCreationAttributes> {
+export class MLShopCell
+  extends Model<MLShopCell, MLShopCellCreationAttributes>
+  implements MLShopCellCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLShopCell ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;

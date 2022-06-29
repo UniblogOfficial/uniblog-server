@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLImageCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mlimages' })
-export class MLImage extends Model<MLImage, IMLImageCreationAttributes> {
+export class MLImage
+  extends Model<MLImage, IMLImageCreationAttributes>
+  implements IMLImageCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLImage ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -29,14 +32,14 @@ export class MLImage extends Model<MLImage, IMLImageCreationAttributes> {
 
   // ================================================================================
 
-  @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
-  images: string[];
+  @Column({ type: DataType.STRING, allowNull: false })
+  image: string;
 
-  @Column({ type: DataType.STRING, defaultValue: '1fr' })
-  grid: string;
+  @Column({ type: DataType.STRING })
+  title: string;
 
-  @Column({ type: DataType.ARRAY(DataType.STRING) })
-  titles: string[];
+  @Column({ type: DataType.STRING })
+  href: string;
 
   @Column({ type: DataType.STRING, defaultValue: 'bottom' })
   imgPosition: 'top' | 'bottom';
@@ -60,7 +63,7 @@ export class MLImage extends Model<MLImage, IMLImageCreationAttributes> {
   textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'center' })
-  align: string; // 'right' | 'left' | 'center' | 'justify';
+  align: 'right' | 'left' | 'center' | 'justify';
 
   // ================================================================================
 

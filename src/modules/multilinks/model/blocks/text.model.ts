@@ -4,7 +4,10 @@ import { MLContentType, Multilink } from '../multilink.model';
 import { IMLTextCreationAttributes } from '../types/creation-attr';
 
 @Table({ tableName: 'mltexts' })
-export class MLText extends Model<MLText, IMLTextCreationAttributes> {
+export class MLText
+  extends Model<MLText, IMLTextCreationAttributes>
+  implements IMLTextCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLText ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -37,6 +40,21 @@ export class MLText extends Model<MLText, IMLTextCreationAttributes> {
   @Column({ type: DataType.TEXT, allowNull: false })
   text: string;
 
+  @Column({ type: DataType.STRING, defaultValue: 'plain' })
+  textType: 'plain' | 'list';
+
+  @Column({ type: DataType.STRING })
+  href: string;
+
+  @Column({ type: DataType.STRING })
+  icon: string;
+
+  @Column({ type: DataType.STRING })
+  iconPosition: 'sticky' | 'aside';
+
+  @Column({ type: DataType.STRING })
+  iconSide: 'right' | 'left';
+
   // ================================================================================
 
   @ApiProperty({ example: '#ff0', description: 'CSS text color' })
@@ -53,7 +71,7 @@ export class MLText extends Model<MLText, IMLTextCreationAttributes> {
   textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  align: string; // 'right' | 'left' | 'center' | 'justify';
+  align: 'right' | 'left' | 'center' | 'justify';
 
   // ================================================================================
 

@@ -13,7 +13,10 @@ import { IMLVoteCreationAttributes } from '../../types/creation-attr';
 import { MLVoteCell } from './vote-cell.model';
 
 @Table({ tableName: 'mlvotes' })
-export class MLVote extends Model<MLVote, IMLVoteCreationAttributes> {
+export class MLVote
+  extends Model<MLVote, IMLVoteCreationAttributes>
+  implements IMLVoteCreationAttributes
+{
   @ApiProperty({ example: '69', description: 'Unique MLVote ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -57,7 +60,7 @@ export class MLVote extends Model<MLVote, IMLVoteCreationAttributes> {
   textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  align: string; // 'right' | 'left' | 'center' | 'justify';
+  align: 'right' | 'left' | 'center' | 'justify';
 
   @Column({ type: DataType.STRING })
   titleBackground: string;
