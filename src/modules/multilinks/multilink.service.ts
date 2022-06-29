@@ -197,18 +197,18 @@ export class MultilinkService {
 
             switch (type) {
               case 'logo':
-                if (suborder === 0) {
-                  logo = this.mlImageDataRepository.create({
-                    multilinkId,
-                    type: MLContentType.LOGO,
-                    order,
-                    suborder,
-                    ...fileData,
-                  });
-                  return logo;
-                }
-                // banner
-                if (suborder === 1) {
+                // if (suborder === 0) {
+                logo = this.mlImageDataRepository.create({
+                  multilinkId,
+                  type: MLContentType.LOGO,
+                  order,
+                  suborder,
+                  ...fileData,
+                });
+                return logo;
+              // }
+              // banner
+              /* if (suborder === 1) {
                   return this.mlImageDataRepository.create({
                     multilinkId,
                     type: MLContentType.LOGO,
@@ -216,7 +216,7 @@ export class MultilinkService {
                     suborder,
                     ...fileData,
                   });
-                }
+                } */
               case 'link':
                 return this.mlImageDataRepository.create({
                   multilinkId,
