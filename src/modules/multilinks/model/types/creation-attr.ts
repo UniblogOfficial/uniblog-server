@@ -77,7 +77,7 @@ export interface IMLVoteCreationAttributes
   buttonFont?: string;
   buttonLetterSpacing?: number;
   buttonTextShadow?: string[];
-  buttonAlign?: 'right' | 'left' | 'center' | 'justify';
+  buttonTextAlign?: 'right' | 'left' | 'center' | 'justify';
 }
 
 export interface IMLDividerCreationAttributes
@@ -139,7 +139,7 @@ export interface IMLImageCreationAttributes
 
 export interface IMLImageTextCreationAttributes
   extends IMLAnyBlockCreationAttributes,
-    Omit<IMLTextProperties, 'align'> {
+    Omit<IMLTextProperties, 'textAlign'> {
   type: MLContentType.IMAGETEXT;
 
   text: string;
@@ -172,19 +172,19 @@ export interface IMLShopCreationAttributes
   subtitleFont?: string;
   subtitleLetterSpacing?: number;
   subtitleTextShadow?: string[];
-  subtitleAlign?: 'right' | 'left' | 'center' | 'justify';
+  subtitleTextAlign?: 'right' | 'left' | 'center' | 'justify';
 
   descriptionColor?: string;
   descriptionFont?: string;
   descriptionLetterSpacing?: number;
   descriptionTextShadow?: string[];
-  descriptionAlign?: 'right' | 'left' | 'center' | 'justify';
+  descriptionTextAlign?: 'right' | 'left' | 'center' | 'justify';
 
   priceColor?: string;
   priceFont?: string;
   priceLetterSpacing?: number;
   priceTextShadow?: string[];
-  priceAlign?: 'right' | 'left' | 'center' | 'justify';
+  priceTextAlign?: 'right' | 'left' | 'center' | 'justify';
 
   buttonBackground?: string;
   buttonBorderRadius?: number;
@@ -192,7 +192,7 @@ export interface IMLShopCreationAttributes
   buttonFont?: string;
   buttonLetterSpacing?: number;
   buttonTextShadow?: string[];
-  buttonAlign?: 'right' | 'left' | 'center' | 'justify';
+  buttonTextAlign?: 'right' | 'left' | 'center' | 'justify';
 }
 
 // ================================================================================
@@ -216,7 +216,7 @@ interface IMLTextProperties {
   font?: string;
   letterSpacing?: number;
   textShadow?: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
-  align?: 'right' | 'left' | 'center' | 'justify';
+  textAlign?: 'right' | 'left' | 'center' | 'justify';
 }
 
 export enum SocialNetwork {

@@ -70,7 +70,7 @@ export class MLShop
   textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  align: 'right' | 'left' | 'center' | 'justify';
+  textAlign: 'right' | 'left' | 'center' | 'justify';
 
   @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
@@ -86,7 +86,7 @@ export class MLShop
   subtitleTextShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  subtitleAlign: 'right' | 'left' | 'center' | 'justify';
+  subtitleTextAlign: 'right' | 'left' | 'center' | 'justify';
 
   @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
@@ -102,7 +102,7 @@ export class MLShop
   descriptionTextShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  descriptionAlign: 'right' | 'left' | 'center' | 'justify';
+  descriptionTextAlign: 'right' | 'left' | 'center' | 'justify';
 
   @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
@@ -118,7 +118,7 @@ export class MLShop
   priceTextShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  priceAlign: 'right' | 'left' | 'center' | 'justify';
+  priceTextAlign: 'right' | 'left' | 'center' | 'justify';
 
   @ApiProperty({ example: '#ff0', description: 'ML shop block button CSS background' })
   @Column({ type: DataType.STRING, defaultValue: '#0000' })
@@ -142,7 +142,7 @@ export class MLShop
   buttonTextShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  buttonAlign: 'right' | 'left' | 'center' | 'justify';
+  buttonTextAlign: 'right' | 'left' | 'center' | 'justify';
 
   // ================================================================================
 
