@@ -70,9 +70,9 @@ export interface IMLVoteCreationAttributes
   type: MLContentType.VOTE;
 
   titleBackground?: string;
-  titleBorderRadius?: number;
+  titleBorderRadius?: number[];
   buttonBackground?: string;
-  buttonBorderRadius?: number;
+  buttonBorderRadius?: number[];
   buttonColor?: string;
   buttonFont?: string;
   buttonLetterSpacing?: number;
@@ -187,7 +187,7 @@ export interface IMLShopCreationAttributes
   priceTextAlign?: 'right' | 'left' | 'center' | 'justify';
 
   buttonBackground?: string;
-  buttonBorderRadius?: number;
+  buttonBorderRadius?: number[];
   buttonColor?: string;
   buttonFont?: string;
   buttonLetterSpacing?: number;
@@ -204,7 +204,7 @@ interface IMLAnyBlockCreationAttributes {
   padding?: number[];
   margin?: number[];
   background?: string;
-  borderRadius?: number;
+  borderRadius?: number[];
 }
 
 interface IMLTextProperties {

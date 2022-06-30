@@ -27,8 +27,8 @@ export class MLButton
   background: string;
 
   @ApiProperty({ example: '24', description: 'ML block CSS borderRadius' })
-  @Column({ type: DataType.FLOAT, defaultValue: '#0000' })
-  borderRadius: number;
+  @Column({ type: DataType.ARRAY(DataType.INTEGER), defaultValue: [0] })
+  borderRadius: number[];
 
   @ApiProperty({ example: 'button', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })

@@ -65,14 +65,14 @@ export class MLVote
   @Column({ type: DataType.STRING })
   titleBackground: string;
 
-  @Column({ type: DataType.FLOAT })
-  titleBorderRadius: number;
+  @Column({ type: DataType.ARRAY(DataType.INTEGER), defaultValue: [0] })
+  titleBorderRadius: number[];
 
   @Column({ type: DataType.STRING })
   buttonBackground: string;
 
-  @Column({ type: DataType.FLOAT })
-  buttonBorderRadius: number;
+  @Column({ type: DataType.ARRAY(DataType.INTEGER), defaultValue: [0] })
+  buttonBorderRadius: number[];
 
   @Column({ type: DataType.STRING })
   buttonColor: string;

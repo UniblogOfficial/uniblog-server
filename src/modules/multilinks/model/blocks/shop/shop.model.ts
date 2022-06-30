@@ -36,8 +36,8 @@ export class MLShop
   background: string;
 
   @ApiProperty({ example: '24', description: 'ML block CSS borderRadius' })
-  @Column({ type: DataType.FLOAT, defaultValue: '#0000' })
-  borderRadius: number;
+  @Column({ type: DataType.ARRAY(DataType.INTEGER), defaultValue: [0] })
+  borderRadius: number[];
 
   @ApiProperty({ example: 'shop', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
@@ -125,8 +125,8 @@ export class MLShop
   buttonBackground: string;
 
   @ApiProperty({ example: '24', description: 'ML shop block button CSS borderRadius' })
-  @Column({ type: DataType.FLOAT, defaultValue: '#0000' })
-  buttonBorderRadius: number;
+  @Column({ type: DataType.ARRAY(DataType.INTEGER), defaultValue: [0] })
+  buttonBorderRadius: number[];
 
   @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
