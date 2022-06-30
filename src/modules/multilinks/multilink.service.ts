@@ -90,11 +90,15 @@ export class MultilinkService {
       const logoOrders = [];
       // </multilink root data>
       // <multilink content>
-      const createBlockSet = <T extends ModelDefined<any, any>>(blocks: any[], repository: T) => {
+      const createBlockSet = <T extends ModelDefined<any, any>, O extends Record<string, unknown>>(
+        blocks: any[],
+        repository: T,
+        optional?: O,
+      ) => {
         try {
           if (blocks.length) {
             blocks.map(async block => {
-              await repository.create({ multilinkId, ...block });
+              await repository.create({ multilinkId, ...block, ...optional });
             });
           }
         } catch (error) {
@@ -121,34 +125,12 @@ export class MultilinkService {
         throw new Error(`Fail in ${this.mlLogoRepository.tableName}: ${error}`);
       }
 
-      createBlockSet(parsedSets.linkBlocks, this.mlLinkRepository);
+      createBlockSet(parsedSets.linkBlocks, this.mlLinkRepository, { image: '' });
       createBlockSet(parsedSets.buttonBlocks, this.mlButtonRepository);
+      createBlockSet(parsedSets.imageTextBlocks, this.mlImageTextRepository, { image: '' });
+      createBlockSet(parsedSets.imageBlocks, this.mlImageRepository, { image: '' });
+      createBlockSet(parsedSets.carouselBlocks, this.mlCarouselRepository, { images: [] });
 
-      try {
-        if (parsedSets.imageTextBlocks.length) {
-          parsedSets.imageTextBlocks.map(async block => {
-            await this.mlImageTextRepository.create({ multilinkId, ...block, image: '' });
-          });
-        }
-      } catch (error) {
-        throw new Error(`Fail in ${this.mlImageTextRepository.tableName}: ${error}`);
-      }
-
-      try {
-        if (parsedSets.imageBlocks.length) {
-          parsedSets.imageBlocks.map(async block => {
-            await this.mlImageRepository.create({ multilinkId, ...block, images: [] });
-          });
-        }
-      } catch (error) {
-        throw new Error(`Fail in ${this.mlImageRepository.tableName}: ${error}`);
-      }
-
-      if (parsedSets.carouselBlocks.length) {
-        parsedSets.carouselBlocks.map(async block => {
-          await this.mlCarouselRepository.create({ multilinkId, ...block });
-        });
-      }
       if (parsedSets.shopBlocks.length) {
         parsedSets.shopBlocks.map(async block => {
           const shopBlock = await this.mlShopRepository.create({ multilinkId, ...block });
