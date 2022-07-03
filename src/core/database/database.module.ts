@@ -25,7 +25,7 @@ import { MLVideo } from 'src/modules/multilinks/model/blocks/video.model';
 import { MLImageText } from 'src/modules/multilinks/model/blocks/imagetext.model';
 import { MLLink } from 'src/modules/multilinks/model/blocks/link.model';
 import { MLLogo } from 'src/modules/multilinks/model/blocks/logo.model';
-import { MLAudio } from 'src/modules/multilinks/model/blocks/audio.block';
+import { MLAudio } from 'src/modules/multilinks/model/blocks/audio.model';
 import { MLButton } from 'src/modules/multilinks/model/blocks/button.model';
 import { MLCarousel } from 'src/modules/multilinks/model/blocks/carousel.model';
 import { MLDivider } from 'src/modules/multilinks/model/blocks/divider.model';

@@ -4,7 +4,7 @@ import { MLButton } from './model/blocks/button.model';
 import { MLCarousel } from './model/blocks/carousel.model';
 import { MLVote } from './model/blocks/vote/vote.model';
 import { MLMap } from './model/blocks/map.model';
-import { MLAudio } from './model/blocks/audio.block';
+import { MLAudio } from './model/blocks/audio.model';
 import { MLPost } from './model/blocks/post.model';
 import { MLVoteCell } from './model/blocks/vote/vote-cell.model';
 import { MLImageData } from './model/images/ml-imagedata.model';

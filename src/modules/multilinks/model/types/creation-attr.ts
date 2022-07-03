@@ -1,8 +1,6 @@
 import { MLContentType } from '../multilink.model';
 
-export interface IMLTextCreationAttributes
-  extends IMLAnyBlockCreationAttributes,
-    IMLTextProperties {
+export interface IMLTextCreationAttrs extends IMLAnyBlockCreationAttrs, IMLTextProperties {
   type: MLContentType.TEXT;
 
   text: string;
@@ -13,8 +11,7 @@ export interface IMLTextCreationAttributes
   iconSide?: 'right' | 'left';
 }
 
-export interface IMLSocialCreationAttributes
-  extends Omit<IMLAnyBlockCreationAttributes, 'borderRadius'> {
+export interface IMLSocialCreationAttrs extends Omit<IMLAnyBlockCreationAttrs, 'borderRadius'> {
   type: MLContentType.SOCIAL;
 
   links: string[];
@@ -24,8 +21,7 @@ export interface IMLSocialCreationAttributes
   columns?: string;
 }
 
-export interface IMLVideoCreationAttributes
-  extends Omit<IMLAnyBlockCreationAttributes, 'borderRadius'> {
+export interface IMLVideoCreationAttrs extends Omit<IMLAnyBlockCreationAttrs, 'borderRadius'> {
   type: MLContentType.VIDEO;
 
   url: string;
@@ -33,15 +29,13 @@ export interface IMLVideoCreationAttributes
   height: number;
 }
 
-export interface IMLAudioCreationAttributes
-  extends Omit<IMLAnyBlockCreationAttributes, 'borderRadius'> {
+export interface IMLAudioCreationAttrs extends Omit<IMLAnyBlockCreationAttrs, 'borderRadius'> {
   type: MLContentType.AUDIO;
 
   url: string;
 }
 
-export interface IMLWidgetCreationAttributes
-  extends Omit<IMLAnyBlockCreationAttributes, 'borderRadius'> {
+export interface IMLWidgetCreationAttrs extends Omit<IMLAnyBlockCreationAttrs, 'borderRadius'> {
   type: MLContentType.WIDGET;
 
   url: string;
@@ -49,23 +43,21 @@ export interface IMLWidgetCreationAttributes
   height: number;
 }
 
-export interface IMLMapCreationAttributes
-  extends Omit<IMLAnyBlockCreationAttributes, 'borderRadius'> {
+export interface IMLMapCreationAttrs extends Omit<IMLAnyBlockCreationAttrs, 'borderRadius'> {
   type: MLContentType.MAP;
 
   url: string;
   latLng: [number, number];
 }
 
-export interface IMLPostCreationAttributes
-  extends Omit<IMLAnyBlockCreationAttributes, 'borderRadius'> {
+export interface IMLPostCreationAttrs extends Omit<IMLAnyBlockCreationAttrs, 'borderRadius'> {
   type: MLContentType.POST;
 
   url: string;
 }
 
-export interface IMLVoteCreationAttributes
-  extends Omit<IMLAnyBlockCreationAttributes, 'borderRadius'>,
+export interface IMLVoteCreationAttrs
+  extends Omit<IMLAnyBlockCreationAttrs, 'borderRadius'>,
     IMLTextProperties {
   type: MLContentType.VOTE;
 
@@ -80,8 +72,7 @@ export interface IMLVoteCreationAttributes
   buttonTextAlign?: 'right' | 'left' | 'center' | 'justify';
 }
 
-export interface IMLDividerCreationAttributes
-  extends Omit<IMLAnyBlockCreationAttributes, 'borderRadius'> {
+export interface IMLDividerCreationAttrs extends Omit<IMLAnyBlockCreationAttrs, 'borderRadius'> {
   type: MLContentType.DIVIDER;
 
   icon?: string;
@@ -93,9 +84,7 @@ export interface IMLDividerCreationAttributes
   lineColor?: string;
 }
 
-export interface IMLButtonCreationAttributes
-  extends IMLAnyBlockCreationAttributes,
-    IMLTextProperties {
+export interface IMLButtonCreationAttrs extends IMLAnyBlockCreationAttrs, IMLTextProperties {
   type: MLContentType.BUTTON;
 
   href: string;
@@ -103,8 +92,7 @@ export interface IMLButtonCreationAttributes
   image?: string;
 }
 
-export interface IMLLogoCreationAttributes
-  extends Omit<IMLAnyBlockCreationAttributes, 'borderRadius'> {
+export interface IMLLogoCreationAttrs extends Omit<IMLAnyBlockCreationAttrs, 'borderRadius'> {
   type: MLContentType.LOGO;
 
   logo: string;
@@ -114,9 +102,7 @@ export interface IMLLogoCreationAttributes
   vAlign?: string;
 }
 
-export interface IMLLinkCreationAttributes
-  extends IMLAnyBlockCreationAttributes,
-    IMLTextProperties {
+export interface IMLLinkCreationAttrs extends IMLAnyBlockCreationAttrs, IMLTextProperties {
   type: MLContentType.LINK;
 
   href: string;
@@ -125,9 +111,7 @@ export interface IMLLinkCreationAttributes
   image: string;
 }
 
-export interface IMLImageCreationAttributes
-  extends IMLAnyBlockCreationAttributes,
-    IMLTextProperties {
+export interface IMLImageCreationAttrs extends IMLAnyBlockCreationAttrs, IMLTextProperties {
   type: MLContentType.IMAGE;
 
   image: string;
@@ -137,8 +121,8 @@ export interface IMLImageCreationAttributes
   textPosition?: 'inside' | 'outside';
 }
 
-export interface IMLImageTextCreationAttributes
-  extends IMLAnyBlockCreationAttributes,
+export interface IMLImageTextCreationAttrs
+  extends IMLAnyBlockCreationAttrs,
     Omit<IMLTextProperties, 'textAlign'> {
   type: MLContentType.IMAGETEXT;
 
@@ -149,8 +133,7 @@ export interface IMLImageTextCreationAttributes
   vAlign?: 'top' | 'center' | 'bottom';
 }
 
-export interface IMLCarouselCreationAttributes
-  extends Omit<IMLAnyBlockCreationAttributes, 'borderRadius'> {
+export interface IMLCarouselCreationAttrs extends Omit<IMLAnyBlockCreationAttrs, 'borderRadius'> {
   type: MLContentType.CAROUSEL;
 
   images: string[];
@@ -160,9 +143,7 @@ export interface IMLCarouselCreationAttributes
   interval?: number;
 }
 
-export interface IMLShopCreationAttributes
-  extends IMLAnyBlockCreationAttributes,
-    IMLTextProperties {
+export interface IMLShopCreationAttrs extends IMLAnyBlockCreationAttrs, IMLTextProperties {
   type: MLContentType.SHOP;
 
   grid: string;
@@ -197,7 +178,7 @@ export interface IMLShopCreationAttributes
 
 // ================================================================================
 
-interface IMLAnyBlockCreationAttributes {
+export interface IMLAnyBlockCreationAttrs {
   multilinkId: number;
   order: number;
 

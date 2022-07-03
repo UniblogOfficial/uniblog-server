@@ -18,7 +18,7 @@ import { MLVideo } from './blocks/video.model';
 import { MLImage } from './blocks/image.model';
 import { MLImageText } from './blocks/imagetext.model';
 import { MLShop } from './blocks/shop/shop.model';
-import { MLAudio } from './blocks/audio.block';
+import { MLAudio } from './blocks/audio.model';
 import { MLButton } from './blocks/button.model';
 import { MLCarousel } from './blocks/carousel.model';
 import { MLDivider } from './blocks/divider.model';
@@ -27,7 +27,7 @@ import { MLPost } from './blocks/post.model';
 import { MLVote } from './blocks/vote/vote.model';
 import { MLWidget } from './blocks/widget.model';
 
-interface MultilinkCreationAttributes {
+interface MultilinkCreationAttrs {
   name: string;
   background: string;
   maxWidth: number;
@@ -56,7 +56,7 @@ export enum MLContentType {
 }
 
 @Table({ tableName: 'multilinks', paranoid: true })
-export class Multilink extends Model<Multilink, MultilinkCreationAttributes> {
+export class Multilink extends Model<Multilink, MultilinkCreationAttrs> {
   @ApiProperty({ example: '69', description: 'Unique ML ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;

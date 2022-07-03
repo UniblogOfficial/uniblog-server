@@ -16,7 +16,7 @@ import { MLLogo } from './model/blocks/logo.model';
 import { Avatar } from '../users/model/avatar.model';
 import { MLVoteCell } from './model/blocks/vote/vote-cell.model';
 import { MLWidget } from './model/blocks/widget.model';
-import { MLAudio } from './model/blocks/audio.block';
+import { MLAudio } from './model/blocks/audio.model';
 import { MLMap } from './model/blocks/map.model';
 import { MLPost } from './model/blocks/post.model';
 import { MLCarousel } from './model/blocks/carousel.model';

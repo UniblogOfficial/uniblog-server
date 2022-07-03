@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { MLContentType, Multilink } from '../multilink.model';
 
-interface MLImageDataCreationAttributes {
+interface MLImageDataCreationAttrs {
   multilinkId: number;
   type: MLContentType | 'backgroundImage';
   order: number;
@@ -14,8 +14,8 @@ interface MLImageDataCreationAttributes {
 
 @Table({ tableName: 'mlimagedatas' })
 export class MLImageData
-  extends Model<MLImageData, MLImageDataCreationAttributes>
-  implements MLImageDataCreationAttributes
+  extends Model<MLImageData, MLImageDataCreationAttrs>
+  implements MLImageDataCreationAttrs
 {
   @ApiProperty({ example: '69', description: 'Unique MLImageData ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })

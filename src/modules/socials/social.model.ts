@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { User } from '../users/user.model';
 
-interface SocialCreationAttributes {
+interface SocialCreationAttrs {
   name: string;
   accessToken: string;
   socialUserId: string;
@@ -10,7 +10,7 @@ interface SocialCreationAttributes {
 }
 
 @Table({ tableName: 'socials' })
-export class Social extends Model<Social, SocialCreationAttributes> {
+export class Social extends Model<Social, SocialCreationAttrs> {
   @ApiProperty({ example: '69', description: 'Unique social network ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;

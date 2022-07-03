@@ -2,14 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { User } from '../user.model';
 
-interface AvatarCreationAttributes {
+interface AvatarCreationAttrs {
   userId: number;
   imageType: string;
   imageData: Buffer;
 }
 
 @Table({ tableName: 'avatars' })
-export class Avatar extends Model<Avatar, AvatarCreationAttributes> {
+export class Avatar extends Model<Avatar, AvatarCreationAttrs> {
   @ApiProperty({ example: '69', description: 'Unique avatar ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;

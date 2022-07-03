@@ -2,14 +2,16 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { MLAudio } from './modules/multilinks/model/blocks/audio.model';
+import { MLContentType } from './modules/multilinks/model/multilink.model';
 
-const whitelist = [
+/* const whitelist = [
   'https://uniblog-online.netlify.app',
   'https://uniblog-server.herokuapp.com',
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:3002',
-];
+]; */
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -50,6 +52,17 @@ async function start() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
+  /* try {
+    await MLAudio.create({
+      multilinkId: 30,
+      order: 0,
+      margin: [0, 12],
+      type: MLContentType.AUDIO,
+      url: 'http//',
+    });
+  } catch (error) {
+    console.log(error.message);
+  } */
 
   // app.useGlobalPipes(new ValidationPipe());
 

@@ -1,14 +1,15 @@
+import { MLBlock } from './block.model';
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
-import { IMLAudioCreationAttributes } from '../types/creation-attr';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { MLContentType } from '../multilink.model';
+import { IMLAudioCreationAttrs } from '../types/creation-attr';
 
 @Table({ tableName: 'mlaudios' })
 export class MLAudio
-  extends Model<MLAudio, IMLAudioCreationAttributes>
-  implements IMLAudioCreationAttributes
+  extends MLBlock<MLContentType.AUDIO, IMLAudioCreationAttrs>
+  implements IMLAudioCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLAudio ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique MLAudio ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -28,7 +29,7 @@ export class MLAudio
 
   @ApiProperty({ example: 'audio', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.AUDIO;
+  type: MLContentType.AUDIO; */
 
   // ================================================================================
 
@@ -38,7 +39,7 @@ export class MLAudio
 
   // ================================================================================
 
-  @ForeignKey(() => Multilink)
+  /* @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -46,5 +47,5 @@ export class MLAudio
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

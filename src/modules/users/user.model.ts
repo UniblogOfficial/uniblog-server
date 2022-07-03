@@ -14,12 +14,12 @@ import { Post } from '../posts/post.model';
 import { Social } from '../socials/social.model';
 import { Avatar } from './model/avatar.model';
 
-interface UserCreationAttributes {
+interface UserCreationAttrs {
   name: string;
 }
 
 @Table({ tableName: 'users' })
-export class User extends Model<User, UserCreationAttributes> {
+export class User extends Model<User, UserCreationAttrs> {
   @ApiProperty({ example: '69', description: 'Unique user ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
