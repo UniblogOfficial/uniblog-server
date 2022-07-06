@@ -4,7 +4,7 @@ import { Column, DataType, Table } from 'sequelize-typescript';
 import { MLContentType } from '../multilink.model';
 import { IMLAudioCreationAttrs } from '../types/creation-attr';
 
-@Table({ tableName: 'mlaudios' })
+@Table({ tableName: 'MLAudios' })
 export class MLAudio
   extends MLBlock<MLContentType.AUDIO, IMLAudioCreationAttrs>
   implements IMLAudioCreationAttrs

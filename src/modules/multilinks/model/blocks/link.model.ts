@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
-import { IMLLinkCreationAttributes, SocialNetwork, SocialService } from '../types/creation-attr';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { MLContentType } from '../multilink.model';
+import { IMLLinkCreationAttrs, SocialNetwork, SocialService } from '../types/creation-attr';
+import { MLAnyTextBlock } from './anyTextBlock.model';
 
-@Table({ tableName: 'mllinks' })
+@Table({ tableName: 'MLLinks' })
 export class MLLink
-  extends Model<MLLink, IMLLinkCreationAttributes>
-  implements IMLLinkCreationAttributes
+  extends MLAnyTextBlock<MLContentType.LINK, IMLLinkCreationAttrs>
+  implements IMLLinkCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique ML Block Link ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique ML Block Link ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -25,14 +26,14 @@ export class MLLink
   @ApiProperty({ example: '#ff0', description: 'ML block CSS background' })
   @Column({ type: DataType.STRING, defaultValue: '#0000' })
   background: string;
-
+ */
   @ApiProperty({ example: '24', description: 'ML block CSS borderRadius' })
   @Column({ type: DataType.ARRAY(DataType.INTEGER), defaultValue: [0] })
   borderRadius: number[];
 
-  @ApiProperty({ example: 'link', description: 'ML content type' })
+  /* @ApiProperty({ example: 'link', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.LINK;
+  type: MLContentType.LINK; */
 
   // ================================================================================
 
@@ -48,9 +49,17 @@ export class MLLink
   @Column({ type: DataType.STRING })
   image: string;
 
+  @Column({ type: DataType.STRING })
+  logo: string;
+
+  @Column({ type: DataType.ARRAY(DataType.FLOAT), defaultValue: [0] })
+  imageMargin: number[];
+
+  @Column({ type: DataType.STRING })
+  mode: string;
   // ================================================================================
 
-  @ApiProperty({ example: '#ff0', description: 'CSS text color' })
+  /* @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
   color: string;
 
@@ -64,11 +73,11 @@ export class MLLink
   textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  textAlign: 'right' | 'left' | 'center' | 'justify';
+  textAlign: 'right' | 'left' | 'center' | 'justify'; */
 
   // ================================================================================
 
-  @ForeignKey(() => Multilink)
+  /* @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -76,5 +85,5 @@ export class MLLink
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

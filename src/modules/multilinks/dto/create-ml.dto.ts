@@ -7,6 +7,9 @@ export class CreateMLDto {
   @ApiProperty({ example: '#fff', description: 'Must be CSS background value' })
   readonly background: string;
 
+  @ApiProperty({ example: '#fff', description: 'Must be CSS background value' })
+  readonly outerBackground: string;
+
   @ApiProperty({ example: '1024', description: 'Max ML width in px' })
   readonly maxWidth: string;
 

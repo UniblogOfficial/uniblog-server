@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { MLShop } from './shop.model';
 
-interface MLShopCellCreationAttributes {
+interface MLShopCellCreationAttrs {
   blockId: number;
   order: number;
 
@@ -17,10 +17,10 @@ interface MLShopCellCreationAttributes {
   background?: string;
 }
 
-@Table({ tableName: 'mlshopcells' })
+@Table({ tableName: 'MLShopCells' })
 export class MLShopCell
-  extends Model<MLShopCell, MLShopCellCreationAttributes>
-  implements MLShopCellCreationAttributes
+  extends Model<MLShopCell, MLShopCellCreationAttrs>
+  implements MLShopCellCreationAttrs
 {
   @ApiProperty({ example: '69', description: 'Unique MLShopCell ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })

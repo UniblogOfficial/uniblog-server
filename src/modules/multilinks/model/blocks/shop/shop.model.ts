@@ -1,23 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  HasMany,
-  Model,
-  Table,
-} from 'sequelize-typescript';
+import { Column, DataType, HasMany, Table } from 'sequelize-typescript';
 import { MLShopCell } from './shop-cell.model';
-import { MLContentType, Multilink } from '../../multilink.model';
-import { IMLShopCreationAttributes } from '../../types/creation-attr';
+import { MLContentType } from '../../multilink.model';
+import { IMLShopCreationAttrs } from '../../types/creation-attr';
+import { MLAnyTextBlock } from '../anyTextBlock.model';
 
-@Table({ tableName: 'mlshops' })
+@Table({ tableName: 'MLShops' })
 export class MLShop
-  extends Model<MLShop, IMLShopCreationAttributes>
-  implements IMLShopCreationAttributes
+  extends MLAnyTextBlock<MLContentType.SHOP, IMLShopCreationAttrs>
+  implements IMLShopCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLShop ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique MLShop ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -33,15 +26,15 @@ export class MLShop
 
   @ApiProperty({ example: '#ff0', description: 'ML block CSS background' })
   @Column({ type: DataType.STRING, defaultValue: '#0000' })
-  background: string;
+  background: string; */
 
   @ApiProperty({ example: '24', description: 'ML block CSS borderRadius' })
   @Column({ type: DataType.ARRAY(DataType.INTEGER), defaultValue: [0] })
   borderRadius: number[];
 
-  @ApiProperty({ example: 'shop', description: 'ML content type' })
+  /* @ApiProperty({ example: 'shop', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.SHOP;
+  type: MLContentType.SHOP; */
 
   // ================================================================================
 
@@ -56,7 +49,7 @@ export class MLShop
 
   // ================================================================================
 
-  @ApiProperty({ example: '#ff0', description: 'CSS text color' })
+  /* @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
   color: string;
 
@@ -70,7 +63,7 @@ export class MLShop
   textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  textAlign: 'right' | 'left' | 'center' | 'justify';
+  textAlign: 'right' | 'left' | 'center' | 'justify'; */
 
   @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
@@ -146,7 +139,7 @@ export class MLShop
 
   // ================================================================================
 
-  @ForeignKey(() => Multilink)
+  /*  @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -154,5 +147,5 @@ export class MLShop
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

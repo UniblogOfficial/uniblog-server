@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
-import { IMLImageTextCreationAttributes } from '../types/creation-attr';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { MLContentType } from '../multilink.model';
+import { IMLImageTextCreationAttrs } from '../types/creation-attr';
+import { MLAnyTextBlock } from './anyTextBlock.model';
 
-@Table({ tableName: 'mlimagetexts' })
+@Table({ tableName: 'MLImageTexts' })
 export class MLImageText
-  extends Model<MLImageText, IMLImageTextCreationAttributes>
-  implements IMLImageTextCreationAttributes
+  extends MLAnyTextBlock<MLContentType.IMAGETEXT, IMLImageTextCreationAttrs>
+  implements IMLImageTextCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLImageText ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique MLImageText ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -24,18 +25,19 @@ export class MLImageText
 
   @ApiProperty({ example: '#ff0', description: 'ML block CSS background' })
   @Column({ type: DataType.STRING, defaultValue: '#0000' })
-  background: string;
+  background: string; */
 
   @ApiProperty({ example: '24', description: 'ML block CSS borderRadius' })
   @Column({ type: DataType.ARRAY(DataType.INTEGER), defaultValue: [0] })
   borderRadius: number[];
 
-  @ApiProperty({ example: 'imagetext', description: 'ML content type' })
+  /*  @ApiProperty({ example: 'imagetext', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.IMAGETEXT;
+  type: MLContentType.IMAGETEXT; */
 
   // ================================================================================
 
+  @ApiProperty({ example: 'https://ibb.co/q216/log.png', description: 'url to image source' })
   @Column({ type: DataType.STRING, allowNull: false })
   image: string;
 
@@ -51,9 +53,13 @@ export class MLImageText
   @Column({ type: DataType.STRING, defaultValue: 'center' })
   vAlign: 'top' | 'center' | 'bottom';
 
+  @ApiProperty({ example: 'https://somelink.com', description: 'url to target source' })
+  @Column({ type: DataType.STRING })
+  href: string;
+
   // ================================================================================
 
-  @ApiProperty({ example: '#ff0', description: 'CSS text color' })
+  /* @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
   color: string;
 
@@ -64,11 +70,11 @@ export class MLImageText
   letterSpacing: number;
 
   @Column({ type: DataType.ARRAY(DataType.STRING) })
-  textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+  textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue; */
 
   // ================================================================================
 
-  @ForeignKey(() => Multilink)
+  /* @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -76,5 +82,5 @@ export class MLImageText
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

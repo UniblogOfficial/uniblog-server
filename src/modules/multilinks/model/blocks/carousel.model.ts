@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
-import { IMLCarouselCreationAttributes } from '../types/creation-attr';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { MLContentType } from '../multilink.model';
+import { IMLCarouselCreationAttrs } from '../types/creation-attr';
+import { MLBlock } from './block.model';
 
-@Table({ tableName: 'mlcarousels' })
+@Table({ tableName: 'MLCarousels' })
 export class MLCarousel
-  extends Model<MLCarousel, IMLCarouselCreationAttributes>
-  implements IMLCarouselCreationAttributes
+  extends MLBlock<MLContentType.CAROUSEL, IMLCarouselCreationAttrs>
+  implements IMLCarouselCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLCarousel ID' })
+  /*   @ApiProperty({ example: '69', description: 'Unique MLCarousel ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -28,7 +29,7 @@ export class MLCarousel
 
   @ApiProperty({ example: 'carousel', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.CAROUSEL;
+  type: MLContentType.CAROUSEL; */
 
   // ================================================================================
 
@@ -44,12 +45,13 @@ export class MLCarousel
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   swipe: boolean;
 
+  @ApiProperty({ example: 3000, description: 'slider interval' })
   @Column({ type: DataType.INTEGER })
   interval: number;
 
   // ================================================================================
 
-  @ForeignKey(() => Multilink)
+  /*   @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -57,5 +59,5 @@ export class MLCarousel
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

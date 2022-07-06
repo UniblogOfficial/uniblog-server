@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
-import { IMLTextCreationAttributes } from '../types/creation-attr';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { MLContentType } from '../multilink.model';
+import { IMLTextCreationAttrs } from '../types/creation-attr';
+import { MLAnyTextBlock } from './anyTextBlock.model';
 
-@Table({ tableName: 'mltexts' })
+@Table({ tableName: 'MLTexts' })
 export class MLText
-  extends Model<MLText, IMLTextCreationAttributes>
-  implements IMLTextCreationAttributes
+  extends MLAnyTextBlock<MLContentType.TEXT, IMLTextCreationAttrs>
+  implements IMLTextCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLText ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique MLText ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -24,15 +25,15 @@ export class MLText
 
   @ApiProperty({ example: '#ff0', description: 'ML block CSS background' })
   @Column({ type: DataType.STRING, defaultValue: '#0000' })
-  background: string;
+  background: string; */
 
   @ApiProperty({ example: '24', description: 'ML block CSS borderRadius' })
   @Column({ type: DataType.ARRAY(DataType.INTEGER), defaultValue: [0] })
   borderRadius: number[];
 
-  @ApiProperty({ example: 'text', description: 'ML content type' })
+  /* @ApiProperty({ example: 'text', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.TEXT;
+  type: MLContentType.TEXT; */
 
   // ================================================================================
 
@@ -57,7 +58,7 @@ export class MLText
 
   // ================================================================================
 
-  @ApiProperty({ example: '#ff0', description: 'CSS text color' })
+  /* @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
   color: string;
 
@@ -71,11 +72,11 @@ export class MLText
   textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  textAlign: 'right' | 'left' | 'center' | 'justify';
+  textAlign: 'right' | 'left' | 'center' | 'justify'; */
 
   // ================================================================================
 
-  @ForeignKey(() => Multilink)
+  /* @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -83,5 +84,5 @@ export class MLText
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

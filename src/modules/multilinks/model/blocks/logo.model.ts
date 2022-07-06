@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
-import { IMLLogoCreationAttributes } from '../types/creation-attr';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { MLContentType } from '../multilink.model';
+import { IMLLogoCreationAttrs } from '../types/creation-attr';
+import { MLBlock } from './block.model';
 
-@Table({ tableName: 'mllogos' })
+@Table({ tableName: 'MLLogos' })
 export class MLLogo
-  extends Model<MLLogo, IMLLogoCreationAttributes>
-  implements IMLLogoCreationAttributes
+  extends MLBlock<MLContentType.LOGO, IMLLogoCreationAttrs>
+  implements IMLLogoCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLLogo ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique MLLogo ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -28,7 +29,7 @@ export class MLLogo
 
   @ApiProperty({ example: 'logo', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.LOGO;
+  type: MLContentType.LOGO; */
 
   // ================================================================================
 
@@ -38,6 +39,7 @@ export class MLLogo
   @Column({ type: DataType.STRING })
   banner: string;
 
+  @ApiProperty({ example: 100, description: 'logo size in px' })
   @Column({ type: DataType.INTEGER })
   size: number;
 
@@ -47,7 +49,7 @@ export class MLLogo
   @Column({ type: DataType.STRING, defaultValue: 'center' })
   vAlign: string; // 'top' | 'center' | 'bottom';
 
-  @ForeignKey(() => Multilink)
+  /* @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -55,5 +57,5 @@ export class MLLogo
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

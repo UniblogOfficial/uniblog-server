@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
-import { IMLSocialCreationAttributes, SocialNetwork } from '../types/creation-attr';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { MLContentType } from '../multilink.model';
+import { IMLSocialCreationAttrs, SocialNetwork, SocialService } from '../types/creation-attr';
+import { MLBlock } from './block.model';
 
-@Table({ tableName: 'mlsocials' })
+@Table({ tableName: 'MLSocials' })
 export class MLSocial
-  extends Model<MLSocial, IMLSocialCreationAttributes>
-  implements IMLSocialCreationAttributes
+  extends MLBlock<MLContentType.SOCIAL, IMLSocialCreationAttrs>
+  implements IMLSocialCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLSocial ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique MLSocial ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -28,7 +29,7 @@ export class MLSocial
 
   @ApiProperty({ example: 'social', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.SOCIAL;
+  type: MLContentType.SOCIAL; */
 
   // ================================================================================
 
@@ -41,7 +42,11 @@ export class MLSocial
     description: 'Type of social (name of service)',
   })
   @Column({ type: DataType.ARRAY(DataType.STRING) })
-  linkTypes: SocialNetwork[];
+  linkTypes: (SocialNetwork | SocialService)[];
+
+  @ApiProperty({ example: 'font-awesome', description: 'icons set id or name' })
+  @Column({ type: DataType.STRING })
+  setId: string;
 
   @Column({ type: DataType.FLOAT })
   size: number;
@@ -52,7 +57,7 @@ export class MLSocial
   @Column({ type: DataType.STRING })
   columns: string;
 
-  @ForeignKey(() => Multilink)
+  /* @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -60,5 +65,5 @@ export class MLSocial
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

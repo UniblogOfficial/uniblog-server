@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
-import { IMLDividerCreationAttributes } from '../types/creation-attr';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { MLContentType } from '../multilink.model';
+import { IMLDividerCreationAttrs } from '../types/creation-attr';
+import { MLBlock } from './block.model';
 
-@Table({ tableName: 'mldividers' })
+@Table({ tableName: 'MLDividers' })
 export class MLDivider
-  extends Model<MLDivider, IMLDividerCreationAttributes>
-  implements IMLDividerCreationAttributes
+  extends MLBlock<MLContentType.DIVIDER, IMLDividerCreationAttrs>
+  implements IMLDividerCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLDivider ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique MLDivider ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -29,9 +30,10 @@ export class MLDivider
   @ApiProperty({ example: 'divider', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
   type: MLContentType.DIVIDER;
-
+ */
   // ================================================================================
 
+  @ApiProperty({ example: 'heart', description: 'icon name according to certain icon list' })
   @Column({ type: DataType.STRING })
   icon: string;
 
@@ -49,7 +51,7 @@ export class MLDivider
 
   // ================================================================================
 
-  @ForeignKey(() => Multilink)
+  /* @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -57,5 +59,5 @@ export class MLDivider
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

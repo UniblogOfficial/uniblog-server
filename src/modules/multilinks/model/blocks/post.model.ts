@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
-import { IMLPostCreationAttributes } from '../types/creation-attr';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { MLContentType } from '../multilink.model';
+import { IMLPostCreationAttrs } from '../types/creation-attr';
+import { MLBlock } from './block.model';
 
-@Table({ tableName: 'mlposts' })
+@Table({ tableName: 'MLPosts' })
 export class MLPost
-  extends Model<MLPost, IMLPostCreationAttributes>
-  implements IMLPostCreationAttributes
+  extends MLBlock<MLContentType.POST, IMLPostCreationAttrs>
+  implements IMLPostCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLPost ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique MLPost ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -28,7 +29,7 @@ export class MLPost
 
   @ApiProperty({ example: 'post', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.POST;
+  type: MLContentType.POST; */
 
   // ================================================================================
 
@@ -38,7 +39,7 @@ export class MLPost
 
   // ================================================================================
 
-  @ForeignKey(() => Multilink)
+  /* @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -46,5 +47,5 @@ export class MLPost
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

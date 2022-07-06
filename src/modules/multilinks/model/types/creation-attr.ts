@@ -15,7 +15,8 @@ export interface IMLSocialCreationAttrs extends Omit<IMLAnyBlockCreationAttrs, '
   type: MLContentType.SOCIAL;
 
   links: string[];
-  linkTypes: SocialNetwork[];
+  linkTypes: (SocialNetwork | SocialService)[];
+  setId: string;
   size: number;
   rows?: string;
   columns?: string;
@@ -61,6 +62,24 @@ export interface IMLVoteCreationAttrs
     IMLTextProperties {
   type: MLContentType.VOTE;
 
+  target: string;
+  titleBackground?: string;
+  titleBorderRadius?: number[];
+  buttonBackground?: string;
+  buttonBorderRadius?: number[];
+  buttonColor?: string;
+  buttonFont?: string;
+  buttonLetterSpacing?: number;
+  buttonTextShadow?: string[];
+  buttonTextAlign?: 'right' | 'left' | 'center' | 'justify';
+}
+
+export interface IMLFeedbackCreationAttrs
+  extends Omit<IMLAnyBlockCreationAttrs, 'borderRadius'>,
+    IMLTextProperties {
+  type: MLContentType.FEEDBACK;
+
+  target: string;
   titleBackground?: string;
   titleBorderRadius?: number[];
   buttonBackground?: string;
@@ -108,7 +127,10 @@ export interface IMLLinkCreationAttrs extends IMLAnyBlockCreationAttrs, IMLTextP
   href: string;
   linkType: SocialNetwork | SocialService | 'third-party';
   title: string;
-  image: string;
+  image?: string;
+  logo?: string;
+  imageMargin?: number[];
+  mode?: string;
 }
 
 export interface IMLImageCreationAttrs extends IMLAnyBlockCreationAttrs, IMLTextProperties {
@@ -128,6 +150,7 @@ export interface IMLImageTextCreationAttrs
 
   text: string;
   image: string;
+  href?: string;
   imgPosition: 'right' | 'left';
   hAlign?: 'right' | 'left' | 'center' | 'justify';
   vAlign?: 'top' | 'center' | 'bottom';
@@ -141,6 +164,17 @@ export interface IMLCarouselCreationAttrs extends Omit<IMLAnyBlockCreationAttrs,
   arrows?: boolean;
   swipe?: boolean;
   interval?: number;
+}
+
+export interface IMLTimerCreationAttrs extends IMLAnyBlockCreationAttrs, IMLTextProperties {
+  type: MLContentType.TIMER;
+
+  image: string;
+  title?: string;
+  href: string;
+  countdown: number;
+  imgPosition?: 'top' | 'bottom';
+  textPosition?: 'inside' | 'outside';
 }
 
 export interface IMLShopCreationAttrs extends IMLAnyBlockCreationAttrs, IMLTextProperties {
@@ -184,17 +218,24 @@ export interface IMLAnyBlockCreationAttrs {
 
   padding?: number[];
   margin?: number[];
+  border?: string;
   background?: string;
   borderRadius?: number[];
 }
 
-interface IMLTextProperties {
+export interface IMLTextProperties {
   color?: string;
   // font must contain size & family;
   // all props: font-style font-variant font-weight font-size/line-height font-family
   // exm. #1: italic small-caps bold 12px/30px Georgia, serif;
   // exm. #2: 20px Arial, sans-serif; <= required
-  font?: string;
+  // font?: string;
+  fontStyle?: string;
+  fontVariant?: string;
+  fontWeight?: number;
+  fontSize?: number;
+  lineHeight?: number;
+  fontFamily?: string;
   letterSpacing?: number;
   textShadow?: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
   textAlign?: 'right' | 'left' | 'center' | 'justify';

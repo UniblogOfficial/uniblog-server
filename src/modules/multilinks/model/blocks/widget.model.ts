@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
-import { IMLWidgetCreationAttributes } from '../types/creation-attr';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { MLContentType } from '../multilink.model';
+import { IMLWidgetCreationAttrs } from '../types/creation-attr';
+import { MLBlock } from './block.model';
 
-@Table({ tableName: 'mlwidgets' })
+@Table({ tableName: 'MLWidgets' })
 export class MLWidget
-  extends Model<MLWidget, IMLWidgetCreationAttributes>
-  implements IMLWidgetCreationAttributes
+  extends MLBlock<MLContentType.WIDGET, IMLWidgetCreationAttrs>
+  implements IMLWidgetCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLWidget ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique MLWidget ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -28,7 +29,7 @@ export class MLWidget
 
   @ApiProperty({ example: 'widget', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.WIDGET;
+  type: MLContentType.WIDGET; */
 
   // ================================================================================
 
@@ -47,7 +48,7 @@ export class MLWidget
 
   // ================================================================================
 
-  @ForeignKey(() => Multilink)
+  /* @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -55,5 +56,5 @@ export class MLWidget
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

@@ -3,7 +3,7 @@ import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize
 import { Multilink } from '../multilink.model';
 import { IMLAnyBlockCreationAttrs } from '../types/creation-attr';
 
-@Table({ tableName: 'mlblocks' })
+@Table({ tableName: 'MLBlocks' })
 export class MLBlock<Block, BlockAttrs>
   extends Model<MLBlock<Block, BlockAttrs>, BlockAttrs>
   implements IMLAnyBlockCreationAttrs
@@ -21,6 +21,9 @@ export class MLBlock<Block, BlockAttrs>
 
   @Column({ type: DataType.ARRAY(DataType.FLOAT) })
   margin: number[];
+
+  @Column({ type: DataType.STRING })
+  border: string; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @ApiProperty({ example: '#ff0', description: 'ML block CSS background' })
   @Column({ type: DataType.STRING })

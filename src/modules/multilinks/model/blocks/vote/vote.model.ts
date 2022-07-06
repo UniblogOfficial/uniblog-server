@@ -1,23 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  HasMany,
-  Model,
-  Table,
-} from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../../multilink.model';
-import { IMLVoteCreationAttributes } from '../../types/creation-attr';
+import { Column, DataType, HasMany, Table } from 'sequelize-typescript';
+import { MLContentType } from '../../multilink.model';
+import { IMLVoteCreationAttrs } from '../../types/creation-attr';
+import { MLAnyTextBlock } from '../anyTextBlock.model';
 import { MLVoteCell } from './vote-cell.model';
 
-@Table({ tableName: 'mlvotes' })
+@Table({ tableName: 'MLVotes' })
 export class MLVote
-  extends Model<MLVote, IMLVoteCreationAttributes>
-  implements IMLVoteCreationAttributes
+  extends MLAnyTextBlock<MLContentType.VOTE, IMLVoteCreationAttrs>
+  implements IMLVoteCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLVote ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique MLVote ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -37,16 +30,20 @@ export class MLVote
 
   @ApiProperty({ example: 'vote', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.VOTE;
+  type: MLContentType.VOTE; */
 
   // ================================================================================
 
   @HasMany(() => MLVoteCell)
   cells: MLVoteCell[];
 
+  @ApiProperty({ example: 'https://somemail@gmail.com', description: 'url for feedback accept' })
+  @Column({ type: DataType.STRING })
+  target: string;
+
   // ================================================================================
 
-  @ApiProperty({ example: '#ff0', description: 'CSS text color' })
+  /* @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
   color: string;
 
@@ -60,7 +57,7 @@ export class MLVote
   textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'left' })
-  textAlign: 'right' | 'left' | 'center' | 'justify';
+  textAlign: 'right' | 'left' | 'center' | 'justify'; */
 
   @Column({ type: DataType.STRING })
   titleBackground: string;
@@ -91,7 +88,7 @@ export class MLVote
 
   // ================================================================================
 
-  @ForeignKey(() => Multilink)
+  /* @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -99,5 +96,5 @@ export class MLVote
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

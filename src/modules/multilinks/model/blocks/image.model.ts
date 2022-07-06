@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
-import { IMLImageCreationAttributes } from '../types/creation-attr';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { MLContentType } from '../multilink.model';
+import { IMLImageCreationAttrs } from '../types/creation-attr';
+import { MLAnyTextBlock } from './anyTextBlock.model';
 
-@Table({ tableName: 'mlimages' })
+@Table({ tableName: 'MLImages' })
 export class MLImage
-  extends Model<MLImage, IMLImageCreationAttributes>
-  implements IMLImageCreationAttributes
+  extends MLAnyTextBlock<MLContentType.IMAGE, IMLImageCreationAttrs>
+  implements IMLImageCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLImage ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique MLImage ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -28,16 +29,18 @@ export class MLImage
 
   @ApiProperty({ example: 'image', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.IMAGE;
+  type: MLContentType.IMAGE; */
 
   // ================================================================================
 
+  @ApiProperty({ example: 'https://ibb.co/q216/log.png', description: 'url to image source' })
   @Column({ type: DataType.STRING, allowNull: false })
   image: string;
 
   @Column({ type: DataType.STRING })
   title: string;
 
+  @ApiProperty({ example: 'https://somelink.com', description: 'url to target source' })
   @Column({ type: DataType.STRING })
   href: string;
 
@@ -49,7 +52,7 @@ export class MLImage
 
   // ================================================================================
 
-  @ApiProperty({ example: '#ff0', description: 'CSS text color' })
+  /* @ApiProperty({ example: '#ff0', description: 'CSS text color' })
   @Column({ type: DataType.STRING })
   color: string;
 
@@ -63,11 +66,11 @@ export class MLImage
   textShadow: string[]; // 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 
   @Column({ type: DataType.STRING, defaultValue: 'center' })
-  textAlign: 'right' | 'left' | 'center' | 'justify';
+  textAlign: 'right' | 'left' | 'center' | 'justify'; */
 
   // ================================================================================
 
-  @ForeignKey(() => Multilink)
+  /* @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -75,5 +78,5 @@ export class MLImage
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

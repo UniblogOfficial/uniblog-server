@@ -1,4 +1,3 @@
-import { MLImageData } from './images/ml-imagedata.model';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   BelongsTo,
@@ -26,37 +25,46 @@ import { MLMap } from './blocks/map.model';
 import { MLPost } from './blocks/post.model';
 import { MLVote } from './blocks/vote/vote.model';
 import { MLWidget } from './blocks/widget.model';
+import { MLTimer } from './blocks/timer.model';
+import { MLFeedback } from './blocks/feedback.model';
+import { MLImageData } from './images/ml-imagedata.model';
 
 interface MultilinkCreationAttrs {
   name: string;
   background: string;
+  outerBackground?: string;
   maxWidth: number;
   contentMap: MLContentType[];
   userId: number;
 }
 
 export enum MLContentType {
-  TEXT = 'textBlocks',
-  SOCIAL = 'socialBlocks',
-  WIDGET = 'widgetBlocks',
-  VIDEO = 'videoBlocks',
-  AUDIO = 'audioBlocks',
-  POST = 'postBlocks',
-  VOTE = 'voteBlocks',
-  MAP = 'mapBlocks',
-  DIVIDER = 'dividerBlocks',
+  TEXT = 'text',
+  SOCIAL = 'social',
+  WIDGET = 'widget',
+  VIDEO = 'video',
+  AUDIO = 'audio',
+  POST = 'post',
+  VOTE = 'vote',
+  MAP = 'map',
+  FEEDBACK = 'feedback',
+  DIVIDER = 'divider',
 
-  LINK = 'linkBlocks',
-  LOGO = 'logoBlocks',
-  BUTTON = 'buttonBlocks',
-  IMAGE = 'imageBlocks',
-  IMAGETEXT = 'imageTextBlocks',
-  CAROUSEL = 'carouselBlocks',
-  SHOP = 'shopBlocks',
+  LINK = 'link',
+  LOGO = 'logo',
+  BUTTON = 'button',
+  IMAGE = 'image',
+  IMAGETEXT = 'imageText',
+  CAROUSEL = 'carousel',
+  TIMER = 'timer',
+  SHOP = 'shop',
 }
 
 @Table({ tableName: 'multilinks', paranoid: true })
-export class Multilink extends Model<Multilink, MultilinkCreationAttrs> {
+export class Multilink
+  extends Model<Multilink, MultilinkCreationAttrs>
+  implements MultilinkCreationAttrs
+{
   @ApiProperty({ example: '69', description: 'Unique ML ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
@@ -75,6 +83,10 @@ export class Multilink extends Model<Multilink, MultilinkCreationAttrs> {
   @ApiProperty({ example: '#ff0', description: 'ML CSS background' })
   @Column({ type: DataType.STRING, allowNull: false })
   background: string;
+
+  @ApiProperty({ example: '#ff0', description: 'ML CSS outer background' })
+  @Column({ type: DataType.STRING })
+  outerBackground: string;
 
   @ApiProperty({ example: '720', description: 'ML CSS maxWidth' })
   @Column({ type: DataType.INTEGER, allowNull: false })
@@ -104,6 +116,9 @@ export class Multilink extends Model<Multilink, MultilinkCreationAttrs> {
   @HasMany(() => MLVote)
   voteBlocks: MLVote[];
 
+  @HasMany(() => MLFeedback)
+  feedbackBlocks: MLFeedback[];
+
   @HasMany(() => MLDivider)
   dividerBlocks: MLDivider[];
 
@@ -129,6 +144,9 @@ export class Multilink extends Model<Multilink, MultilinkCreationAttrs> {
 
   @HasMany(() => MLShop)
   shopBlocks: MLShop[];
+
+  @HasMany(() => MLTimer)
+  timerBlocks: MLTimer[];
 
   @HasMany(() => MLImageData)
   images: MLImageData[];

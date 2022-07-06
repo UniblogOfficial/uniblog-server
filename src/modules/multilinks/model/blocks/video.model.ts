@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
-import { IMLVideoCreationAttributes } from '../types/creation-attr';
+import { Column, DataType, Table } from 'sequelize-typescript';
+import { MLContentType } from '../multilink.model';
+import { IMLVideoCreationAttrs } from '../types/creation-attr';
+import { MLBlock } from './block.model';
 
-@Table({ tableName: 'mlvideos' })
+@Table({ tableName: 'MLVideos' })
 export class MLVideo
-  extends Model<MLVideo, IMLVideoCreationAttributes>
-  implements IMLVideoCreationAttributes
+  extends MLBlock<MLContentType.VIDEO, IMLVideoCreationAttrs>
+  implements IMLVideoCreationAttrs
 {
-  @ApiProperty({ example: '69', description: 'Unique MLVideo ID' })
+  /* @ApiProperty({ example: '69', description: 'Unique MLVideo ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
 
@@ -28,7 +29,7 @@ export class MLVideo
 
   @ApiProperty({ example: 'video', description: 'ML content type' })
   @Column({ type: DataType.STRING, allowNull: false })
-  type: MLContentType.VIDEO;
+  type: MLContentType.VIDEO; */
 
   // ================================================================================
 
@@ -44,7 +45,7 @@ export class MLVideo
 
   // ================================================================================
 
-  @ForeignKey(() => Multilink)
+  /* @ForeignKey(() => Multilink)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -52,5 +53,5 @@ export class MLVideo
   multilinkId: number;
 
   @BelongsTo(() => Multilink)
-  multilink: Multilink;
+  multilink: Multilink; */
 }

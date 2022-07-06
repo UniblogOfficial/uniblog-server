@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { MLVote } from './vote.model';
 
-interface MLVoteCellCreationAttributes {
+interface MLVoteCellCreationAttrs {
   blockId: number;
   order: number;
 
@@ -10,10 +10,10 @@ interface MLVoteCellCreationAttributes {
   value: number;
 }
 
-@Table({ tableName: 'mlvotecells' })
+@Table({ tableName: 'MLVoteCells' })
 export class MLVoteCell
-  extends Model<MLVoteCell, MLVoteCellCreationAttributes>
-  implements MLVoteCellCreationAttributes
+  extends Model<MLVoteCell, MLVoteCellCreationAttrs>
+  implements MLVoteCellCreationAttrs
 {
   @ApiProperty({ example: '69', description: 'Unique MLShopCell ID' })
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })

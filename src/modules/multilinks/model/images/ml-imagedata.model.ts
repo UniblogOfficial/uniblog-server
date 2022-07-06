@@ -12,7 +12,7 @@ interface MLImageDataCreationAttrs {
   imageData: Buffer;
 }
 
-@Table({ tableName: 'mlimagedatas' })
+@Table({ tableName: 'MLImageDatas' })
 export class MLImageData
   extends Model<MLImageData, MLImageDataCreationAttrs>
   implements MLImageDataCreationAttrs
