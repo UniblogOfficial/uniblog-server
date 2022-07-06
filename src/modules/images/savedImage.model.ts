@@ -14,7 +14,7 @@ interface ISavedImageCreationAttrs {
   thumbUrl: string;
 }
 
-@Table({ tableName: 'savedimages' })
+@Table({ tableName: 'SavedImages' })
 export class SavedImage
   extends Model<SavedImage, ISavedImageCreationAttrs>
   implements ISavedImageCreationAttrs
