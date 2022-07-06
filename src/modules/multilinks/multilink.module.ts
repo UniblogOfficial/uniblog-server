@@ -26,6 +26,8 @@ import { MLShopCell } from './model/blocks/shop/shop-cell.model';
 import { MLImageText } from './model/blocks/imagetext.model';
 import { MLLink } from './model/blocks/link.model';
 import { MLLogo } from './model/blocks/logo.model';
+import { MLFeedback } from './model/blocks/feedback.model';
+import { MLTimer } from './model/blocks/timer.model';
 
 @Module({
   controllers: [MultilinkController],
@@ -45,6 +47,7 @@ import { MLLogo } from './model/blocks/logo.model';
       MLAudio,
       MLMap,
       MLVote,
+      MLFeedback,
       MLDivider,
 
       MLLogo,
@@ -54,6 +57,7 @@ import { MLLogo } from './model/blocks/logo.model';
       MLImageText,
       MLCarousel,
       MLShop,
+      MLTimer,
       //
       MLShopCell,
       MLVoteCell,

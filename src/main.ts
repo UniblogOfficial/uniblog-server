@@ -2,8 +2,6 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { MLAudio } from './modules/multilinks/model/blocks/audio.model';
-import { MLContentType } from './modules/multilinks/model/multilink.model';
 
 /* const whitelist = [
   'https://uniblog-online.netlify.app',

@@ -53,21 +53,6 @@ export class MultilinkController {
           );
         }
       },
-      /* storage: diskStorage({
-          // Destination storage path details
-          destination: (req: any, file: any, cb: any) => {
-            const uploadPath = `dist/static/images/multilink/${req.user.id}/${req.body.name}`;
-            // Create folder if doesn't exist
-            if (!fs.existsSync(uploadPath)) {
-              fs.mkdirSync(uploadPath, { recursive: true });
-            }
-            cb(null, uploadPath);
-          },
-          // File modification details
-          filename: (req: any, file: any, cb: any) => {
-            cb(null, `${file.fieldname}.${file.mimetype.split('/')[1]}`);
-          },
-        }), */
     }),
   )
   create(
@@ -76,7 +61,7 @@ export class MultilinkController {
     @UploadedFiles()
     images: TMLImagesFormData,
   ) {
-    return this.multilinkService.createMultilink(request.user, dto, images.images);
+    return this.multilinkService.createMultilink(request.user, dto);
   }
 
   @ApiOperation({ summary: 'All user multilinks fetching' })

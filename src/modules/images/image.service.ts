@@ -1,74 +1,121 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { MLContentType } from './../multilinks/model/multilink.model';
 import { HttpService } from '@nestjs/axios';
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { AxiosResponse } from 'axios';
 import { lastValueFrom, map, Observable } from 'rxjs';
+import { SavedImage } from './savedImage.model';
+import FormData = require('form-data');
+
+export interface File extends Blob {
+  readonly lastModified: number;
+  readonly name: string;
+}
 
 @Injectable()
 export class ImageService {
-  constructor(private httpService: HttpService) {}
+  constructor(
+    @InjectModel(SavedImage) private savedImageRepository: typeof SavedImage,
+    private httpService: HttpService,
+  ) {}
 
-  save(user, dto, file: Express.Multer.File) {
+  async save(user, dto, file: Express.Multer.File) {
     const { order, type, suborder } = {
-      order: +file.originalname.split('.')[0].split('_')[0],
-      type: file.originalname.split('.')[0].split('_')[1],
-      suborder: +file.originalname.split('.')[0].split('_')[2],
+      type: file.originalname.split('.')[0].split('-')[0] as MLContentType,
+      order: +file.originalname.split('.')[0].split('-')[1],
+      suborder: +file.originalname.split('.')[0].split('-')[2],
     };
+    let response;
+    try {
+      response = await this.saveImageData(file);
+    } catch (e) {
+      throw new HttpException(
+        'Image processing error: ' + e.message,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    if (response) {
+      const { image, thumb } = response as TImageHostResponseData;
+      const { extension, filename, mime, name, url } = image;
+      this.savedImageRepository.create({
+        userId: user.id,
+        extension,
+        filename,
+        mime,
+        name,
+        type,
+        url,
+        thumbUrl: thumb.url,
+      });
+    }
+
+    return { data: response, message: 'Image saved' };
   }
 
   private async saveImageData(
-    file: Express.Multer.File,
+    multerFile: Express.Multer.File,
   ): Promise<Observable<AxiosResponse<any, any>>> {
     const apiKey = process.env.IMG_HOST_API_KEY;
-    const formData = new FormData();
-
+    const formData = new FormData({ writable: true, readable: true });
     formData.append('key', apiKey);
-    formData.append('image', file.path, file.originalname);
-    const data = await lastValueFrom(
-      this.httpService
-        .post(`https://api.imgbb.com/1/upload`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        })
-        .pipe(map(res => res.data)),
-    );
-    return data;
-    /* {
-      "data": {
-          "id": "qmZN216",
-          "title": "logo-front",
-          "url_viewer": "https://ibb.co/qmZN216",
-          "url": "https://i.ibb.co/VMKgkB6/logo-front.png",
-          "display_url": "https://i.ibb.co/VMKgkB6/logo-front.png",
-          "width": "190",
-          "height": "190",
-          "size": 27222,
-          "time": "1656441947",
-          "expiration": "0",
-          "image": {
-              "filename": "logo-front.png",
-              "name": "logo-front",
-              "mime": "image/png",
-              "extension": "png",
-              "url": "https://i.ibb.co/VMKgkB6/logo-front.png"
-          },
-          "thumb": {
-              "filename": "logo-front.png",
-              "name": "logo-front",
-              "mime": "image/png",
-              "extension": "png",
-              "url": "https://i.ibb.co/qmZN216/logo-front.png"
-          },
-          "delete_url": "https://ibb.co/qmZN216/d23ddd7717398647eded9ac5421f19af"
-      },
-      "success": true,
-      "status": 200
-  } */
+    formData.append('name', multerFile.originalname.split('.')[0]);
+    formData.append('image', multerFile.buffer, multerFile.originalname.split('.')[0]);
+
+    console.log(multerFile);
+
+    try {
+      const response = await lastValueFrom(
+        this.httpService
+          .post(`https://api.imgbb.com/1/upload?key=${apiKey}`, formData, {
+            headers: {
+              // @ts-ignore
+              'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+            },
+          })
+          .pipe(map(res => res.data)),
+      );
+      return response.data;
+    } catch (e) {
+      console.log(e.response?.data);
+      throw new HttpException(
+        'hosting error - ' + e.message + ' - ' + e.response?.data?.error?.message,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
+
+type TImageHostResponse = {
+  data: TImageHostResponseData;
+  success: boolean; // true;
+  status: number; // 200;
+};
+
+type TImageHostResponseData = {
+  id: string; // 'qmZN216';
+  title: string; // 'logo-front';
+  url_viewer: string; // 'https://ibb.co/qmZN216';
+  url: string; // 'https://i.ibb.co/VMKgkB6/logo-front.png';
+  display_url: string; // 'https://i.ibb.co/VMKgkB6/logo-front.png';
+  width: string; // '190';
+  height: string; // '190';
+  size: number; // 27222;
+  time: string; // '1656441947';
+  expiration: string; // '0';
+  image: {
+    filename: string; // 'logo-front.png';
+    name: string; // 'logo-front';
+    mime: string; // 'image/png';
+    extension: string; // 'png';
+    url: string; // 'https://i.ibb.co/VMKgkB6/logo-front.png';
+  };
+  thumb: {
+    filename: string; // 'logo-front.png';
+    name: string; // 'logo-front';
+    mime: string; // 'image/png';
+    extension: string; // 'png';
+    url: string; // 'https://i.ibb.co/qmZN216/logo-front.png';
+  };
+  delete_url: string; // 'https://ibb.co/qmZN216/d23ddd7717398647eded9ac5421f19af';
+};

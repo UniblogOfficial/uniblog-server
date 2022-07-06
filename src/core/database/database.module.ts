@@ -1,4 +1,3 @@
-import { MLShopCell } from '../../modules/multilinks/model/blocks/shop/shop-cell.model';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 import { url2obj } from './dbUrlToObj';
@@ -34,6 +33,9 @@ import { MLPost } from 'src/modules/multilinks/model/blocks/post.model';
 import { MLVoteCell } from 'src/modules/multilinks/model/blocks/vote/vote-cell.model';
 import { MLVote } from 'src/modules/multilinks/model/blocks/vote/vote.model';
 import { MLWidget } from 'src/modules/multilinks/model/blocks/widget.model';
+import { MLTimer } from './../../modules/multilinks/model/blocks/timer.model';
+import { MLFeedback } from './../../modules/multilinks/model/blocks/feedback.model';
+import { MLShopCell } from '../../modules/multilinks/model/blocks/shop/shop-cell.model';
 
 const db = url2obj(process.env.DATABASE_URL);
 
@@ -73,6 +75,7 @@ const db = url2obj(process.env.DATABASE_URL);
         MLAudio,
         MLMap,
         MLVote,
+        MLFeedback,
         MLDivider,
 
         MLLogo,
@@ -82,6 +85,7 @@ const db = url2obj(process.env.DATABASE_URL);
         MLImageText,
         MLCarousel,
         MLShop,
+        MLTimer,
         //
         MLShopCell,
         MLVoteCell,

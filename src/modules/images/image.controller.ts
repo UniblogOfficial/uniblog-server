@@ -1,3 +1,4 @@
+import { SaveImageDto } from './dto/save-image.dto';
 import {
   UseGuards,
   Controller,
@@ -15,7 +16,6 @@ import path from 'path';
 import { ApiKeyGuard } from '../auth/api-key.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { TImageFormData } from '../files/file.service';
-import { CreateMLDto } from '../multilinks/dto/create-ml.dto';
 import { ImageService } from './image.service';
 
 @ApiTags('Image')
@@ -48,11 +48,26 @@ export class ImageController {
           );
         }
       },
+      /* storage: diskStorage({
+        // Destination storage path details
+        destination: (req: any, file: any, cb: any) => {
+          const uploadPath = `dist/static/images/${req.user.id}`;
+          // Create folder if doesn't exist
+          if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+          }
+          cb(null, uploadPath);
+        },
+        // File modification details
+        filename: (req: any, file: any, cb: any) => {
+          cb(null, `${file.originalname}`);
+        },
+      }), */
     }),
   )
   save(
     @Req() request,
-    @Body() dto: CreateMLDto,
+    @Body() dto: SaveImageDto,
     @UploadedFiles()
     image: TImageFormData,
   ) {

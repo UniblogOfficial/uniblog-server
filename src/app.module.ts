@@ -13,6 +13,7 @@ import { SocialModule } from './modules/socials/social.module';
 import { MultilinkModule } from './modules/multilinks/multilink.module';
 import * as path from 'path';
 import config from './config';
+import { ImageModule } from './modules/images/image.module';
 
 @Module({
   controllers: [],
@@ -30,6 +31,7 @@ import config from './config';
     AuthModule,
     PostModule,
     FileModule,
+    ImageModule,
     SocialModule,
     MultilinkModule,
   ],

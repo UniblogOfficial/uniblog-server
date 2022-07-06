@@ -1,3 +1,4 @@
+import { MLFeedback } from './model/blocks/feedback.model';
 import { getKeys } from './../../common/utils';
 import { MLImageData } from './model/images/ml-imagedata.model';
 import { MLShopCell } from './model/blocks/shop/shop-cell.model';
@@ -24,6 +25,7 @@ import { MLDivider } from './model/blocks/divider.model';
 import { MLVote } from './model/blocks/vote/vote.model';
 import { MLButton } from './model/blocks/button.model';
 import { ModelDefined } from 'sequelize/types';
+import { MLTimer } from './model/blocks/timer.model';
 
 @Injectable()
 export class MultilinkService {
@@ -38,6 +40,7 @@ export class MultilinkService {
     @InjectModel(MLAudio) private mlAudioRepository: typeof MLAudio,
     @InjectModel(MLMap) private mlMapRepository: typeof MLMap,
     @InjectModel(MLVote) private mlVoteRepository: typeof MLVote,
+    @InjectModel(MLFeedback) private mlFeedbackRepository: typeof MLFeedback,
     @InjectModel(MLDivider) private mlDividerRepository: typeof MLDivider,
     //
     @InjectModel(MLLogo) private mlLogoRepository: typeof MLLogo,
@@ -47,6 +50,7 @@ export class MultilinkService {
     @InjectModel(MLLink) private mlLinkRepository: typeof MLLink,
     @InjectModel(MLButton) private mlButtonRepository: typeof MLButton,
     @InjectModel(MLShop) private mlShopRepository: typeof MLShop,
+    @InjectModel(MLTimer) private mlTimerRepository: typeof MLTimer,
     //
     @InjectModel(MLShopCell) private mlShopCellRepository: typeof MLShopCell,
     @InjectModel(MLVoteCell) private mlVoteCellRepository: typeof MLVoteCell,
@@ -55,9 +59,9 @@ export class MultilinkService {
     @InjectModel(Avatar) private avatarRepository: typeof Avatar,
   ) {}
 
-  async createMultilink(user, dto: CreateMLDto, images: Express.Multer.File[]) {
-    const { name, background, maxWidth, contentMap, ...blocks } = dto;
-    const parsedSets: { [key: string]: any } = blocks;
+  async createMultilink(user, dto: CreateMLDto) {
+    const { name, background, outerBackground, maxWidth, contentMap, ...blocks } = dto;
+    const parsedSets: { [key: string]: any[] } = {};
     getKeys(blocks).forEach(key => {
       parsedSets[key] = JSON.parse(blocks[key]) as any[];
     });
@@ -74,6 +78,7 @@ export class MultilinkService {
       const mlRootData = {
         name: JSON.parse(name),
         background: JSON.parse(background),
+        outerBackground: JSON.parse(outerBackground),
         maxWidth: +maxWidth,
         contentMap: JSON.parse(contentMap),
       };
@@ -112,24 +117,28 @@ export class MultilinkService {
       createBlockSet(parsedSets.videoBlocks, this.mlVideoRepository);
       createBlockSet(parsedSets.audioBlocks, this.mlAudioRepository);
       createBlockSet(parsedSets.mapBlocks, this.mlMapRepository);
+      createBlockSet(parsedSets.feedbackBlocks, this.mlFeedbackRepository);
       createBlockSet(parsedSets.dividerBlocks, this.mlDividerRepository);
 
+      let hasLogo: boolean;
       try {
         if (parsedSets.logoBlocks.length) {
           parsedSets.logoBlocks.map(async block => {
             logoOrders.push(block.order);
-            await this.mlLogoRepository.create({ multilinkId, ...block, logo: '' });
+            await this.mlLogoRepository.create({ multilinkId, ...block, logo: block.logo ?? '' });
           });
+          hasLogo = parsedSets.logoBlocks.some(block => block.logo);
         }
       } catch (error) {
         throw new Error(`Fail in ${this.mlLogoRepository.tableName}: ${error}`);
       }
 
-      createBlockSet(parsedSets.linkBlocks, this.mlLinkRepository, { image: '' });
-      createBlockSet(parsedSets.buttonBlocks, this.mlButtonRepository);
-      createBlockSet(parsedSets.imageTextBlocks, this.mlImageTextRepository, { image: '' });
-      createBlockSet(parsedSets.imageBlocks, this.mlImageRepository, { image: '' });
-      createBlockSet(parsedSets.carouselBlocks, this.mlCarouselRepository, { images: [] });
+      createBlockSet(parsedSets.linkBlocks, this.mlLinkRepository, {});
+      createBlockSet(parsedSets.buttonBlocks, this.mlButtonRepository, {});
+      createBlockSet(parsedSets.imageTextBlocks, this.mlImageTextRepository, {});
+      createBlockSet(parsedSets.imageBlocks, this.mlImageRepository, {});
+      createBlockSet(parsedSets.carouselBlocks, this.mlCarouselRepository, {});
+      createBlockSet(parsedSets.timerBlocks, this.mlTimerRepository, {});
 
       if (parsedSets.shopBlocks.length) {
         parsedSets.shopBlocks.map(async block => {
@@ -139,7 +148,6 @@ export class MultilinkService {
               return this.mlShopCellRepository.create({
                 blockId: shopBlock.id,
                 ...cell,
-                image: '',
               });
             }),
           );
@@ -160,8 +168,7 @@ export class MultilinkService {
       }
       // </multilink content>
       // <multilink images>
-      let logo: Promise<MLImageData>;
-      images &&
+      /* images &&
         images.length &&
         (await Promise.all(
           images.map(file => {
@@ -190,7 +197,7 @@ export class MultilinkService {
                 return logo;
               // }
               // banner
-              /* if (suborder === 1) {
+              if (suborder === 1) {
                   return this.mlImageDataRepository.create({
                     multilinkId,
                     type: MLContentType.LOGO,
@@ -198,7 +205,7 @@ export class MultilinkService {
                     suborder,
                     ...fileData,
                   });
-                } */
+                }
               case 'link':
                 return this.mlImageDataRepository.create({
                   multilinkId,
@@ -259,7 +266,8 @@ export class MultilinkService {
             }
           }),
         ));
-      if (!logo && logoOrders.length) {
+      } */
+      if (!hasLogo && logoOrders.length) {
         const avatar = await this.avatarRepository.findOne({
           where: { userId: user.id },
         });
