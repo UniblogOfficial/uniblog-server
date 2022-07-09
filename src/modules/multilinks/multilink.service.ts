@@ -59,6 +59,29 @@ export class MultilinkService {
     @InjectModel(Avatar) private avatarRepository: typeof Avatar,
   ) {}
 
+  includeOptions = [
+    { model: MLText, separate: true },
+    { model: MLSocial, separate: true },
+    { model: MLPost, separate: true },
+    { model: MLWidget, separate: true },
+    { model: MLVideo, separate: true },
+    { model: MLAudio, separate: true },
+    { model: MLMap, separate: true },
+    { model: MLVote, separate: true },
+    { model: MLFeedback, separate: true },
+    { model: MLDivider, separate: true },
+
+    { model: MLLogo, separate: true },
+    { model: MLImage, separate: true },
+    { model: MLImageText, separate: true },
+    { model: MLCarousel, separate: true },
+    { model: MLLink, separate: true },
+    { model: MLButton, separate: true },
+    { model: MLShop, separate: true },
+    { model: MLTimer, separate: true },
+    { model: MLImageData, separate: true },
+  ];
+
   async createMultilink(user, dto: CreateMLDto) {
     const { name, background, outerBackground, maxWidth, contentMap, ...blocks } = dto;
     const parsedSets: { [key: string]: any[] } = {};
@@ -168,105 +191,6 @@ export class MultilinkService {
       }
       // </multilink content>
       // <multilink images>
-      /* images &&
-        images.length &&
-        (await Promise.all(
-          images.map(file => {
-            const { order, type, suborder } = {
-              order: +file.originalname.split('.')[0].split('_')[0],
-              type: file.originalname.split('.')[0].split('_')[1],
-              suborder: +file.originalname.split('.')[0].split('_')[2],
-            };
-
-            const fileData = {
-              imageName: file.originalname.split('.')[0],
-              imageType: file.mimetype,
-              imageData: file.buffer,
-            };
-
-            switch (type) {
-              case 'logo':
-                // if (suborder === 0) {
-                logo = this.mlImageDataRepository.create({
-                  multilinkId,
-                  type: MLContentType.LOGO,
-                  order,
-                  suborder,
-                  ...fileData,
-                });
-                return logo;
-              // }
-              // banner
-              if (suborder === 1) {
-                  return this.mlImageDataRepository.create({
-                    multilinkId,
-                    type: MLContentType.LOGO,
-                    order,
-                    suborder,
-                    ...fileData,
-                  });
-                }
-              case 'link':
-                return this.mlImageDataRepository.create({
-                  multilinkId,
-                  type: MLContentType.LINK,
-                  order,
-                  suborder,
-                  ...fileData,
-                });
-              case 'button':
-                return this.mlImageDataRepository.create({
-                  multilinkId,
-                  type: MLContentType.BUTTON,
-                  order,
-                  suborder,
-                  ...fileData,
-                });
-              case 'image':
-                return this.mlImageDataRepository.create({
-                  multilinkId,
-                  type: MLContentType.IMAGE,
-                  order,
-                  suborder,
-                  ...fileData,
-                });
-              case 'imagetext':
-                return this.mlImageDataRepository.create({
-                  multilinkId,
-                  type: MLContentType.IMAGETEXT,
-                  order,
-                  suborder,
-                  ...fileData,
-                });
-              case 'carousel':
-                return this.mlImageDataRepository.create({
-                  multilinkId,
-                  type: MLContentType.CAROUSEL,
-                  order,
-                  suborder,
-                  ...fileData,
-                });
-              case 'shop':
-                return this.mlImageDataRepository.create({
-                  multilinkId,
-                  type: MLContentType.SHOP,
-                  order,
-                  suborder,
-                  ...fileData,
-                });
-            }
-            if (file.originalname.split('.')[0] === 'backgroundImage') {
-              return this.mlImageDataRepository.create({
-                multilinkId,
-                type: 'backgroundImage',
-                order: 9999,
-                suborder: 0,
-                ...fileData,
-              });
-            }
-          }),
-        ));
-      } */
       if (!hasLogo && logoOrders.length) {
         const avatar = await this.avatarRepository.findOne({
           where: { userId: user.id },
@@ -289,7 +213,7 @@ export class MultilinkService {
       }
       // </multilink images>
       const createdML = await this.multilinkRepository.findByPk(multilink.id, {
-        include: { all: true, nested: true },
+        include: this.includeOptions,
       });
 
       return {
@@ -305,7 +229,7 @@ export class MultilinkService {
     try {
       const multilink = await this.multilinkRepository.findOne({
         where: { name },
-        include: { all: true, nested: true },
+        include: this.includeOptions,
       });
       multilink.clickCount++;
       multilink.save();
@@ -319,7 +243,7 @@ export class MultilinkService {
     try {
       const multilinks = await this.multilinkRepository.findAll({
         where: { userId: user.id },
-        include: { all: true, nested: true },
+        include: this.includeOptions,
       });
       return { data: { multilinks }, message: 'Here all your stuff, sir' };
     } catch (error) {
