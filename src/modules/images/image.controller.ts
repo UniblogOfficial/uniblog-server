@@ -9,6 +9,7 @@ import {
   Req,
   UploadedFiles,
   UseInterceptors,
+  Get,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiSecurity, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -17,6 +18,7 @@ import { ApiKeyGuard } from '../auth/api-key.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { TImageFormData } from '../files/file.service';
 import { ImageService } from './image.service';
+import { SavedImage } from './savedImage.model';
 
 @ApiTags('Image')
 @ApiSecurity('API-KEY', ['API-KEY'])
@@ -72,5 +74,13 @@ export class ImageController {
     image: TImageFormData,
   ) {
     return this.imageService.save(request.user, dto, image.image[0]);
+  }
+
+  @ApiOperation({ summary: 'All image fetching' })
+  @ApiResponse({ status: 200, type: [SavedImage] })
+  @UseGuards(JwtAuthGuard)
+  @Get('/all')
+  getAll(@Req() request) {
+    return this.imageService.getAllByUserId(request.user);
   }
 }

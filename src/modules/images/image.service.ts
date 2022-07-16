@@ -53,6 +53,16 @@ export class ImageService {
     return { data: response, message: 'Image saved' };
   }
 
+  async getAllByUserId(user) {
+    try {
+      const images = await this.savedImageRepository.findAll({ where: { userId: user.id } });
+      if (images.length) {
+        return { data: images, message: 'Here is your saved images!' };
+      }
+      return { data: null, message: 'There is no saved images' };
+    } catch (e) {}
+  }
+
   private async saveImageData(
     multerFile: Express.Multer.File,
   ): Promise<Observable<AxiosResponse<any, any>>> {
