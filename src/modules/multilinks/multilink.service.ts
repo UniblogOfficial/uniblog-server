@@ -24,7 +24,7 @@ import { MLCarousel } from './model/blocks/carousel.model';
 import { MLDivider } from './model/blocks/divider.model';
 import { MLVote } from './model/blocks/vote/vote.model';
 import { MLButton } from './model/blocks/button.model';
-import { ModelDefined } from 'sequelize/types';
+import { Includeable, ModelDefined } from 'sequelize/types';
 import { MLTimer } from './model/blocks/timer.model';
 
 @Injectable()
@@ -59,7 +59,7 @@ export class MultilinkService {
     @InjectModel(Avatar) private avatarRepository: typeof Avatar,
   ) {}
 
-  includeOptions = [
+  includeOptions: Includeable[] = [
     { model: MLText, separate: true },
     { model: MLSocial, separate: true },
     { model: MLPost, separate: true },
@@ -67,7 +67,7 @@ export class MultilinkService {
     { model: MLVideo, separate: true },
     { model: MLAudio, separate: true },
     { model: MLMap, separate: true },
-    { model: MLVote, separate: true },
+    { model: MLVote, separate: true, include: [{ model: MLVoteCell, separate: true }] },
     { model: MLFeedback, separate: true },
     { model: MLDivider, separate: true },
 
@@ -77,7 +77,7 @@ export class MultilinkService {
     { model: MLCarousel, separate: true },
     { model: MLLink, separate: true },
     { model: MLButton, separate: true },
-    { model: MLShop, separate: true },
+    { model: MLShop, separate: true, include: [{ model: MLShopCell, separate: true }] },
     { model: MLTimer, separate: true },
     { model: MLImageData, separate: true },
   ];
