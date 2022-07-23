@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, DataType, Table } from 'sequelize-typescript';
-import { MLContentType } from '../multilink.model';
-import { IMLFeedbackCreationAttrs } from '../types/creation-attr';
-import { MLAnyTextBlock } from './anyTextBlock.model';
+
+import { MLContentType } from 'modules/multilinks/model/multilink.model';
+import { IMLFeedbackCreationAttrs } from 'modules/multilinks/model/types/creation-attr';
+import { MLAnyTextBlock } from 'modules/multilinks/model/blocks/anyTextBlock.model';
 
 @Table({ tableName: 'MLFeedbacks' })
 export class MLFeedback

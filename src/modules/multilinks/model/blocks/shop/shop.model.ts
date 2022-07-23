@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, DataType, HasMany, Table } from 'sequelize-typescript';
-import { MLShopCell } from './shop-cell.model';
-import { MLContentType } from '../../multilink.model';
-import { IMLShopCreationAttrs } from '../../types/creation-attr';
-import { MLAnyTextBlock } from '../anyTextBlock.model';
+
+import { MLShopCell } from 'modules/multilinks/model/blocks/shop/shop-cell.model';
+import { MLContentType } from 'modules/multilinks/model/multilink.model';
+import { IMLShopCreationAttrs } from 'modules/multilinks/model/types/creation-attr';
+import { MLAnyTextBlock } from 'modules/multilinks/model/blocks/anyTextBlock.model';
 
 @Table({ tableName: 'MLShops' })
 export class MLShop

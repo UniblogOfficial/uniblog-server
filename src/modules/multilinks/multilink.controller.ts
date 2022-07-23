@@ -1,4 +1,3 @@
-import { JwtAuthGuard } from './../auth/jwt-auth.guard';
 import {
   Body,
   Controller,
@@ -8,20 +7,20 @@ import {
   Param,
   Post,
   Req,
-  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Express } from 'express';
-
-import * as path from 'path';
 import { ApiConsumes, ApiOperation, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { Multilink } from './model/multilink.model';
-import { MultilinkService } from './multilink.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { CreateMLDto } from './dto/create-ml.dto';
-import { TMLImagesFormData } from '../files/file.service';
-import { ApiKeyGuard } from '../auth/api-key.guard';
+import * as path from 'path';
+
+import { MultilinkService } from 'modules/multilinks/multilink.service';
+
+import { JwtAuthGuard } from 'modules/auth/jwt-auth.guard';
+import { ApiKeyGuard } from 'modules/auth/api-key.guard';
+
+import { Multilink } from 'modules/multilinks/model/multilink.model';
+import { CreateMLDto } from 'modules/multilinks/dto/create-ml.dto';
 
 @ApiTags('Multilink')
 @ApiSecurity('API-KEY', ['API-KEY'])
@@ -55,12 +54,7 @@ export class MultilinkController {
       },
     }),
   )
-  create(
-    @Req() request,
-    @Body() dto: CreateMLDto,
-    @UploadedFiles()
-    images: TMLImagesFormData,
-  ) {
+  create(@Req() request: any, @Body() dto: CreateMLDto) {
     return this.multilinkService.createMultilink(request.user, dto);
   }
 
@@ -68,7 +62,7 @@ export class MultilinkController {
   @ApiResponse({ status: 200, type: Multilink })
   @UseGuards(JwtAuthGuard)
   @Get('/all')
-  getAll(@Req() request) {
+  getAll(@Req() request: any) {
     return this.multilinkService.getMLsByUserId(request.user);
   }
 

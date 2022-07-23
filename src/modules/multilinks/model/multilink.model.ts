@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import {
   BelongsTo,
   Column,
@@ -8,26 +7,28 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { User } from '../../users/user.model';
-import { MLLogo } from './blocks/logo.model';
-import { MLLink } from './blocks/link.model';
-import { MLSocial } from './blocks/social.model';
-import { MLText } from './blocks/text.model';
-import { MLVideo } from './blocks/video.model';
-import { MLImage } from './blocks/image.model';
-import { MLImageText } from './blocks/imagetext.model';
-import { MLShop } from './blocks/shop/shop.model';
-import { MLAudio } from './blocks/audio.model';
-import { MLButton } from './blocks/button.model';
-import { MLCarousel } from './blocks/carousel.model';
-import { MLDivider } from './blocks/divider.model';
-import { MLMap } from './blocks/map.model';
-import { MLPost } from './blocks/post.model';
-import { MLVote } from './blocks/vote/vote.model';
-import { MLWidget } from './blocks/widget.model';
-import { MLTimer } from './blocks/timer.model';
-import { MLFeedback } from './blocks/feedback.model';
-import { MLImageData } from './images/ml-imagedata.model';
+import { ApiProperty } from '@nestjs/swagger';
+
+import { User } from 'modules/users/user.model';
+import { MLLogo } from 'modules/multilinks/model/blocks/logo.model';
+import { MLLink } from 'modules/multilinks/model/blocks/link.model';
+import { MLSocial } from 'modules/multilinks/model/blocks/social.model';
+import { MLText } from 'modules/multilinks/model/blocks/text.model';
+import { MLVideo } from 'modules/multilinks/model/blocks/video.model';
+import { MLImage } from 'modules/multilinks/model/blocks/image.model';
+import { MLImageText } from 'modules/multilinks/model/blocks/imagetext.model';
+import { MLShop } from 'modules/multilinks/model/blocks/shop/shop.model';
+import { MLAudio } from 'modules/multilinks/model/blocks/audio.model';
+import { MLButton } from 'modules/multilinks/model/blocks/button.model';
+import { MLCarousel } from 'modules/multilinks/model/blocks/carousel.model';
+import { MLDivider } from 'modules/multilinks/model/blocks/divider.model';
+import { MLMap } from 'modules/multilinks/model/blocks/map.model';
+import { MLPost } from 'modules/multilinks/model/blocks/post.model';
+import { MLVote } from 'modules/multilinks/model/blocks/vote/vote.model';
+import { MLWidget } from 'modules/multilinks/model/blocks/widget.model';
+import { MLTimer } from 'modules/multilinks/model/blocks/timer.model';
+import { MLFeedback } from 'modules/multilinks/model/blocks/feedback.model';
+import { MLImageData } from 'modules/multilinks/model/images/ml-imagedata.model';
 
 interface MultilinkCreationAttrs {
   name: string;

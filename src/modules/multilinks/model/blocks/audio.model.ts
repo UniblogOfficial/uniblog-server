@@ -1,8 +1,9 @@
-import { MLBlock } from './block.model';
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, DataType, Table } from 'sequelize-typescript';
-import { MLContentType } from '../multilink.model';
-import { IMLAudioCreationAttrs } from '../types/creation-attr';
+
+import { MLBlock } from 'modules/multilinks/model/blocks/block.model';
+import { MLContentType } from 'modules/multilinks/model/multilink.model';
+import { IMLAudioCreationAttrs } from 'modules/multilinks/model/types/creation-attr';
 
 @Table({ tableName: 'MLAudios' })
 export class MLAudio

@@ -1,33 +1,37 @@
-import { MLWidget } from './model/blocks/widget.model';
-import { MLDivider } from './model/blocks/divider.model';
-import { MLButton } from './model/blocks/button.model';
-import { MLCarousel } from './model/blocks/carousel.model';
-import { MLVote } from './model/blocks/vote/vote.model';
-import { MLMap } from './model/blocks/map.model';
-import { MLAudio } from './model/blocks/audio.model';
-import { MLPost } from './model/blocks/post.model';
-import { MLVoteCell } from './model/blocks/vote/vote-cell.model';
-import { MLImageData } from './model/images/ml-imagedata.model';
-import { MLVideo } from './model/blocks/video.model';
-import { MLShop } from './model/blocks/shop/shop.model';
-import { MLSocial } from './model/blocks/social.model';
-import { MLImage } from './model/blocks/image.model';
-import { Avatar } from 'src/modules/users/model/avatar.model';
-import { UserModule } from './../users/user.module';
-import { AuthModule } from './../auth/auth.module';
-import { MLText } from './model/blocks/text.model';
-import { Multilink } from './model/multilink.model';
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { MultilinkController } from './multilink.controller';
-import { MultilinkService } from './multilink.service';
 import { MulterModule } from '@nestjs/platform-express';
-import { MLShopCell } from './model/blocks/shop/shop-cell.model';
-import { MLImageText } from './model/blocks/imagetext.model';
-import { MLLink } from './model/blocks/link.model';
-import { MLLogo } from './model/blocks/logo.model';
-import { MLFeedback } from './model/blocks/feedback.model';
-import { MLTimer } from './model/blocks/timer.model';
+
+import { UserModule } from 'modules/users/user.module';
+import { AuthModule } from 'modules/auth/auth.module';
+
+import { MultilinkService } from './multilink.service';
+
+import { MultilinkController } from 'modules/multilinks/multilink.controller';
+
+import { MLWidget } from 'modules/multilinks/model/blocks/widget.model';
+import { MLDivider } from 'modules/multilinks/model/blocks/divider.model';
+import { MLButton } from 'modules/multilinks/model/blocks/button.model';
+import { MLCarousel } from 'modules/multilinks/model/blocks/carousel.model';
+import { MLVote } from 'modules/multilinks/model/blocks/vote/vote.model';
+import { MLMap } from 'modules/multilinks/model/blocks/map.model';
+import { MLAudio } from 'modules/multilinks/model/blocks/audio.model';
+import { MLPost } from 'modules/multilinks/model/blocks/post.model';
+import { MLVoteCell } from 'modules/multilinks/model/blocks/vote/vote-cell.model';
+import { MLImageData } from 'modules/multilinks/model/images/ml-imagedata.model';
+import { MLVideo } from 'modules/multilinks/model/blocks/video.model';
+import { MLShop } from 'modules/multilinks/model/blocks/shop/shop.model';
+import { MLSocial } from 'modules/multilinks/model/blocks/social.model';
+import { MLImage } from 'modules/multilinks/model/blocks/image.model';
+import { Avatar } from 'modules/users/model/avatar.model';
+import { MLText } from 'modules/multilinks/model/blocks/text.model';
+import { Multilink } from 'modules/multilinks/model/multilink.model';
+import { MLShopCell } from 'modules/multilinks/model/blocks/shop/shop-cell.model';
+import { MLImageText } from 'modules/multilinks/model/blocks/imagetext.model';
+import { MLLink } from 'modules/multilinks/model/blocks/link.model';
+import { MLLogo } from 'modules/multilinks/model/blocks/logo.model';
+import { MLFeedback } from 'modules/multilinks/model/blocks/feedback.model';
+import { MLTimer } from 'modules/multilinks/model/blocks/timer.model';
 
 @Module({
   controllers: [MultilinkController],
