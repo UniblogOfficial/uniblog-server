@@ -3,8 +3,8 @@ import { ApiOperation, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger
 
 import { AuthService } from 'modules/auth/auth.service';
 
-import { ApiKeyGuard } from 'modules/auth/api-key.guard';
-import { JwtAuthGuard } from 'modules/auth/jwt-auth.guard';
+import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
+import { JwtAuthGuard } from 'modules/auth/guards/jwt-auth.guard';
 
 import { User } from 'modules/users/user.model';
 import { CreateUserDto } from 'modules/users/dto/create-user.dto';

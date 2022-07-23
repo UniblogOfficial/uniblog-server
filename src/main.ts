@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { AppModule } from './app.module';
+// import { HttpException, HttpStatus } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+import { AppModule } from 'app.module';
 
 /* const whitelist = [
   'https://uniblog-online.netlify.app',
@@ -12,7 +13,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 ]; */
 
 const corsOptions = {
-  origin: (origin, callback) => {
+  origin: (origin: any, callback: any) => {
     /* if (!origin || whitelist.indexOf(origin) !== -1) {
       console.log('Allowed cors for: ', origin);
       callback(null, true);
@@ -29,8 +30,8 @@ const corsOptions = {
 
 async function start() {
   const PORT = process.env.PORT || 5000;
-  console.log(process.env.NODE_ENV);
   const app = await NestFactory.create(AppModule);
+
   app.enableCors(corsOptions);
   app.setGlobalPrefix('api');
 
@@ -48,8 +49,10 @@ async function start() {
       'API-KEY',
     )
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
+
   /* try {
     await MLAudio.create({
       multilinkId: 30,

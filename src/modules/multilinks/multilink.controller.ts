@@ -16,8 +16,8 @@ import * as path from 'path';
 
 import { MultilinkService } from 'modules/multilinks/multilink.service';
 
-import { JwtAuthGuard } from 'modules/auth/jwt-auth.guard';
-import { ApiKeyGuard } from 'modules/auth/api-key.guard';
+import { JwtAuthGuard } from 'modules/auth/guards/jwt-auth.guard';
+import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
 
 import { Multilink } from 'modules/multilinks/model/multilink.model';
 import { CreateMLDto } from 'modules/multilinks/dto/create-ml.dto';

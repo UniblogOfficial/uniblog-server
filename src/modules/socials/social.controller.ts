@@ -3,7 +3,7 @@ import { ApiSecurity } from '@nestjs/swagger';
 
 import { SocialService } from 'modules/socials/social.service';
 
-import { ApiKeyGuard } from 'modules/auth/api-key.guard';
+import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
 
 import { BindSocialVkDto } from 'modules/socials/dto/bind-social.dto';
 

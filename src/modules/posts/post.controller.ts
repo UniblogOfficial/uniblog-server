@@ -4,7 +4,7 @@ import { ApiSecurity } from '@nestjs/swagger';
 
 import { PostService } from 'modules/posts/post.service';
 
-import { ApiKeyGuard } from 'modules/auth/api-key.guard';
+import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
 
 import { CreatePostDto } from 'modules/posts/dto/create-post.dto';
 import { PublishPostDto } from 'modules/posts/dto/publish-post.dto';

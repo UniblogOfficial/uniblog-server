@@ -16,8 +16,8 @@ import path from 'path';
 
 import { ImageService } from 'modules/images/image.service';
 
-import { ApiKeyGuard } from 'modules/auth/api-key.guard';
-import { JwtAuthGuard } from 'modules/auth/jwt-auth.guard';
+import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
+import { JwtAuthGuard } from 'modules/auth/guards/jwt-auth.guard';
 
 import { SavedImage } from 'modules/images/savedImage.model';
 import { SaveImageDto } from 'modules/images/dto/save-image.dto';

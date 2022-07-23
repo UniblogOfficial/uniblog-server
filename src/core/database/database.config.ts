@@ -1,6 +1,6 @@
 import { Dialect } from 'sequelize/types';
 
-import { IDatabaseConfig } from './interfaces/dbConfig.interface';
+import { IDatabaseConfig } from 'core/database/interfaces/dbConfig.interface';
 
 export const databaseConfig: IDatabaseConfig = {
   development: {

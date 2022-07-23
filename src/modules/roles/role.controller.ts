@@ -3,7 +3,7 @@ import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 
 import { RoleService } from 'modules/roles/role.service';
 
-import { ApiKeyGuard } from 'modules/auth/api-key.guard';
+import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
 
 import { CreateRoleDto } from 'modules/roles/dto/create-role.dto';
 

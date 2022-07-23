@@ -1,19 +1,20 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config({ path: `.${process.env.NODE_ENV}.env` });
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from './core/database/database.module';
-import { UserModule } from './modules/users/user.module';
 import { ConfigModule } from '@nestjs/config';
-import { RoleModule } from './modules/roles/role.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { PostModule } from './modules/posts/post.module';
-import { FileModule } from './modules/files/file.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { SocialModule } from './modules/socials/social.module';
-import { MultilinkModule } from './modules/multilinks/multilink.module';
-import * as path from 'path';
-import config from './config';
-import { ImageModule } from './modules/images/image.module';
+// import { ServeStaticModule } from '@nestjs/serve-static';
+// import * as path from 'path';
+import config from 'config';
+
+import { DatabaseModule } from 'core/database/database.module';
+import { UserModule } from 'modules/users/user.module';
+import { RoleModule } from 'modules/roles/role.module';
+import { AuthModule } from 'modules/auth/auth.module';
+import { PostModule } from 'modules/posts/post.module';
+import { FileModule } from 'modules/files/file.module';
+import { SocialModule } from 'modules/socials/social.module';
+import { MultilinkModule } from 'modules/multilinks/multilink.module';
+import { ImageModule } from 'modules/images/image.module';
 
 @Module({
   controllers: [],

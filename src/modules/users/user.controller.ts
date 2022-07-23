@@ -18,9 +18,9 @@ import * as path from 'path';
 
 import { UserService } from 'modules/users/user.service';
 
-import { ApiKeyGuard } from 'modules/auth/api-key.guard';
-import { JwtAuthGuard } from 'modules/auth/jwt-auth.guard';
-import { RolesGuard } from 'modules/auth/roles.guard';
+import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
+import { JwtAuthGuard } from 'modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'modules/auth/guards/roles.guard';
 
 import { ValidationPipe } from 'core/pipes/validation.pipe';
 import { Roles } from 'modules/auth/roles-auth.decorator';
