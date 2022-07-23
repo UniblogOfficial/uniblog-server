@@ -1,10 +1,14 @@
-import { ImageController } from './image.controller';
-import { SavedImage } from './savedImage.model';
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { ImageService } from './image.service';
 import { HttpModule } from '@nestjs/axios';
-import { AuthModule } from '../auth/auth.module';
+
+import { AuthModule } from 'modules/auth/auth.module';
+
+import { ImageService } from 'modules/images/image.service';
+
+import { ImageController } from 'modules/images/image.controller';
+
+import { SavedImage } from 'modules/images/savedImage.model';
 
 @Module({
   providers: [ImageService],

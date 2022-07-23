@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType } from '../multilinks/model/multilink.model';
-import { User } from '../users/user.model';
+
+import { User } from 'modules/users/user.model';
+import { MLContentType } from 'modules/multilinks/model/multilink.model';
 
 interface ISavedImageCreationAttrs {
   userId: number;

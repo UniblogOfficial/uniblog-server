@@ -1,4 +1,3 @@
-import { SaveImageDto } from './dto/save-image.dto';
 import {
   UseGuards,
   Controller,
@@ -14,11 +13,15 @@ import {
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiSecurity, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import path from 'path';
-import { ApiKeyGuard } from '../auth/api-key.guard';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { TImageFormData } from '../files/file.service';
-import { ImageService } from './image.service';
-import { SavedImage } from './savedImage.model';
+
+import { ImageService } from 'modules/images/image.service';
+
+import { ApiKeyGuard } from 'modules/auth/api-key.guard';
+import { JwtAuthGuard } from 'modules/auth/jwt-auth.guard';
+
+import { SavedImage } from 'modules/images/savedImage.model';
+import { SaveImageDto } from 'modules/images/dto/save-image.dto';
+import { TImageFormData } from 'modules/files/file.service';
 
 @ApiTags('Image')
 @ApiSecurity('API-KEY', ['API-KEY'])
@@ -37,7 +40,7 @@ export class ImageController {
       limits: {
         fileSize: 1024 * 10000, // is it 10mb?
       },
-      fileFilter: (req: any, file: any, cb: any) => {
+      fileFilter: (_, file: any, cb: any) => {
         if (file.mimetype.match(/\/(jpg|jpeg|png|gif|bmp)$/)) {
           cb(null, true);
         } else {
@@ -68,7 +71,7 @@ export class ImageController {
     }),
   )
   save(
-    @Req() request,
+    @Req() request: any,
     @Body() dto: SaveImageDto,
     @UploadedFiles()
     image: TImageFormData,
@@ -80,7 +83,7 @@ export class ImageController {
   @ApiResponse({ status: 200, type: [SavedImage] })
   @UseGuards(JwtAuthGuard)
   @Get('/all')
-  getAll(@Req() request) {
+  getAll(@Req() request: any) {
     return this.imageService.getAllByUserId(request.user);
   }
 }
