@@ -1,8 +1,11 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
-import { ApiKeyGuard } from '../auth/api-key.guard';
-import { BindSocialVkDto } from './dto/bind-social.dto';
-import { SocialService } from './social.service';
+
+import { SocialService } from 'modules/socials/social.service';
+
+import { ApiKeyGuard } from 'modules/auth/api-key.guard';
+
+import { BindSocialVkDto } from 'modules/socials/dto/bind-social.dto';
 
 @ApiSecurity('API-KEY', ['API-KEY'])
 @UseGuards(ApiKeyGuard)
