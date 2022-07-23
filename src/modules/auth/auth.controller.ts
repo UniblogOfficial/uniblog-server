@@ -1,12 +1,16 @@
-import { ApiKeyGuard } from './api-key.guard';
-import { CreateUserDto } from './../users/dto/create-user.dto';
-import { AuthService } from './auth.service';
 import { Body, Controller, Get, Post, Req, UseGuards, UsePipes } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { LoginDto } from './dto/login.dto';
-import { ValidationPipe } from 'src/core/pipes/validation.pipe';
-import { User } from '../users/user.model';
-import { JwtAuthGuard } from './jwt-auth.guard';
+
+import { AuthService } from 'modules/auth/auth.service';
+
+import { ApiKeyGuard } from 'modules/auth/api-key.guard';
+import { JwtAuthGuard } from 'modules/auth/jwt-auth.guard';
+
+import { User } from 'modules/users/user.model';
+import { CreateUserDto } from 'modules/users/dto/create-user.dto';
+import { LoginDto } from 'modules/auth/dto/login.dto';
+
+import { ValidationPipe } from 'core/pipes/validation.pipe';
 
 @ApiTags('Auth')
 @ApiSecurity('API-KEY', ['API-KEY'])
@@ -19,7 +23,7 @@ export class AuthController {
   @ApiResponse({ status: 200, type: [User] })
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  me(@Req() request) {
+  me(@Req() request: any) {
     return this.authService.me(request.user);
   }
 

@@ -1,7 +1,7 @@
-import { Role } from 'src/modules/roles/role.model';
+import { Role } from 'modules/roles/role.model';
 
 export type TUserTokenData = {
-  email: string;
   id: number;
+  email: string;
   roles: Role[];
 };
