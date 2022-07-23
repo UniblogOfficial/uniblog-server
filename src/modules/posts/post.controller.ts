@@ -1,10 +1,13 @@
-import { PostService } from './post.service';
 import { Body, Controller, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { PublishPostDto } from './dto/publish-post.dto';
 import { ApiSecurity } from '@nestjs/swagger';
-import { ApiKeyGuard } from '../auth/api-key.guard';
+
+import { PostService } from 'modules/posts/post.service';
+
+import { ApiKeyGuard } from 'modules/auth/api-key.guard';
+
+import { CreatePostDto } from 'modules/posts/dto/create-post.dto';
+import { PublishPostDto } from 'modules/posts/dto/publish-post.dto';
 
 @ApiSecurity('API-KEY', ['API-KEY'])
 @UseGuards(ApiKeyGuard)
