@@ -23,7 +23,7 @@ import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
 import { JwtAuthGuard } from 'modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'modules/auth/guards/roles.guard';
 
-import { ValidationPipe } from 'core/pipes/validation.pipe';
+import { ValidationPipe } from 'common/pipes/validation.pipe';
 import { Roles } from 'modules/auth/roles-auth.decorator';
 
 import { BanUserDto } from 'modules/users/dto/ban-user.dto';

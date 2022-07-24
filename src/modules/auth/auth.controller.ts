@@ -10,7 +10,7 @@ import { JwtAuthGuard } from 'modules/auth/guards/jwt-auth.guard';
 import { CreateUserDto } from 'modules/users/dto/create-user.dto';
 import { LoginDto } from 'modules/auth/dto/login.dto';
 
-import { ValidationPipe } from 'core/pipes/validation.pipe';
+import { ValidationPipe } from 'common/pipes/validation.pipe';
 
 @ApiTags('Auth')
 @ApiSecurity('API-KEY', ['API-KEY'])
