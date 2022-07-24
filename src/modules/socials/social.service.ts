@@ -94,7 +94,7 @@ export class SocialService {
     return data;
   }
 
-  getAccountByUserId(userId: string) {
+  getAccount(userId: string) {
     return this.prisma.social.findUnique({ where: { id: userId } });
   }
 }

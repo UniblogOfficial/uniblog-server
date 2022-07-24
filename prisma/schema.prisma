@@ -79,7 +79,7 @@ model Avatar {
   imageType String?
   imageData Bytes?
 
-  userId String
+  userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())

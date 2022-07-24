@@ -13,7 +13,7 @@ export class RoleService {
     return this.prisma.role.create({ data: dto });
   }
 
-  getRoleByValue(value: RoleType) {
+  getRole(value: RoleType) {
     return this.prisma.role.findUnique({ where: { value } });
   }
 }

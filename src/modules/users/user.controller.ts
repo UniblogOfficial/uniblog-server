@@ -75,7 +75,7 @@ export class UserController {
     }),
   )
   updateAvatar(
-    @Req() request,
+    @Req() request: any,
     @UploadedFiles()
     image: TUserAvatarFormData,
   ) {

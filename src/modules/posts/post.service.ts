@@ -30,12 +30,12 @@ export class PostService {
   async publish(dto: PublishPostDto) {
     let userVk: Social;
     try {
-      userVk = await this.socialService.getAccountByUserId(dto.userId);
+      userVk = await this.socialService.getAccount(dto.userId);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    if (!userVk) throw new HttpException('Vk user not found', HttpStatus.BAD_REQUEST);
+    if (!userVk) throw new HttpException('Vk user not found', HttpStatus.NOT_FOUND);
 
     return lastValueFrom(
       this.httpService

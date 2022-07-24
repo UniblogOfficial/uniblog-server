@@ -2,22 +2,24 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 import { PrismaService } from 'modules/prisma/prisma.service';
+import { RoleService } from 'modules/roles/role.service';
 
 import { CreateUserDto } from 'modules/users/dto/create-user.dto';
 import { BanUserDto } from 'modules/users/dto/ban-user.dto';
 import { AddRoleDto } from 'modules/users/dto/add-role.dto';
+import { GetUserDto } from 'modules/users/dto/get-user-dto';
 import { TUserAvatarFormData } from 'modules/files/file.service';
 import { TUserTokenData } from 'modules/auth/types/index';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private roleService: RoleService) {}
 
   async createUser(dto: CreateUserDto): Promise<User> {
     try {
-      const [user, role] = await this.prisma.$transaction([
+      const [user, role] = await Promise.all([
         this.prisma.user.create({ data: dto }),
-        this.prisma.role.findUnique({ where: { value: 'user' } }),
+        this.roleService.getRole('user'),
       ]);
 
       await this.prisma.userRole.create({
@@ -30,16 +32,20 @@ export class UserService {
     }
   }
 
-  async updateAvatar(userTokenData: TUserTokenData, image: TUserAvatarFormData) {
+  async updateAvatar({ id }: TUserTokenData, image: TUserAvatarFormData) {
     try {
-      const { id } = await this.prisma.user.findUnique({
-        where: { id: userTokenData.id },
-        select: { id: true },
-      });
-      const avatar = await this.prisma.avatar.findFirst({
-        where: { userId: id },
-        select: { id: true },
-      });
+      const [user, avatar] = await this.prisma.$transaction([
+        this.prisma.user.findUnique({
+          where: { id },
+          select: { id: true },
+        }),
+        this.prisma.avatar.findUnique({
+          where: { userId: id },
+          select: { id: true },
+        }),
+      ]);
+
+      if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
       const avatarData = {
         imageType: image.avatar[0].mimetype,
@@ -62,9 +68,9 @@ export class UserService {
   }
 
   async addRole({ userId, value }: AddRoleDto) {
-    const [user, role] = await this.prisma.$transaction([
+    const [user, role] = await Promise.all([
       this.prisma.user.findUnique({ where: { id: userId }, select: { id: true } }),
-      this.prisma.role.findUnique({ where: { value }, select: { id: true } }),
+      this.roleService.getRole(value),
     ]);
 
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -89,15 +95,14 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
-  getUserById(id: string) {
-    return this.prisma.user.findUnique({ where: { id } });
-  }
+  getUser(dto: GetUserDto) {
+    const { id, email, name } = dto;
 
-  getUserByEmail(email: string) {
-    return this.prisma.user.findUnique({ where: { email } });
-  }
+    if (!id && !email && !name)
+      throw new HttpException('One of user field must be provided', HttpStatus.BAD_REQUEST);
 
-  getUserByName(name: string) {
-    return this.prisma.user.findUnique({ where: { name } });
+    const where = id ? { id } : email ? { email } : { name };
+
+    return this.prisma.user.findUnique({ where });
   }
 }
