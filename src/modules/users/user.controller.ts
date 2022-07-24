@@ -59,7 +59,7 @@ export class UserController {
       limits: {
         fileSize: 1024 * 1000, // is it 1mb?
       },
-      fileFilter: (req: any, file: any, cb: any) => {
+      fileFilter: (_: any, file: any, cb: any) => {
         if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
           cb(null, true);
         } else {

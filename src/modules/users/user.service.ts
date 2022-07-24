@@ -2,7 +2,6 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 import { PrismaService } from 'modules/prisma/prisma.service';
-import { RoleService } from 'modules/roles/role.service';
 
 import { CreateUserDto } from 'modules/users/dto/create-user.dto';
 import { BanUserDto } from 'modules/users/dto/ban-user.dto';
@@ -12,7 +11,7 @@ import { TUserTokenData } from 'modules/auth/types/index';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService, private roleService: RoleService) {}
+  constructor(private prisma: PrismaService) {}
 
   async createUser(dto: CreateUserDto): Promise<User> {
     try {
