@@ -1,0 +1,755 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+
+  name       String   @unique
+  email      String?  @unique
+  password   String?
+  isVerified Boolean? @default(false)
+
+  banned    Boolean? @default(false)
+  banReason String?
+
+  savedImages SavedImage[]
+  multilinks  Multilink[]
+  socials     Social[]
+  roles       UserRole[]
+  avatars     Avatar[]
+  posts       Post[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id          String  @id @default(uuid())
+  value       String  @unique
+  description String?
+
+  users UserRole[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserRole {
+  id String @id @default(uuid())
+
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([roleId, userId])
+}
+
+model SavedImage {
+  id String @id @default(uuid())
+
+  type      String
+  name      String
+  filename  String
+  mime      String
+  extension String
+  url       String
+  thumbUrl  String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Avatar {
+  id String @id @default(uuid())
+
+  imageType String?
+  imageData Bytes?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id String @id @default(uuid())
+
+  body  String
+  image String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Social {
+  id String @id @default(uuid())
+
+  name         String
+  socialUserId String  @unique
+  accessToken  String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Multilink {
+  id   String @id @default(uuid())
+  name String @unique
+
+  contentMap      String[]
+  background      String
+  outerBackground String?
+
+  maxWidth   Int
+  clickCount Int @default(0)
+
+  MLAudios     MLAudio[]
+  MLButtons    MLButton[]
+  MLCarousels  MLCarousel[]
+  MLDividers   MLDivider[]
+  MLFeedbacks  MLFeedback[]
+  MLImageDatas MLImageData[]
+  MLImageTexts MLImageText[]
+  MLImages     MLImage[]
+  MLLinks      MLLink[]
+  MLLogos      MLLogo[]
+  MLMaps       MLMap[]
+  MLPosts      MLPost[]
+  MLShops      MLShop[]
+  MLSocials    MLSocial[]
+  MLTexts      MLText[]
+  MLTimers     MLTimer[]
+  MLVideos     MLVideo[]
+  MLVotes      MLVote[]
+  MLWidgets    MLWidget[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLAudio {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  url String
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLButton {
+  id String @id @default(uuid())
+
+  order        Int
+  padding      Float[]
+  margin       Float[]
+  border       String?
+  borderRadius Int[]   @default([0])
+  background   String?
+  type         String
+
+  color         String?
+  fontStyle     String?
+  fontVariant   String?
+  fontWeight    Int?
+  fontSize      Float?
+  lineHeight    Float?
+  fontFamily    String?
+  letterSpacing Float?
+  textShadow    String[]
+  textAlign     String?  @default("left")
+
+  title String?
+  href  String?
+  image String?
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLCarousel {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  images   String[]
+  dots     Boolean? @default(true)
+  arrows   Boolean? @default(true)
+  swipe    Boolean? @default(true)
+  interval Int?
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLDivider {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  icon           String?
+  primaryColor   String?
+  secondaryColor String?
+  line           String?
+  lineColor      String?
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLFeedback {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  color         String?
+  fontStyle     String?
+  fontVariant   String?
+  fontWeight    Int?
+  fontSize      Float?
+  lineHeight    Float?
+  fontFamily    String?
+  letterSpacing Float?
+  textShadow    String[]
+  textAlign     String?  @default("left")
+
+  target            String?
+  titleBackground   String?
+  titleBorderRadius Int[]   @default([0])
+
+  buttonBackground    String?
+  buttonBorderRadius  Int[]    @default([0])
+  buttonColor         String?
+  buttonFont          String?
+  buttonLetterSpacing Float?
+  buttonTextShadow    String[]
+  buttonTextAlign     String?
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLImageData {
+  id String @id @default(uuid())
+
+  type     String
+  order    Int
+  suborder Int
+
+  imageName String?
+  imageType String
+  imageData Bytes
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLImageText {
+  id String @id @default(uuid())
+
+  order        Int
+  padding      Float[]
+  margin       Float[]
+  border       String?
+  background   String?
+  type         String
+  borderRadius Int[]   @default([0])
+
+  color         String?
+  fontStyle     String?
+  fontVariant   String?
+  fontWeight    Int?
+  fontSize      Float?
+  lineHeight    Float?
+  fontFamily    String?
+  letterSpacing Float?
+  textShadow    String[]
+  textAlign     String?  @default("left")
+
+  image       String
+  imgPosition String
+  text        String
+  hAlign      String? @default("left")
+  vAlign      String? @default("center")
+  href        String?
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLImage {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  color         String?
+  fontStyle     String?
+  fontVariant   String?
+  fontWeight    Int?
+  fontSize      Float?
+  lineHeight    Float?
+  fontFamily    String?
+  letterSpacing Float?
+  textShadow    String[]
+  textAlign     String?  @default("left")
+
+  image        String
+  title        String?
+  href         String?
+  imgPosition  String? @default("bottom")
+  textPosition String? @default("outside")
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLLink {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  color         String?
+  fontStyle     String?
+  fontVariant   String?
+  fontWeight    Int?
+  fontSize      Float?
+  lineHeight    Float?
+  fontFamily    String?
+  letterSpacing Float?
+  textShadow    String[]
+  textAlign     String?  @default("left")
+
+  borderRadius Int[]   @default([0])
+  href         String
+  linkType     String
+  title        String
+  image        String?
+  logo         String?
+  imageMargin  Float[] @default([0])
+  mode         String?
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLLogo {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  logo   String
+  banner String?
+  size   Int?
+  hAlign String? @default("center")
+  vAlign String? @default("center")
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLMap {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  url    String
+  latLng Float[]
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLPost {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  url String
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLShopCell {
+  id String @id @default(uuid())
+
+  order       Int
+  image       String
+  title       String
+  subtitle    String?
+  description String?
+  price       String?
+  button      String?
+  href        String?
+  background  String?
+
+  blockId String
+  MLShop  MLShop @relation(fields: [blockId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLShop {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  color         String?
+  fontStyle     String?
+  fontVariant   String?
+  fontWeight    Int?
+  fontSize      Float?
+  lineHeight    Float?
+  fontFamily    String?
+  letterSpacing Float?
+  textShadow    String[]
+  textAlign     String?  @default("left")
+
+  subtitleColor         String?
+  subtitleFont          String?
+  subtitleLetterSpacing Float?
+  subtitleTextShadow    String[]
+  subtitleTextAlign     String?  @default("left")
+
+  descriptionColor         String?
+  descriptionFont          String?
+  descriptionLetterSpacing Float?
+  descriptionTextShadow    String[]
+  descriptionTextAlign     String?  @default("left")
+
+  priceColor         String?
+  priceFont          String?
+  priceLetterSpacing Float?
+  priceTextShadow    String[]
+  priceTextAlign     String?  @default("left")
+
+  buttonBackground    String?  @default("#0000")
+  buttonBorderRadius  Int[]    @default([0])
+  buttonColor         String?
+  buttonFont          String?
+  buttonLetterSpacing Float?
+  buttonTextShadow    String[]
+  buttonTextAlign     String?  @default("left")
+
+  borderRadius Int[]   @default([0])
+  grid         String? @default("1fr 1fr 1fr")
+  gap          Float?
+
+  MLShopCells MLShopCell[]
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLSocial {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  links     String[]
+  linkTypes String[]
+  setId     String?
+  size      Float?
+  rows      String?
+  columns   String?
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLText {
+  id String @id @default(uuid())
+
+  order        Int
+  padding      Float[]
+  margin       Float[]
+  border       String?
+  background   String?
+  type         String
+  borderRadius Int[]   @default([0])
+
+  color         String?
+  fontStyle     String?
+  fontVariant   String?
+  fontWeight    Int?
+  fontSize      Float?
+  lineHeight    Float?
+  fontFamily    String?
+  letterSpacing Float?
+  textShadow    String[]
+  textAlign     String?  @default("left")
+
+  text         String
+  textType     String? @default("plain")
+  href         String?
+  icon         String?
+  iconPosition String?
+  iconSide     String?
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLTimer {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  color         String?
+  fontStyle     String?
+  fontVariant   String?
+  fontWeight    Int?
+  fontSize      Float?
+  lineHeight    Float?
+  fontFamily    String?
+  letterSpacing Float?
+  textShadow    String[]
+  textAlign     String?  @default("left")
+
+  image        String
+  title        String?
+  href         String
+  countdown    Int
+  imgPosition  String? @default("bottom")
+  textPosition String? @default("outside")
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLVideo {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  url    String
+  width  Int
+  height Int
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLVoteCell {
+  id String @id @default(uuid())
+
+  order      Int
+  title      String
+  value      Float
+  background String?
+
+  blockId String
+  MLVote  MLVote @relation(fields: [blockId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLVote {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  color         String?
+  fontStyle     String?
+  fontVariant   String?
+  fontWeight    Int?
+  fontSize      Float?
+  lineHeight    Float?
+  fontFamily    String?
+  letterSpacing Float?
+  textShadow    String[]
+  textAlign     String?  @default("left")
+
+  buttonColor         String?
+  buttonFont          String?
+  buttonLetterSpacing Float?
+  buttonTextShadow    String[]
+  buttonTextAlign     String?
+
+  target             String?
+  titleBackground    String?
+  titleBorderRadius  Int[]   @default([0])
+  buttonBackground   String?
+  buttonBorderRadius Int[]   @default([0])
+
+  MLVoteCells MLVoteCell[]
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MLWidget {
+  id String @id @default(uuid())
+
+  order      Int
+  padding    Float[]
+  margin     Float[]
+  border     String?
+  background String?
+  type       String
+
+  url    String
+  width  Int
+  height Int
+
+  multilinkId String
+  multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
