@@ -14,12 +14,12 @@ datasource db {
 model User {
   id String @id @default(uuid())
 
-  name       String   @unique
-  email      String?  @unique
+  name       String  @unique
+  email      String? @unique
   password   String?
-  isVerified Boolean? @default(false)
+  isVerified Boolean @default(false)
 
-  banned    Boolean? @default(false)
+  banned    Boolean @default(false)
   banReason String?
 
   savedImages SavedImage[]
@@ -163,7 +163,7 @@ model MLAudio {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(audio)
 
   url String
 
@@ -181,9 +181,9 @@ model MLButton {
   padding      Float[]
   margin       Float[]
   border       String?
-  borderRadius Int[]   @default([0])
+  borderRadius Int[]       @default([0])
   background   String?
-  type         String
+  type         ContentType @default(button)
 
   color         String?
   fontStyle     String?
@@ -194,7 +194,7 @@ model MLButton {
   fontFamily    String?
   letterSpacing Float?
   textShadow    String[]
-  textAlign     String?  @default("left")
+  textAlign     Align    @default(left)
 
   title String?
   href  String?
@@ -215,12 +215,12 @@ model MLCarousel {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(carousel)
 
   images   String[]
-  dots     Boolean? @default(true)
-  arrows   Boolean? @default(true)
-  swipe    Boolean? @default(true)
+  dots     Boolean  @default(true)
+  arrows   Boolean  @default(true)
+  swipe    Boolean  @default(true)
   interval Int?
 
   multilinkId String
@@ -238,12 +238,12 @@ model MLDivider {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(divider)
 
   icon           String?
   primaryColor   String?
   secondaryColor String?
-  line           String?
+  line           LineType?
   lineColor      String?
 
   multilinkId String
@@ -261,7 +261,7 @@ model MLFeedback {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(feedback)
 
   color         String?
   fontStyle     String?
@@ -272,7 +272,7 @@ model MLFeedback {
   fontFamily    String?
   letterSpacing Float?
   textShadow    String[]
-  textAlign     String?  @default("left")
+  textAlign     Align    @default(left)
 
   target            String?
   titleBackground   String?
@@ -284,7 +284,7 @@ model MLFeedback {
   buttonFont          String?
   buttonLetterSpacing Float?
   buttonTextShadow    String[]
-  buttonTextAlign     String?
+  buttonTextAlign     Align    @default(left)
 
   multilinkId String
   multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -296,7 +296,7 @@ model MLFeedback {
 model MLImageData {
   id String @id @default(uuid())
 
-  type     String
+  type     ContentType
   order    Int
   suborder Int
 
@@ -319,8 +319,8 @@ model MLImageText {
   margin       Float[]
   border       String?
   background   String?
-  type         String
-  borderRadius Int[]   @default([0])
+  type         ContentType @default(imageText)
+  borderRadius Int[]       @default([0])
 
   color         String?
   fontStyle     String?
@@ -331,13 +331,13 @@ model MLImageText {
   fontFamily    String?
   letterSpacing Float?
   textShadow    String[]
-  textAlign     String?  @default("left")
+  textAlign     Align    @default(left)
 
   image       String
-  imgPosition String
+  imgPosition ImagePosition
   text        String
-  hAlign      String? @default("left")
-  vAlign      String? @default("center")
+  hAlign      Align         @default(left)
+  vAlign      Align         @default(center)
   href        String?
 
   multilinkId String
@@ -355,7 +355,7 @@ model MLImage {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(image)
 
   color         String?
   fontStyle     String?
@@ -366,13 +366,13 @@ model MLImage {
   fontFamily    String?
   letterSpacing Float?
   textShadow    String[]
-  textAlign     String?  @default("left")
+  textAlign     Align    @default(left)
 
   image        String
   title        String?
   href         String?
-  imgPosition  String? @default("bottom")
-  textPosition String? @default("outside")
+  imgPosition  ImagePosition @default(bottom)
+  textPosition TextPosition  @default(outside)
 
   multilinkId String
   multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -389,7 +389,7 @@ model MLLink {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(link)
 
   color         String?
   fontStyle     String?
@@ -400,15 +400,15 @@ model MLLink {
   fontFamily    String?
   letterSpacing Float?
   textShadow    String[]
-  textAlign     String?  @default("left")
+  textAlign     Align    @default(left)
 
-  borderRadius Int[]   @default([0])
+  borderRadius Int[]         @default([0])
   href         String
-  linkType     String
+  linkType     SocialService
   title        String
   image        String?
   logo         String?
-  imageMargin  Float[] @default([0])
+  imageMargin  Float[]       @default([0])
   mode         String?
 
   multilinkId String
@@ -426,13 +426,13 @@ model MLLogo {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(logo)
 
   logo   String
   banner String?
   size   Int?
-  hAlign String? @default("center")
-  vAlign String? @default("center")
+  hAlign Align   @default(center)
+  vAlign Align   @default(center)
 
   multilinkId String
   multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -449,7 +449,7 @@ model MLMap {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(map)
 
   url    String
   latLng Float[]
@@ -469,7 +469,7 @@ model MLPost {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(post)
 
   url String
 
@@ -508,7 +508,7 @@ model MLShop {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(shop)
 
   color         String?
   fontStyle     String?
@@ -519,36 +519,36 @@ model MLShop {
   fontFamily    String?
   letterSpacing Float?
   textShadow    String[]
-  textAlign     String?  @default("left")
+  textAlign     Align    @default(left)
 
   subtitleColor         String?
   subtitleFont          String?
   subtitleLetterSpacing Float?
   subtitleTextShadow    String[]
-  subtitleTextAlign     String?  @default("left")
+  subtitleTextAlign     Align    @default(left)
 
   descriptionColor         String?
   descriptionFont          String?
   descriptionLetterSpacing Float?
   descriptionTextShadow    String[]
-  descriptionTextAlign     String?  @default("left")
+  descriptionTextAlign     Align    @default(left)
 
   priceColor         String?
   priceFont          String?
   priceLetterSpacing Float?
   priceTextShadow    String[]
-  priceTextAlign     String?  @default("left")
+  priceTextAlign     Align    @default(left)
 
-  buttonBackground    String?  @default("#0000")
+  buttonBackground    String   @default("#000000")
   buttonBorderRadius  Int[]    @default([0])
   buttonColor         String?
   buttonFont          String?
   buttonLetterSpacing Float?
   buttonTextShadow    String[]
-  buttonTextAlign     String?  @default("left")
+  buttonTextAlign     Align    @default(left)
 
-  borderRadius Int[]   @default([0])
-  grid         String? @default("1fr 1fr 1fr")
+  borderRadius Int[]  @default([0])
+  grid         String @default("1fr 1fr 1fr")
   gap          Float?
 
   MLShopCells MLShopCell[]
@@ -568,10 +568,10 @@ model MLSocial {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(social)
 
   links     String[]
-  linkTypes String[]
+  linkTypes SocialService[]
   setId     String?
   size      Float?
   rows      String?
@@ -592,8 +592,8 @@ model MLText {
   margin       Float[]
   border       String?
   background   String?
-  type         String
-  borderRadius Int[]   @default([0])
+  type         ContentType @default(text)
+  borderRadius Int[]       @default([0])
 
   color         String?
   fontStyle     String?
@@ -604,14 +604,14 @@ model MLText {
   fontFamily    String?
   letterSpacing Float?
   textShadow    String[]
-  textAlign     String?  @default("left")
+  textAlign     Align    @default(left)
 
   text         String
-  textType     String? @default("plain")
+  textType     TextType      @default(plain)
   href         String?
   icon         String?
-  iconPosition String?
-  iconSide     String?
+  iconPosition IconPosition?
+  iconSide     Side
 
   multilinkId String
   multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -628,7 +628,7 @@ model MLTimer {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(timer)
 
   color         String?
   fontStyle     String?
@@ -639,14 +639,14 @@ model MLTimer {
   fontFamily    String?
   letterSpacing Float?
   textShadow    String[]
-  textAlign     String?  @default("left")
+  textAlign     Align    @default(left)
 
   image        String
   title        String?
   href         String
   countdown    Int
-  imgPosition  String? @default("bottom")
-  textPosition String? @default("outside")
+  imgPosition  ImagePosition @default(bottom)
+  textPosition TextPosition  @default(outside)
 
   multilinkId String
   multilink   Multilink @relation(fields: [multilinkId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -663,7 +663,7 @@ model MLVideo {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(video)
 
   url    String
   width  Int
@@ -699,7 +699,7 @@ model MLVote {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(vote)
 
   color         String?
   fontStyle     String?
@@ -710,13 +710,13 @@ model MLVote {
   fontFamily    String?
   letterSpacing Float?
   textShadow    String[]
-  textAlign     String?  @default("left")
+  textAlign     Align    @default(left)
 
   buttonColor         String?
   buttonFont          String?
   buttonLetterSpacing Float?
   buttonTextShadow    String[]
-  buttonTextAlign     String?
+  buttonTextAlign     Align    @default(left)
 
   target             String?
   titleBackground    String?
@@ -741,7 +741,7 @@ model MLWidget {
   margin     Float[]
   border     String?
   background String?
-  type       String
+  type       ContentType @default(widget)
 
   url    String
   width  Int
@@ -752,4 +752,83 @@ model MLWidget {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum ContentType {
+  text
+  social
+  widget
+  video
+  audio
+  post
+  vote
+  map
+  feedback
+  divider
+  link
+  logo
+  button
+  image
+  imageText
+  carousel
+  timer
+  shop
+  backgroundImage
+}
+
+enum Side {
+  right
+  left
+}
+
+enum IconPosition {
+  sticky
+  aside
+}
+
+enum ImagePosition {
+  top
+  bottom
+}
+
+enum TextPosition {
+  inside
+  outside
+}
+
+enum TextType {
+  plain
+  list
+}
+
+enum Align {
+  top
+  bottom
+  right
+  left
+  center
+  justify
+}
+
+enum LineType {
+  solid
+  faded
+}
+
+enum SocialService {
+  vk
+  facebook
+  instagram
+  tiktok
+  twitter
+  pinterest
+  telegram
+
+  boosty
+  discord
+  patreon
+  twitch
+  youtube
+
+  thirdParty
 }
