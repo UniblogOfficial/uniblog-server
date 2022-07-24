@@ -28,11 +28,11 @@ export class AuthService {
 
   async me(userTokenData: TUserTokenData) {
     const user = await this.userService.getUserById(userTokenData.id);
-    if (user) {
-      return { data: user };
+    if (!user) {
+      throw new HttpException('Token expired or such user not exists', HttpStatus.NOT_FOUND);
     }
 
-    throw new HttpException('Token expired or such user not exists', HttpStatus.NOT_FOUND);
+    return { data: user };
   }
 
   async login(dto: LoginDto) {
@@ -54,10 +54,10 @@ export class AuthService {
     const user = await this.userService.getUserByEmail(loginDto.email);
     const isPasswordsEqual = await bcrypt.compare(loginDto.password, user.password);
 
-    if (user && isPasswordsEqual) {
-      return user;
+    if (!user || !isPasswordsEqual) {
+      throw new UnauthorizedException({ message: 'Invalid email/password' });
     }
 
-    throw new UnauthorizedException({ message: 'Invalid email/password' });
+    return user;
   }
 }

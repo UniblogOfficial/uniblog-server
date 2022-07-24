@@ -1,31 +1,29 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
+import { User } from '@prisma/client';
 
+import { PrismaService } from 'modules/prisma/prisma.service';
 import { RoleService } from 'modules/roles/role.service';
 
 import { CreateUserDto } from 'modules/users/dto/create-user.dto';
 import { BanUserDto } from 'modules/users/dto/ban-user.dto';
 import { AddRoleDto } from 'modules/users/dto/add-role.dto';
-import { Avatar } from 'modules/users/model/avatar.model';
-import { User } from 'modules/users/user.model';
 import { TUserAvatarFormData } from 'modules/files/file.service';
 import { TUserTokenData } from 'modules/auth/types/index';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectModel(User) private userRepository: typeof User,
-    @InjectModel(Avatar) private avatarRepository: typeof Avatar,
-    private roleService: RoleService,
-  ) {}
+  constructor(private prisma: PrismaService, private roleService: RoleService) {}
 
-  async createUser(dto: CreateUserDto) {
+  async createUser(dto: CreateUserDto): Promise<User> {
     try {
-      const user = await this.userRepository.create(dto);
-      const role = await this.roleService.getRoleByValue('USER');
+      const [user, role] = await this.prisma.$transaction([
+        this.prisma.user.create({ data: dto }),
+        this.prisma.role.findUnique({ where: { value: 'user' } }),
+      ]);
 
-      await user.$set('roles', [role.id]);
-      user.roles = [role];
+      await this.prisma.userRole.create({
+        data: { userId: user.id, roleId: role.id },
+      });
 
       return user;
     } catch (error) {
@@ -35,70 +33,72 @@ export class UserService {
 
   async updateAvatar(userTokenData: TUserTokenData, image: TUserAvatarFormData) {
     try {
-      const { id } = await this.userRepository.findByPk(userTokenData.id);
-      let avatar = await this.avatarRepository.findOne({ where: { userId: id } });
+      const { id } = await this.prisma.user.findUnique({
+        where: { id: userTokenData.id },
+        select: { id: true },
+      });
+      const avatar = await this.prisma.avatar.findFirst({
+        where: { userId: id },
+        select: { id: true },
+      });
 
       const avatarData = {
-        userId: id,
         imageType: image.avatar[0].mimetype,
         imageData: image.avatar[0].buffer,
       };
 
       if (!avatar) {
-        avatar = await this.avatarRepository.create(avatarData);
+        await this.prisma.avatar.create({ data: { ...avatarData, userId: id } });
       } else {
-        await this.avatarRepository.update(avatarData, {
-          where: { userId: id },
-          returning: true,
+        await this.prisma.avatar.update({
+          where: { id: avatar.id },
+          data: avatarData,
         });
       }
 
-      const user = await this.getUserById(id);
-
-      return { data: user, message: 'Avatar updated' };
+      return this.prisma.user.findUnique({ where: { id } });
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async addRole(dto: AddRoleDto) {
-    const user = await this.userRepository.findByPk(dto.userId);
-    const role = await this.roleService.getRoleByValue(dto.value);
+  async addRole({ userId, value }: AddRoleDto) {
+    const [user, role] = await this.prisma.$transaction([
+      this.prisma.user.findUnique({ where: { id: userId }, select: { id: true } }),
+      this.prisma.role.findUnique({ where: { value }, select: { id: true } }),
+    ]);
 
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     if (!role) throw new HttpException('Role not found', HttpStatus.NOT_FOUND);
 
-    await user.$add('role', role.id);
-
-    return dto;
+    return this.prisma.userRole.create({
+      data: { userId: user.id, roleId: role.id },
+    });
   }
 
-  async ban(dto: BanUserDto) {
-    const user = await this.userRepository.findByPk(dto.userId);
-
+  async ban({ userId, banReason }: BanUserDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true },
+    });
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
-    user.banned = true;
-    user.banReason = dto.banReason;
-
-    await user.save();
-
-    return user;
+    return this.prisma.user.update({ where: { id: userId }, data: { banned: true, banReason } });
   }
 
   getAllUsers() {
-    return this.userRepository.findAll({ include: { all: true } });
+    return this.prisma.user.findMany();
   }
 
-  getUserById(id: number) {
-    return this.userRepository.findOne({ where: { id }, include: { all: true } });
+  getUserById(id: string) {
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
   getUserByEmail(email: string) {
-    return this.userRepository.findOne({ where: { email }, include: { all: true } });
+    return this.prisma.user.findUnique({ where: { email } });
   }
 
   getUserByName(name: string) {
-    return this.userRepository.findOne({ where: { name }, include: { all: true } });
+    return this.prisma.user.findUnique({ where: { name } });
   }
 }

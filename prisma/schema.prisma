@@ -30,8 +30,8 @@ model User {
 }
 
 model Role {
-  id          String  @id @default(uuid())
-  value       String  @unique
+  id          String   @id @default(uuid())
+  value       RoleType @unique
   description String?
 
   users UserRole[]
@@ -748,6 +748,11 @@ model MLWidget {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum RoleType {
+  user
+  admin
 }
 
 enum ContentType {
