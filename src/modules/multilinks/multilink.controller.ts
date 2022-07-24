@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiConsumes, ApiOperation, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { Multilink } from '@prisma/client';
 import * as path from 'path';
 
 import { MultilinkService } from 'modules/multilinks/multilink.service';
@@ -19,7 +20,6 @@ import { MultilinkService } from 'modules/multilinks/multilink.service';
 import { JwtAuthGuard } from 'modules/auth/guards/jwt-auth.guard';
 import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
 
-import { Multilink } from 'modules/multilinks/model/multilink.model';
 import { CreateMLDto } from 'modules/multilinks/dto/create-ml.dto';
 
 @ApiTags('Multilink')
@@ -30,8 +30,8 @@ export class MultilinkController {
   constructor(private multilinkService: MultilinkService) {}
 
   @ApiOperation({ summary: 'Multilink creating' })
+  @ApiResponse({ status: 200 })
   @ApiConsumes('multipart/form-data')
-  @ApiResponse({ status: 200, type: Multilink })
   @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
@@ -54,22 +54,20 @@ export class MultilinkController {
       },
     }),
   )
-  create(@Req() request: any, @Body() dto: CreateMLDto) {
-    return this.multilinkService.createMultilink(request.user, dto);
+  create(@Req() request: any, @Body() dto: CreateMLDto): Promise<Multilink> {
+    return this.multilinkService.createMultilink(request.user.id, dto);
   }
 
   @ApiOperation({ summary: 'All user multilinks fetching' })
-  @ApiResponse({ status: 200, type: Multilink })
   @UseGuards(JwtAuthGuard)
   @Get('/all')
-  getAll(@Req() request: any) {
+  getAll(@Req() request: any): Promise<Multilink[]> {
     return this.multilinkService.getMLsByUserId(request.user);
   }
 
   @ApiOperation({ summary: 'Multilink fetching (public)' })
-  @ApiResponse({ status: 200, type: Multilink })
   @Get('/:name')
-  getOne(@Param('name') name: string) {
+  getOne(@Param('name') name: string): Promise<Multilink> {
     return this.multilinkService.getMLByName(name);
   }
 }

@@ -1,4 +1,4 @@
 export class BindSocialVkDto {
+  readonly userId: string;
   readonly code: string;
-  readonly userId: number;
 }

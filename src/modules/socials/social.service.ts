@@ -1,23 +1,20 @@
-import { HttpService } from '@nestjs/axios';
 import {
   HttpException,
   HttpStatus,
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 import { AxiosResponse } from 'axios';
+import { HttpService } from '@nestjs/axios';
 import { lastValueFrom, map, Observable } from 'rxjs';
 
+import { PrismaService } from 'modules/prisma/prisma.service';
+
 import { BindSocialVkDto } from 'modules/socials/dto/bind-social.dto';
-import { Social } from 'modules/socials/social.model';
 
 @Injectable()
 export class SocialService {
-  constructor(
-    @InjectModel(Social) private socialRepository: typeof Social,
-    private httpService: HttpService,
-  ) {}
+  constructor(private prisma: PrismaService, private httpService: HttpService) {}
 
   async bindVk(dto: BindSocialVkDto) {
     let authData: any;
@@ -34,22 +31,25 @@ export class SocialService {
     }
 
     const { socialUserId, accessToken } = authData;
-    const account = await this.getAccountBySocialUserId(socialUserId);
+    const account = await this.prisma.social.findUnique({
+      where: { socialUserId },
+      select: { id: true },
+    });
 
     if (account) {
       throw new HttpException('Account already have bound', HttpStatus.BAD_REQUEST);
     }
 
-    await this.socialRepository.create({
-      name: 'vk',
-      accessToken,
-      socialUserId,
-      userId: dto.userId,
+    await this.prisma.social.create({
+      data: {
+        name: 'vk',
+        accessToken,
+        socialUserId,
+        userId: dto.userId,
+      },
     });
 
-    const VkData = await this.getSocialUserData(socialUserId, accessToken);
-
-    return VkData;
+    return this.getSocialUserData(socialUserId, accessToken);
   }
 
   private async getVkAuthData(code: string): Promise<Observable<AxiosResponse<any, any>>> {
@@ -94,11 +94,7 @@ export class SocialService {
     return data;
   }
 
-  private getAccountBySocialUserId(socialUserId: string) {
-    return this.socialRepository.findOne({ where: { socialUserId } });
-  }
-
-  getAccountByUserId(userId: number) {
-    return this.socialRepository.findOne({ where: { userId } });
+  getAccount(userId: string) {
+    return this.prisma.social.findUnique({ where: { id: userId } });
   }
 }

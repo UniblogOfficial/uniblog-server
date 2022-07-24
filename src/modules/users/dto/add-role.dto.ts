@@ -1,9 +1,6 @@
-import { IsString, IsNumber } from 'class-validator';
+import { RoleType } from '@prisma/client';
 
 export class AddRoleDto {
-  @IsString({ message: 'Must be a string' })
-  readonly value: string;
-
-  @IsNumber({}, { message: 'Must be a number' })
-  readonly userId: number;
+  readonly userId: string;
+  readonly value: RoleType;
 }
