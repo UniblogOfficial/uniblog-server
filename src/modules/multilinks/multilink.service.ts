@@ -72,73 +72,76 @@ export class MultilinkService {
       // <multilink content>
 
       const createBlockSet = (blocks: any[], modelName: string) => {
-        try {
-          blocks.map(async block => {
-            await this.prisma[modelName].create({ data: { ...block, multilinkId } });
-          });
-        } catch (error) {
-          throw new HttpException(
-            `${modelName} creating error - ${error.message}`,
-            HttpStatus.INTERNAL_SERVER_ERROR,
-          );
-        }
+        return blocks.map(block =>
+          this.prisma[modelName].create({ data: { ...block, multilinkId } }),
+        );
       };
 
-      createBlockSet(parsedSets.textBlocks, 'mLText');
-      createBlockSet(parsedSets.socialBlocks, 'mLSocial');
-      createBlockSet(parsedSets.postBlocks, 'mLPost');
-      createBlockSet(parsedSets.widgetBlocks, 'mLWidget');
-      createBlockSet(parsedSets.videoBlocks, 'mLVideo');
-      createBlockSet(parsedSets.audioBlocks, 'mLAudio');
-      createBlockSet(parsedSets.mapBlocks, 'mLMap');
-      createBlockSet(parsedSets.feedbackBlocks, 'mLFeedback');
-      createBlockSet(parsedSets.dividerBlocks, 'mLDivider');
-      createBlockSet(parsedSets.linkBlocks, 'mLLink');
-      createBlockSet(parsedSets.buttonBlocks, 'mLButton');
-      createBlockSet(parsedSets.imageTextBlocks, 'mLImageText');
-      createBlockSet(parsedSets.imageBlocks, 'mLImage');
-      createBlockSet(parsedSets.carouselBlocks, 'mLCarousel');
-      createBlockSet(parsedSets.timerBlocks, 'mLTimer');
-
-      let hasLogo = false;
       try {
-        parsedSets.logoBlocks.map(async block => {
-          logoOrders.push(block.order);
-          await this.prisma.mLLogo.create({
-            data: { ...block, multilinkId, logo: block.logo || '' },
-          });
-        });
-
-        hasLogo = parsedSets.logoBlocks.some(block => block.logo);
+        await this.prisma.$transaction(
+          [
+            createBlockSet(parsedSets.textBlocks, 'mLText'),
+            createBlockSet(parsedSets.socialBlocks, 'mLSocial'),
+            createBlockSet(parsedSets.postBlocks, 'mLPost'),
+            createBlockSet(parsedSets.widgetBlocks, 'mLWidget'),
+            createBlockSet(parsedSets.videoBlocks, 'mLVideo'),
+            createBlockSet(parsedSets.audioBlocks, 'mLAudio'),
+            createBlockSet(parsedSets.mapBlocks, 'mLMap'),
+            createBlockSet(parsedSets.feedbackBlocks, 'mLFeedback'),
+            createBlockSet(parsedSets.dividerBlocks, 'mLDivider'),
+            createBlockSet(parsedSets.linkBlocks, 'mLLink'),
+            createBlockSet(parsedSets.buttonBlocks, 'mLButton'),
+            createBlockSet(parsedSets.imageTextBlocks, 'mLImageText'),
+            createBlockSet(parsedSets.imageBlocks, 'mLImage'),
+            createBlockSet(parsedSets.carouselBlocks, 'mLCarousel'),
+            createBlockSet(parsedSets.timerBlocks, 'mLTimer'),
+          ].flat(),
+        );
       } catch (error) {
         throw new HttpException(
-          `'mLLogo' creating error - ${error.message}`,
+          `Base blocks creation error - ${error.message}`,
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
 
-      parsedSets.shopBlocks.map(async block => {
-        const shopBlock = await this.prisma.mLShop.create({ data: { ...block, multilinkId } });
+      let hasLogo = false;
+      try {
+        await this.prisma.$transaction(
+          parsedSets.logoBlocks.map(block => {
+            if (block.logo) hasLogo = true;
+            logoOrders.push(block.order);
 
-        await Promise.all(
-          block.cells.map((cell: any) => {
-            return this.prisma.mLShopCell.create({ ...cell, blockId: shopBlock.id });
+            return this.prisma.mLLogo.create({
+              data: { ...block, multilinkId, logo: block.logo || '' },
+            });
           }),
         );
-      });
+      } catch (error) {
+        throw new HttpException(
+          `mLLogo creation error - ${error.message}`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
 
-      parsedSets.voteBlocks.map(async block => {
-        const voteBlock = await this.prisma.mLVote.create({ data: { ...block, multilinkId } });
+      await Promise.all(
+        parsedSets.shopBlocks.flatMap(async block => {
+          const shopBlock = await this.prisma.mLShop.create({ data: { ...block, multilinkId } });
 
-        await Promise.all(
-          block.cells.map((cell: any) => {
+          return block.cells.map((cell: any) => {
+            return this.prisma.mLShopCell.create({ data: { ...cell, blockId: shopBlock.id } });
+          });
+        }),
+      );
+
+      await Promise.all(
+        parsedSets.voteBlocks.flatMap(async block => {
+          const voteBlock = await this.prisma.mLVote.create({ data: { ...block, multilinkId } });
+
+          return block.cells.map((cell: any) => {
             return this.prisma.mLVoteCell.create({ data: { ...cell, blockId: voteBlock.id } });
-          }),
-        );
-      });
-
-      // </multilink content>
-      // <multilink images>
+          });
+        }),
+      );
 
       if (!hasLogo && logoOrders.length) {
         const avatar = await this.prisma.avatar.findUnique({ where: { userId } });
@@ -162,7 +165,7 @@ export class MultilinkService {
         }
       }
 
-      // </multilink images>
+      // </multilink content>
 
       const createdML = await this.prisma.multilink.findUnique({
         where: { id: multilink.id },

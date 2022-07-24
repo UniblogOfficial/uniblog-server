@@ -30,6 +30,7 @@ export class MultilinkController {
   constructor(private multilinkService: MultilinkService) {}
 
   @ApiOperation({ summary: 'Multilink creating' })
+  @ApiResponse({ status: 200 })
   @ApiConsumes('multipart/form-data')
   @UseGuards(JwtAuthGuard)
   @Post()
