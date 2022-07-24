@@ -22,6 +22,6 @@ export class RoleController {
 
   @Get('/:value')
   getByValue(@Param('value') value: RoleType) {
-    return this.roleService.getRoleByValue(value);
+    return this.roleService.getRole(value);
   }
 }

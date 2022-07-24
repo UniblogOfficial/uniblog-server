@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiSecurity, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { SavedImage } from '@prisma/client';
 import path from 'path';
 
 import { ImageService } from 'modules/images/image.service';
@@ -19,7 +20,6 @@ import { ImageService } from 'modules/images/image.service';
 import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
 import { JwtAuthGuard } from 'modules/auth/guards/jwt-auth.guard';
 
-import { SavedImage } from 'modules/images/savedImage.model';
 import { SaveImageDto } from 'modules/images/dto/save-image.dto';
 import { TImageFormData } from 'modules/files/file.service';
 
@@ -80,10 +80,10 @@ export class ImageController {
   }
 
   @ApiOperation({ summary: 'All image fetching' })
-  @ApiResponse({ status: 200, type: [SavedImage] })
+  @ApiResponse({ status: 200 })
   @UseGuards(JwtAuthGuard)
   @Get('/all')
-  getAll(@Req() request: any) {
-    return this.imageService.getAllByUserId(request.user);
+  getAll(@Req() request: any): Promise<SavedImage[]> {
+    return this.imageService.getAll(request.user.id);
   }
 }

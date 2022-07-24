@@ -1,12 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 import { HttpService } from '@nestjs/axios';
+import { ContentType } from '@prisma/client';
 import { AxiosResponse } from 'axios';
 import { lastValueFrom, map, Observable } from 'rxjs';
 import FormData from 'form-data';
 
-import { MLContentType } from 'modules/multilinks/model/multilink.model';
-import { SavedImage } from 'modules/images/savedImage.model';
+import { PrismaService } from 'modules/prisma/prisma.service';
 
 export interface File extends Blob {
   readonly lastModified: number;
@@ -15,13 +14,10 @@ export interface File extends Blob {
 
 @Injectable()
 export class ImageService {
-  constructor(
-    @InjectModel(SavedImage) private savedImageRepository: typeof SavedImage,
-    private httpService: HttpService,
-  ) {}
+  constructor(private prisma: PrismaService, private httpService: HttpService) {}
 
   async save(user: any, _: any, file: Express.Multer.File) {
-    const type = file.originalname.split('.')[0].split('-')[0] as MLContentType;
+    const type = file.originalname.split('.')[0].split('-')[0] as ContentType;
 
     let response: any;
     try {
@@ -36,30 +32,26 @@ export class ImageService {
     if (response) {
       const { image, thumb } = response as TImageHostResponseData;
       const { extension, filename, mime, name, url } = image;
-      this.savedImageRepository.create({
-        userId: user.id,
-        extension,
-        filename,
-        mime,
-        name,
-        type,
-        url,
-        thumbUrl: thumb.url,
+
+      this.prisma.savedImage.create({
+        data: {
+          userId: user.id,
+          extension,
+          filename,
+          mime,
+          name,
+          type,
+          url,
+          thumbUrl: thumb.url,
+        },
       });
     }
 
     return { data: response, message: 'Image saved' };
   }
 
-  async getAllByUserId(user: { id: string }) {
-    try {
-      const images = await this.savedImageRepository.findAll({ where: { userId: user.id } });
-      if (images.length) {
-        return { data: images, message: 'Here is your saved images!' };
-      }
-
-      return { data: null, message: 'There is no saved images' };
-    } catch {}
+  async getAll(userId: string) {
+    return this.prisma.savedImage.findMany({ where: { userId } });
   }
 
   private async saveImageData(

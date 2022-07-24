@@ -11,7 +11,7 @@ import { UserController } from 'modules/users/user.controller';
 @Module({
   controllers: [UserController],
   providers: [UserService],
-  imports: [RoleModule, PrismaModule, forwardRef(() => AuthModule)],
+  imports: [PrismaModule, RoleModule, forwardRef(() => AuthModule)],
   exports: [UserService],
 })
 export class UserModule {}

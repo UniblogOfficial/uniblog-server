@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiOperation, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
 import * as path from 'path';
 
 import { UserService } from 'modules/users/user.service';
@@ -30,7 +31,6 @@ import { AddRoleDto } from 'modules/users/dto/add-role.dto';
 import { CreateUserDto } from 'modules/users/dto/create-user.dto';
 import { TUserTokenData } from 'modules/auth/types/index';
 import { TUserAvatarFormData } from 'modules/files/file.service';
-import { User } from 'modules/users/user.model';
 
 @ApiTags('User')
 @ApiSecurity('API-KEY', ['API-KEY'])
@@ -40,18 +40,18 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @ApiOperation({ summary: 'User creation' })
-  @ApiResponse({ status: 200, type: User })
+  @ApiResponse({ status: 200 })
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @UsePipes(ValidationPipe)
   @Post()
-  create(@Body() userDto: CreateUserDto) {
+  create(@Body() userDto: CreateUserDto): Promise<User> {
     return this.userService.createUser(userDto);
   }
 
   @ApiOperation({ summary: 'Update user avatar' })
   @ApiConsumes('multipart/form-data')
-  @ApiResponse({ status: 200, type: User })
+  @ApiResponse({ status: 200 })
   @UseGuards(JwtAuthGuard)
   @Post('avatar')
   @UseInterceptors(
@@ -78,16 +78,16 @@ export class UserController {
     @Req() request: any,
     @UploadedFiles()
     image: TUserAvatarFormData,
-  ) {
+  ): Promise<User> {
     return this.userService.updateAvatar(request.user as TUserTokenData, image);
   }
 
   @ApiOperation({ summary: 'All users fetching' })
-  @ApiResponse({ status: 200, type: [User] })
+  @ApiResponse({ status: 200 })
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @Get('all')
-  getAll() {
+  getAll(): Promise<User[]> {
     return this.userService.getAllUsers();
   }
 
