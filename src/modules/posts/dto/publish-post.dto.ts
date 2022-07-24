@@ -1,5 +1,5 @@
 export class PublishPostDto {
+  readonly userId: string;
   readonly body: string;
-  readonly userId: number;
   readonly targets: string[];
 }

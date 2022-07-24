@@ -1,30 +1,30 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom, map } from 'rxjs';
+import { Social } from '@prisma/client';
 
+import { PrismaService } from 'modules/prisma/prisma.service';
 import { SocialService } from 'modules/socials/social.service';
 import { FileService } from 'modules/files/file.service';
 
 import { CreatePostDto } from 'modules/posts/dto/create-post.dto';
 import { PublishPostDto } from 'modules/posts/dto/publish-post.dto';
-import { Social } from 'modules/socials/social.model';
-import { Post } from 'modules/posts/post.model';
+import { TUserTokenData } from 'modules/auth/types/index';
 
 @Injectable()
 export class PostService {
   constructor(
-    @InjectModel(Post) private postRepository: typeof Post,
+    private prisma: PrismaService,
     private fileService: FileService,
     private httpService: HttpService,
     private socialService: SocialService,
   ) {}
 
-  async create(dto: CreatePostDto, image: File) {
+  async create(user: TUserTokenData, dto: CreatePostDto, image: File) {
     const imageName = this.fileService.create(image);
-    const post = await this.postRepository.create({ ...dto, image: imageName });
-
-    return post;
+    return this.prisma.post.create({
+      data: { ...dto, userId: user.id, image: imageName },
+    });
   }
 
   async publish(dto: PublishPostDto) {
@@ -37,7 +37,7 @@ export class PostService {
 
     if (!userVk) throw new HttpException('Vk user not found', HttpStatus.BAD_REQUEST);
 
-    const data = await lastValueFrom(
+    return lastValueFrom(
       this.httpService
         .post(`https://api.vk.com/method/wall.post`, {
           params: {
@@ -50,6 +50,5 @@ export class PostService {
         })
         .pipe(map(res => res.data)),
     );
-    return data;
   }
 }

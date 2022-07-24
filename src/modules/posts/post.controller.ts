@@ -1,4 +1,12 @@
-import { Body, Controller, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Req,
+  Controller,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiSecurity } from '@nestjs/swagger';
 
@@ -8,6 +16,7 @@ import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
 
 import { CreatePostDto } from 'modules/posts/dto/create-post.dto';
 import { PublishPostDto } from 'modules/posts/dto/publish-post.dto';
+import { TUserTokenData } from 'modules/auth/types/index';
 
 @ApiSecurity('API-KEY', ['API-KEY'])
 @UseGuards(ApiKeyGuard)
@@ -17,8 +26,8 @@ export class PostController {
 
   @Post()
   @UseInterceptors(FileInterceptor('image'))
-  create(@Body() dto: CreatePostDto, @UploadedFile() image: any) {
-    return this.postService.create(dto, image);
+  create(@Req() request: any, @Body() dto: CreatePostDto, @UploadedFile() image: any) {
+    return this.postService.create(request.user as TUserTokenData, dto, image);
   }
 
   @Post('publish')
