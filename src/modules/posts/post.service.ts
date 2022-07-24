@@ -1,13 +1,15 @@
-import { SocialService } from './../socials/social.service';
-import { FileService } from './../files/file.service';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { CreatePostDto } from './dto/create-post.dto';
-import { Post } from './post.model';
-import { PublishPostDto } from './dto/publish-post.dto';
-import { lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
-import { Social } from '../socials/social.model';
+import { lastValueFrom, map } from 'rxjs';
+
+import { SocialService } from 'modules/socials/social.service';
+import { FileService } from 'modules/files/file.service';
+
+import { CreatePostDto } from 'modules/posts/dto/create-post.dto';
+import { PublishPostDto } from 'modules/posts/dto/publish-post.dto';
+import { Social } from 'modules/socials/social.model';
+import { Post } from 'modules/posts/post.model';
 
 @Injectable()
 export class PostService {
@@ -19,23 +21,21 @@ export class PostService {
   ) {}
 
   async create(dto: CreatePostDto, image: File) {
-    const imageName = await this.fileService.create(image);
+    const imageName = this.fileService.create(image);
     const post = await this.postRepository.create({ ...dto, image: imageName });
+
     return post;
   }
 
   async publish(dto: PublishPostDto) {
-    // const imageName = await this.fileService.create(image);
-    // const post = await this.postRepository.create({ ...dto, image: imageName });
-    // https://prnt.sc/umipVPCnvviL
     let userVk: Social;
     try {
       userVk = await this.socialService.getAccountByUserId(dto.userId);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     if (!userVk) throw new HttpException('Vk user not found', HttpStatus.BAD_REQUEST);
-    console.log(userVk.accessToken);
 
     const data = await lastValueFrom(
       this.httpService

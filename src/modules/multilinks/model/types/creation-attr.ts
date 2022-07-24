@@ -1,4 +1,4 @@
-import { MLContentType } from '../multilink.model';
+import { MLContentType } from 'modules/multilinks/model/multilink.model';
 
 export interface IMLTextCreationAttrs extends IMLAnyBlockCreationAttrs, IMLTextProperties {
   type: MLContentType.TEXT;

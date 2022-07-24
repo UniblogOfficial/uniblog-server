@@ -1,5 +1,3 @@
-import { UserRole } from '../roles/user-role.model';
-import { ApiProperty } from '@nestjs/swagger';
 import {
   BelongsToMany,
   Column,
@@ -9,10 +7,13 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Role } from '../roles/role.model';
-import { Post } from '../posts/post.model';
-import { Social } from '../socials/social.model';
-import { Avatar } from './model/avatar.model';
+import { ApiProperty } from '@nestjs/swagger';
+
+import { Role } from 'modules/roles/role.model';
+import { Post } from 'modules/posts/post.model';
+import { Social } from 'modules/socials/social.model';
+import { Avatar } from 'modules/users/model/avatar.model';
+import { UserRole } from 'modules/roles/user-role.model';
 
 interface UserCreationAttrs {
   name: string;

@@ -1,31 +1,33 @@
-import { MLFeedback } from './model/blocks/feedback.model';
-import { getKeys } from './../../common/utils';
-import { MLImageData } from './model/images/ml-imagedata.model';
-import { MLShopCell } from './model/blocks/shop/shop-cell.model';
-import { MLShop } from './model/blocks/shop/shop.model';
-import { MLVideo } from './model/blocks/video.model';
-import { MLLink } from './model/blocks/link.model';
-import { MLImageText } from './model/blocks/imagetext.model';
-import { MLImage } from './model/blocks/image.model';
-import { MLSocial } from './model/blocks/social.model';
-import { MLText } from './model/blocks/text.model';
-import { MLContentType, Multilink } from './model/multilink.model';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { CreateMLDto } from './dto/create-ml.dto';
-import { MLLogo } from './model/blocks/logo.model';
-import { Avatar } from '../users/model/avatar.model';
-import { MLVoteCell } from './model/blocks/vote/vote-cell.model';
-import { MLWidget } from './model/blocks/widget.model';
-import { MLAudio } from './model/blocks/audio.model';
-import { MLMap } from './model/blocks/map.model';
-import { MLPost } from './model/blocks/post.model';
-import { MLCarousel } from './model/blocks/carousel.model';
-import { MLDivider } from './model/blocks/divider.model';
-import { MLVote } from './model/blocks/vote/vote.model';
-import { MLButton } from './model/blocks/button.model';
 import { Includeable, ModelDefined } from 'sequelize/types';
-import { MLTimer } from './model/blocks/timer.model';
+
+import { getKeys } from 'common/utils';
+
+import { MLFeedback } from 'modules/multilinks/model/blocks/feedback.model';
+import { MLImageData } from 'modules/multilinks/model/images/ml-imagedata.model';
+import { MLShopCell } from 'modules/multilinks/model/blocks/shop/shop-cell.model';
+import { MLShop } from 'modules/multilinks/model/blocks/shop/shop.model';
+import { MLVideo } from 'modules/multilinks/model/blocks/video.model';
+import { MLLink } from 'modules/multilinks/model/blocks/link.model';
+import { MLImageText } from 'modules/multilinks/model/blocks/imagetext.model';
+import { MLImage } from 'modules/multilinks/model/blocks/image.model';
+import { MLSocial } from 'modules/multilinks/model/blocks/social.model';
+import { MLText } from 'modules/multilinks/model/blocks/text.model';
+import { MLContentType, Multilink } from 'modules/multilinks/model/multilink.model';
+import { CreateMLDto } from 'modules/multilinks/dto/create-ml.dto';
+import { MLLogo } from 'modules/multilinks/model/blocks/logo.model';
+import { Avatar } from 'modules/users/model/avatar.model';
+import { MLVoteCell } from 'modules/multilinks/model/blocks/vote/vote-cell.model';
+import { MLWidget } from 'modules/multilinks/model/blocks/widget.model';
+import { MLAudio } from 'modules/multilinks/model/blocks/audio.model';
+import { MLMap } from 'modules/multilinks/model/blocks/map.model';
+import { MLPost } from 'modules/multilinks/model/blocks/post.model';
+import { MLCarousel } from 'modules/multilinks/model/blocks/carousel.model';
+import { MLDivider } from 'modules/multilinks/model/blocks/divider.model';
+import { MLVote } from 'modules/multilinks/model/blocks/vote/vote.model';
+import { MLButton } from 'modules/multilinks/model/blocks/button.model';
+import { MLTimer } from 'modules/multilinks/model/blocks/timer.model';
 
 @Injectable()
 export class MultilinkService {
@@ -82,22 +84,23 @@ export class MultilinkService {
     { model: MLImageData, separate: true },
   ];
 
-  async createMultilink(user, dto: CreateMLDto) {
+  async createMultilink(user: any, dto: CreateMLDto) {
+    const { id: userId } = user;
     const { name, background, outerBackground, maxWidth, contentMap, ...blocks } = dto;
     const parsedSets: { [key: string]: any[] } = {};
+
     getKeys(blocks).forEach(key => {
       parsedSets[key] = JSON.parse(blocks[key]) as any[];
     });
 
     try {
-      /* let multilink = await this.multilinkRepository.findOne({
-        where: { userId: user.id, name: dto.name },
-      }); */
       await this.multilinkRepository.destroy({
-        where: { userId: user.id, name: JSON.parse(name) },
+        where: { userId, name: JSON.parse(name) },
         force: true,
       });
+
       // <multilink root data>
+
       const mlRootData = {
         name: JSON.parse(name),
         background: JSON.parse(background),
@@ -105,19 +108,24 @@ export class MultilinkService {
         maxWidth: +maxWidth,
         contentMap: JSON.parse(contentMap),
       };
-      let multilink;
+
+      let multilink: any;
+
       try {
         multilink = await this.multilinkRepository.create({
-          userId: user.id,
+          userId,
           ...mlRootData,
         });
       } catch (error) {
         throw new Error(`Fail in ML creation: ${error}`);
       }
+
       const multilinkId = multilink.id;
       const logoOrders = [];
+
       // </multilink root data>
       // <multilink content>
+
       const createBlockSet = <T extends ModelDefined<any, any>, O extends Record<string, unknown>>(
         blocks: any[],
         repository: T,
@@ -126,13 +134,14 @@ export class MultilinkService {
         try {
           if (blocks.length) {
             blocks.map(async block => {
-              await repository.create({ multilinkId, ...block, ...optional });
+              await repository.create({ ...block, ...optional, multilinkId });
             });
           }
         } catch (error) {
           throw new Error(`Fail in ${repository.tableName}: ${error}`);
         }
       };
+
       createBlockSet(parsedSets.textBlocks, this.mlTextRepository);
       createBlockSet(parsedSets.socialBlocks, this.mlSocialRepository);
       createBlockSet(parsedSets.postBlocks, this.mlPostRepository);
@@ -148,8 +157,9 @@ export class MultilinkService {
         if (parsedSets.logoBlocks.length) {
           parsedSets.logoBlocks.map(async block => {
             logoOrders.push(block.order);
-            await this.mlLogoRepository.create({ multilinkId, ...block, logo: block.logo ?? '' });
+            await this.mlLogoRepository.create({ ...block, multilinkId, logo: block.logo || '' });
           });
+
           hasLogo = parsedSets.logoBlocks.some(block => block.logo);
         }
       } catch (error) {
@@ -165,45 +175,42 @@ export class MultilinkService {
 
       if (parsedSets.shopBlocks.length) {
         parsedSets.shopBlocks.map(async block => {
-          const shopBlock = await this.mlShopRepository.create({ multilinkId, ...block });
+          const shopBlock = await this.mlShopRepository.create({ ...block, multilinkId });
+
           await Promise.all(
-            block.cells.map(cell => {
-              return this.mlShopCellRepository.create({
-                blockId: shopBlock.id,
-                ...cell,
-              });
+            block.cells.map((cell: any) => {
+              return this.mlShopCellRepository.create({ ...cell, blockId: shopBlock.id });
             }),
           );
         });
       }
+
       if (parsedSets.voteBlocks.length) {
         parsedSets.voteBlocks.map(async block => {
-          const voteBlock = await this.mlVoteRepository.create({ multilinkId, ...block });
+          const voteBlock = await this.mlVoteRepository.create({ ...block, multilinkId });
           await Promise.all(
-            block.cells.map(cell => {
-              return this.mlVoteCellRepository.create({
-                blockId: voteBlock.id,
-                ...cell,
-              });
+            block.cells.map((cell: any) => {
+              return this.mlVoteCellRepository.create({ ...cell, blockId: voteBlock.id });
             }),
           );
         });
       }
+
       // </multilink content>
       // <multilink images>
+
       if (!hasLogo && logoOrders.length) {
-        const avatar = await this.avatarRepository.findOne({
-          where: { userId: user.id },
-        });
+        const avatar = await this.avatarRepository.findOne({ where: { userId } });
+
         if (avatar) {
           await Promise.all(
             logoOrders.map(order => {
               return this.mlImageDataRepository.create({
-                multilinkId: multilink.id,
-                type: MLContentType.LOGO,
                 order,
                 suborder: 0,
                 imageName: 'avatar',
+                type: MLContentType.LOGO,
+                multilinkId: multilink.id,
                 imageType: avatar.imageType,
                 imageData: avatar.imageData,
               });
@@ -211,7 +218,9 @@ export class MultilinkService {
           );
         }
       }
+
       // </multilink images>
+
       const createdML = await this.multilinkRepository.findByPk(multilink.id, {
         include: this.includeOptions,
       });
@@ -231,20 +240,23 @@ export class MultilinkService {
         where: { name },
         include: this.includeOptions,
       });
+
       multilink.clickCount++;
       multilink.save();
+
       return { data: { multilink }, message: 'Here we go' };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }
   }
 
-  async getMLsByUserId(user) {
+  async getMLsByUserId(user: any) {
     try {
       const multilinks = await this.multilinkRepository.findAll({
         where: { userId: user.id },
         include: this.includeOptions,
       });
+
       return { data: { multilinks }, message: 'Here all your stuff, sir' };
     } catch (error) {
       throw new HttpException(`DB Error: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);

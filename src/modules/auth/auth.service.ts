@@ -1,11 +1,13 @@
-import { TUserTokenData } from './types/index';
-import * as bcrypt from 'bcryptjs';
-import { UserService } from '../users/user.service';
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../users/user.model';
-import { LoginDto } from './dto/login.dto';
-import { CreateUserDto } from '../users/dto/create-user.dto';
+import * as bcrypt from 'bcryptjs';
+
+import { UserService } from 'modules/users/user.service';
+
+import { User } from 'modules/users/user.model';
+import { LoginDto } from 'modules/auth/dto/login.dto';
+import { CreateUserDto } from 'modules/users/dto/create-user.dto';
+import { TUserTokenData } from 'modules/auth/types/index';
 
 @Injectable()
 export class AuthService {
@@ -16,9 +18,11 @@ export class AuthService {
     if (candidate) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
+
     const hashPassword = await bcrypt.hash(userDto.password, 5);
     const user = await this.userService.createUser({ ...userDto, password: hashPassword });
     const token = this.generateToken(user);
+
     return { data: user, auth: { token }, message: 'User created' };
   }
 
@@ -27,6 +31,7 @@ export class AuthService {
     if (user) {
       return { data: user };
     }
+
     throw new HttpException('Token expired or such user not exists', HttpStatus.NOT_FOUND);
   }
 
@@ -37,17 +42,22 @@ export class AuthService {
   }
 
   generateToken(user: User) {
-    const payload = { email: user.email, id: user.id, roles: user.roles };
+    const { id, email, roles } = user;
+
+    const payload = { id, email, roles };
     const token = this.jwtService.sign(payload);
+
     return token;
   }
 
   private async validateUser(loginDto: LoginDto) {
     const user = await this.userService.getUserByEmail(loginDto.email);
     const isPasswordsEqual = await bcrypt.compare(loginDto.password, user.password);
+
     if (user && isPasswordsEqual) {
       return user;
     }
+
     throw new UnauthorizedException({ message: 'Invalid email/password' });
   }
 }

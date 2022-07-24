@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLShop } from './shop.model';
+
+import { MLShop } from 'modules/multilinks/model/blocks/shop/shop.model';
 
 interface MLShopCellCreationAttrs {
   blockId: number;

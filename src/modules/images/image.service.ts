@@ -1,12 +1,12 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import { MLContentType } from './../multilinks/model/multilink.model';
-import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { lastValueFrom, map, Observable } from 'rxjs';
-import { SavedImage } from './savedImage.model';
-import FormData = require('form-data');
+import FormData from 'form-data';
+
+import { MLContentType } from 'modules/multilinks/model/multilink.model';
+import { SavedImage } from 'modules/images/savedImage.model';
 
 export interface File extends Blob {
   readonly lastModified: number;
@@ -20,13 +20,10 @@ export class ImageService {
     private httpService: HttpService,
   ) {}
 
-  async save(user, dto, file: Express.Multer.File) {
-    const { order, type, suborder } = {
-      type: file.originalname.split('.')[0].split('-')[0] as MLContentType,
-      order: +file.originalname.split('.')[0].split('-')[1],
-      suborder: +file.originalname.split('.')[0].split('-')[2],
-    };
-    let response;
+  async save(user: any, _: any, file: Express.Multer.File) {
+    const type = file.originalname.split('.')[0].split('-')[0] as MLContentType;
+
+    let response: any;
     try {
       response = await this.saveImageData(file);
     } catch (e) {
@@ -35,6 +32,7 @@ export class ImageService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
     if (response) {
       const { image, thumb } = response as TImageHostResponseData;
       const { extension, filename, mime, name, url } = image;
@@ -53,14 +51,15 @@ export class ImageService {
     return { data: response, message: 'Image saved' };
   }
 
-  async getAllByUserId(user) {
+  async getAllByUserId(user: { id: string }) {
     try {
       const images = await this.savedImageRepository.findAll({ where: { userId: user.id } });
       if (images.length) {
         return { data: images, message: 'Here is your saved images!' };
       }
+
       return { data: null, message: 'There is no saved images' };
-    } catch (e) {}
+    } catch {}
   }
 
   private async saveImageData(
@@ -68,26 +67,24 @@ export class ImageService {
   ): Promise<Observable<AxiosResponse<any, any>>> {
     const apiKey = process.env.IMG_HOST_API_KEY;
     const formData = new FormData({ writable: true, readable: true });
+
     formData.append('key', apiKey);
     formData.append('name', multerFile.originalname.split('.')[0]);
     formData.append('image', multerFile.buffer, multerFile.originalname.split('.')[0]);
-
-    console.log(multerFile);
 
     try {
       const response = await lastValueFrom(
         this.httpService
           .post(`https://api.imgbb.com/1/upload?key=${apiKey}`, formData, {
             headers: {
-              // @ts-ignore
-              'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+              'Content-Type': `multipart/form-data; boundary=${formData.getBoundary()}`,
             },
           })
           .pipe(map(res => res.data)),
       );
+
       return response.data;
     } catch (e) {
-      console.log(e.response?.data);
       throw new HttpException(
         'hosting error - ' + e.message + ' - ' + e.response?.data?.error?.message,
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -95,12 +92,6 @@ export class ImageService {
     }
   }
 }
-
-type TImageHostResponse = {
-  data: TImageHostResponseData;
-  success: boolean; // true;
-  status: number; // 200;
-};
 
 type TImageHostResponseData = {
   id: string; // 'qmZN216';

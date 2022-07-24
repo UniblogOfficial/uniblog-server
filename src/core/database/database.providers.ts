@@ -1,12 +1,14 @@
-import { User } from './../../modules/users/user.model';
 import { Sequelize } from 'sequelize-typescript';
-import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../constants';
-import { databaseConfig } from './database.config';
+
 import {
   TDatabaseConfigAttributes,
   TDatabaseWithUriConfigAttributes,
   TDatabaseWithOptionsConfigAttributes,
-} from './interfaces/dbConfig.interface';
+} from 'core/database/interfaces/dbConfig.interface';
+import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from 'core/constants';
+import { databaseConfig } from 'core/database/database.config';
+
+import { User } from 'modules/users/user.model';
 
 export const databaseProviders = [
   {

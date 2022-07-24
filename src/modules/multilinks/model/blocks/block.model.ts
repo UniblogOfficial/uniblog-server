@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { Multilink } from '../multilink.model';
-import { IMLAnyBlockCreationAttrs } from '../types/creation-attr';
+
+import { Multilink } from 'modules/multilinks/model/multilink.model';
+import { IMLAnyBlockCreationAttrs } from 'modules/multilinks/model/types/creation-attr';
 
 @Table({ tableName: 'MLBlocks' })
 export class MLBlock<Block, BlockAttrs>

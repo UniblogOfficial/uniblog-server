@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLVote } from './vote.model';
+
+import { MLVote } from 'modules/multilinks/model/blocks/vote/vote.model';
 
 interface MLVoteCellCreationAttrs {
   blockId: number;

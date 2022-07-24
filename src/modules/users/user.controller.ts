@@ -1,11 +1,3 @@
-import { TUserTokenData } from './../auth/types/index';
-import { ValidationPipe } from './../../core/pipes/validation.pipe';
-import { BanUserDto } from './dto/ban-user.dto';
-import { AddRoleDto } from './dto/add-role.dto';
-import { RolesGuard } from './../auth/roles.guard';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import * as path from 'path';
 import {
   Body,
   Controller,
@@ -22,11 +14,23 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiOperation, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { User } from './user.model';
-import { Roles } from '../auth/roles-auth.decorator';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { TUserAvatarFormData } from '../files/file.service';
-import { ApiKeyGuard } from '../auth/api-key.guard';
+import * as path from 'path';
+
+import { UserService } from 'modules/users/user.service';
+
+import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
+import { JwtAuthGuard } from 'modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'modules/auth/guards/roles.guard';
+
+import { ValidationPipe } from 'core/pipes/validation.pipe';
+import { Roles } from 'modules/auth/roles-auth.decorator';
+
+import { BanUserDto } from 'modules/users/dto/ban-user.dto';
+import { AddRoleDto } from 'modules/users/dto/add-role.dto';
+import { CreateUserDto } from 'modules/users/dto/create-user.dto';
+import { TUserTokenData } from 'modules/auth/types/index';
+import { TUserAvatarFormData } from 'modules/files/file.service';
+import { User } from 'modules/users/user.model';
 
 @ApiTags('User')
 @ApiSecurity('API-KEY', ['API-KEY'])

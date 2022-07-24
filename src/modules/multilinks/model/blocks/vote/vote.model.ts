@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, DataType, HasMany, Table } from 'sequelize-typescript';
-import { MLContentType } from '../../multilink.model';
-import { IMLVoteCreationAttrs } from '../../types/creation-attr';
-import { MLAnyTextBlock } from '../anyTextBlock.model';
-import { MLVoteCell } from './vote-cell.model';
+
+import { MLContentType } from 'modules/multilinks/model/multilink.model';
+import { IMLVoteCreationAttrs } from 'modules/multilinks/model/types/creation-attr';
+import { MLAnyTextBlock } from 'modules/multilinks/model/blocks/anyTextBlock.model';
+import { MLVoteCell } from 'modules/multilinks/model/blocks/vote/vote-cell.model';
 
 @Table({ tableName: 'MLVotes' })
 export class MLVote

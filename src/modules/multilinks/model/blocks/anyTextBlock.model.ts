@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, DataType, Table } from 'sequelize-typescript';
-import { IMLTextProperties } from '../types/creation-attr';
-import { MLBlock } from './block.model';
+
+import { IMLTextProperties } from 'modules/multilinks/model/types/creation-attr';
+import { MLBlock } from 'modules/multilinks/model/blocks/block.model';
 
 @Table({ tableName: 'MLAnyTextBlocks' })
 export class MLAnyTextBlock<Block, BlockAttrs>

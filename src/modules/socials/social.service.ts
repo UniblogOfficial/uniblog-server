@@ -8,8 +8,9 @@ import {
 import { InjectModel } from '@nestjs/sequelize';
 import { AxiosResponse } from 'axios';
 import { lastValueFrom, map, Observable } from 'rxjs';
-import { BindSocialVkDto } from './dto/bind-social.dto';
-import { Social } from './social.model';
+
+import { BindSocialVkDto } from 'modules/socials/dto/bind-social.dto';
+import { Social } from 'modules/socials/social.model';
 
 @Injectable()
 export class SocialService {
@@ -19,33 +20,35 @@ export class SocialService {
   ) {}
 
   async bindVk(dto: BindSocialVkDto) {
-    let authData;
+    let authData: any;
     try {
       authData = await this.getVkAuthData(dto.code);
       authData = {
         socialUserId: authData.user_id,
         accessToken: authData.access_token,
         expiresIn: authData.expires_in,
-        email: authData.email ?? null,
+        email: authData.email || null,
       };
     } catch (err) {
       throw new UnprocessableEntityException('Wrong VK code');
     }
-    console.log(authData);
 
-    const { socialUserId, accessToken, expiresIn } = authData;
+    const { socialUserId, accessToken } = authData;
     const account = await this.getAccountBySocialUserId(socialUserId);
+
     if (account) {
       throw new HttpException('Account already have bound', HttpStatus.BAD_REQUEST);
     }
 
-    const social = await this.socialRepository.create({
+    await this.socialRepository.create({
       name: 'vk',
       accessToken,
       socialUserId,
       userId: dto.userId,
     });
+
     const VkData = await this.getSocialUserData(socialUserId, accessToken);
+
     return VkData;
   }
 
@@ -59,14 +62,15 @@ export class SocialService {
       this.httpService
         .get(`https://oauth.vk.com/access_token`, {
           params: {
+            code: code,
             client_id: clientId,
             client_secret: clientSecret,
             redirect_uri: host + '/callback',
-            code: code,
           },
         })
         .pipe(map(res => res.data)),
     );
+
     return data;
   }
 
@@ -79,23 +83,22 @@ export class SocialService {
         .get(`https://api.vk.com/method/users.get`, {
           params: {
             user_ids: userVkId,
-            fields: 'screen_name',
             access_token: token,
+            fields: 'screen_name',
             v: '5.131',
           },
         })
         .pipe(map(res => res.data)),
     );
+
     return data;
   }
 
-  private async getAccountBySocialUserId(socialUserId: string) {
-    const account = await this.socialRepository.findOne({ where: { socialUserId } });
-    return account;
+  private getAccountBySocialUserId(socialUserId: string) {
+    return this.socialRepository.findOne({ where: { socialUserId } });
   }
 
-  async getAccountByUserId(userId: number) {
-    const account = await this.socialRepository.findOne({ where: { userId } });
-    return account;
+  getAccountByUserId(userId: number) {
+    return this.socialRepository.findOne({ where: { userId } });
   }
 }

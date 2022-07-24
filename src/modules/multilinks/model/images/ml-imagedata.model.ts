@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { MLContentType, Multilink } from '../multilink.model';
+import { MLContentType, Multilink } from 'modules/multilinks/model/multilink.model';
 
 interface MLImageDataCreationAttrs {
   multilinkId: number;

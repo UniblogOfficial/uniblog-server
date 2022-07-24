@@ -1,12 +1,16 @@
-import { SocialModule } from './../socials/social.module';
-import { FileModule } from './../files/file.module';
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { User } from '../users/user.model';
-import { PostController } from './post.controller';
-import { Post } from './post.model';
-import { PostService } from './post.service';
 import { HttpModule } from '@nestjs/axios';
+
+import { SocialModule } from 'modules/socials/social.module';
+import { FileModule } from 'modules/files/file.module';
+
+import { PostService } from 'modules/posts/post.service';
+
+import { PostController } from './post.controller';
+
+import { User } from 'modules/users/user.model';
+import { Post } from 'modules/posts/post.model';
 
 @Module({
   controllers: [PostController],

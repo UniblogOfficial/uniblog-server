@@ -1,8 +1,11 @@
-import { CreateRoleDto } from './dto/create-role.dto';
-import { RoleService } from './role.service';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { ApiKeyGuard } from '../auth/api-key.guard';
+
+import { RoleService } from 'modules/roles/role.service';
+
+import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
+
+import { CreateRoleDto } from 'modules/roles/dto/create-role.dto';
 
 @ApiTags('Role')
 @ApiSecurity('API-KEY', ['API-KEY'])

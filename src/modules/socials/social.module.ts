@@ -1,9 +1,12 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { SocialController } from './social.controller';
-import { Social } from './social.model';
-import { SocialService } from './social.service';
+
+import { SocialService } from 'modules/socials/social.service';
+
+import { SocialController } from 'modules/socials/social.controller';
+
+import { Social } from 'modules/socials/social.model';
 
 @Module({
   controllers: [SocialController],
