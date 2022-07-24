@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Post, Req, UseGuards, UsePipes } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
 
 import { AuthService } from 'modules/auth/auth.service';
 
 import { ApiKeyGuard } from 'modules/auth/guards/api-key.guard';
 import { JwtAuthGuard } from 'modules/auth/guards/jwt-auth.guard';
 
-import { User } from 'modules/users/user.model';
 import { CreateUserDto } from 'modules/users/dto/create-user.dto';
 import { LoginDto } from 'modules/auth/dto/login.dto';
 
@@ -20,10 +20,10 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @ApiOperation({ summary: 'Initial user authentication' })
-  @ApiResponse({ status: 200, type: [User] })
+  @ApiResponse({ status: 200 })
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  me(@Req() request: any) {
+  me(@Req() request: any): Promise<User> {
     return this.authService.me(request.user);
   }
 

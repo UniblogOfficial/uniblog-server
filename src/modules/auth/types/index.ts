@@ -1,4 +1,4 @@
-import { Role } from 'modules/roles/role.model';
+import { Role } from '@prisma/client';
 
 export type TUserTokenData = {
   id: string;

@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 
 import { UserService } from 'modules/users/user.service';
 
-import { User } from 'modules/users/user.model';
 import { LoginDto } from 'modules/auth/dto/login.dto';
 import { CreateUserDto } from 'modules/users/dto/create-user.dto';
 import { TUserTokenData } from 'modules/auth/types/index';
@@ -14,7 +14,7 @@ export class AuthService {
   constructor(private userService: UserService, private jwtService: JwtService) {}
 
   async register(userDto: CreateUserDto) {
-    const candidate = await this.userService.getUserByEmail(userDto.email);
+    const candidate = await this.userService.getUser({ email: userDto.email });
     if (candidate) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
@@ -26,13 +26,8 @@ export class AuthService {
     return { data: user, auth: { token }, message: 'User created' };
   }
 
-  async me(userTokenData: TUserTokenData) {
-    const user = await this.userService.getUserById(userTokenData.id);
-    if (!user) {
-      throw new HttpException('Token expired or such user not exists', HttpStatus.NOT_FOUND);
-    }
-
-    return { data: user };
+  async me({ id }: TUserTokenData) {
+    return this.userService.getUser({ id });
   }
 
   async login(dto: LoginDto) {
@@ -42,17 +37,17 @@ export class AuthService {
   }
 
   generateToken(user: User) {
-    const { id, email, roles } = user;
+    const { id, email } = user;
 
-    const payload = { id, email, roles };
+    const payload = { id, email };
     const token = this.jwtService.sign(payload);
 
     return token;
   }
 
-  private async validateUser(loginDto: LoginDto) {
-    const user = await this.userService.getUserByEmail(loginDto.email);
-    const isPasswordsEqual = await bcrypt.compare(loginDto.password, user.password);
+  private async validateUser({ email, password }: LoginDto) {
+    const user = await this.userService.getUser({ email });
+    const isPasswordsEqual = await bcrypt.compare(password, user.password);
 
     if (!user || !isPasswordsEqual) {
       throw new UnauthorizedException({ message: 'Invalid email/password' });
