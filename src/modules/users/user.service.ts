@@ -95,7 +95,7 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
-  getUser(dto: GetUserDto) {
+  async getUser(dto: GetUserDto) {
     const { id, email, name } = dto;
 
     if (!id && !email && !name)
@@ -103,6 +103,10 @@ export class UserService {
 
     const where = id ? { id } : email ? { email } : { name };
 
-    return this.prisma.user.findUnique({ where });
+    const user = await this.prisma.user.findUnique({ where });
+
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    return user;
   }
 }
