@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { RoleType } from '@prisma/client';
 
 import { RoleService } from 'modules/roles/role.service';
 
@@ -20,7 +21,7 @@ export class RoleController {
   }
 
   @Get('/:value')
-  getByValue(@Param('value') value: string) {
-    return this.roleService.getRoleByValue(value);
+  getByValue(@Param('value') value: RoleType) {
+    return this.roleService.getRole(value);
   }
 }

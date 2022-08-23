@@ -1,4 +1,6 @@
+import { RoleType } from '@prisma/client';
+
 export class CreateRoleDto {
-  readonly value: string;
+  readonly value: RoleType;
   readonly description: string;
 }
